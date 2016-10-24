@@ -104,43 +104,6 @@ We will keep the strict clock model and will set `Clock.rate` to 0.00079.
 	<figcaption>Figure 5: Set the clock rate to 0.00079.</figcaption>
 </figure>
 
-Next, we need to go the `Priors` tab and set the Bayesian Coalescent Skyline as a tree prior (Figure~\ref{fig:coalescent}).
-
-\begin{figure}[h!]
-\centering
-\fbox{\includegraphics[width=\textwidth]{figures/choose_coalescentSkyline.png}}
-\caption{\small Choose the Coalescent Bayesian Skyline as a population prior.}
-\label{fig:coalescent}
-\end{figure}
-
-%\fixme{It has not been explained previously. Or do you mean that it should have been explained in class? Explain it once again here quickly anyway.}
-The Bayesian Coalescent Skyline works by dividing the time between the present and the root of the tree into intervals, thus the number of these intervals has to be defined. Each interval will have a different effective population size. 
-The Bayesian Coalescent Skyline will estimate the number of coalescent events within each interval (which is captured in the Group Size parameter) as well as the effective population size for that interval. The number of intervals is equal to the dimension specified. If we have $d$ intervals, the effective population size is allowed to change $d-1$ times. To specify the number of dimensions, we need to first go to the initialization panel. This is by default not visible \texttt{View > Show Initialization Panel}.
-
-%\begin{figure}[h!]
-%\centering
-%\fbox{\includegraphics[width=0.2\textwidth]{figures/goto_initialization.png}}
-%\caption{\small go to the initialization panel.}
-%\label{fig:initialization}
-%\end{figure}
-
-%\fixme{This procedure needs to be explained better (what do you expand and what do you write where) as we didn't do this before. Also, 5 is the default value, you need to say it.}
-
-For this analysis we will set the number of dimensions to $4$ (the default value is 5). Keep in mind that one has to change the dimension of \textbf{bPopSizes} as well as \textbf{bGroupSizes}. The dimension of both parameters has to be the same (Figure~\ref{fig:dimensions}).
-
-\begin{figure}[h!]
-\centering
-\fbox{\includegraphics[width=\textwidth]{figures/set_dimension.png}}
-\caption{\small Set the dimension of the two parameters, bPopSizes and bGroupSizes, to $4$.}
-\label{fig:dimensions}
-\end{figure}
-
-
-Choosing the dimension for the Bayesian Coalescent Skyline can be rather arbitrary. If the dimension is chosen too low, not all population changes are captured, if it is chosen too large, there might be too little information in an interval to support an estimate of a population size. There are implementations in BEAST of the coalescent skyline that either sample dimensions (Extended Bayesian Skyline~\citep{Heled2008}) or do not require dimensions to be specified (Skyride~\citep{Minin2008}).
-
-We can leave the priors as they are and save the settings to *.xml
-
-%The MCMC will now run for a couple of minutes, depending on the speed of the computer. In the meantime, we can open tracer to have a look at the *.log file.
 
 
 

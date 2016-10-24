@@ -45,17 +45,10 @@ The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993
 
 With an estimated 15-25%, Egypt has the highest Hepatits C prevalence in the world. In the mid 20^(th) century, the prevalence of Hepatitis C increased drastically (see Figure 1](#fig:prevalence) for estimates). We will try to infer this increase from sequence data. 
 
-\begin{figure}[h!]
-\centering
-\fbox{\includegraphics[scale=0.5]{figures/Estimated_number_hcv.png}}
-\caption{\small The estimated number of Hepatitis C cases in Egypt~\citep{Pybus2003}.}
-\label{fig:prevalence}
-\end{figure}
-
 <figure>
 	<a id="fig:prevalence"></a>
 	<img src="figures/Estimated_number_hcv.png" alt="">
-	<figcaption>Figure 1: The estimated number of Hepatitis C cases in Egypt {% citep Pybus2003 --file Skyline-plots/master_refs.bib %}.</figcaption>
+	<figcaption>Figure 1: The estimated number of Hepatitis C cases in Egypt {% cite Pybus2003 --file Skyline-plots/master_refs.bib %}.</figcaption>
 </figure>
 
 

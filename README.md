@@ -71,7 +71,7 @@ While the Bayesian Coalescent Skyline plot is integrated in the core of BEAST2, 
 
 To import the aligned sequences into BEAUti, use `File > Import Alignment` to select the `*.nexus` file.
 
-BEAUti will recognize the sequences from the `*.nexus` file as nucleotide data. It will do so for sequence files with the character set of ** A | C | G | T | N **, where ** N ** indicates an unknown nucleotide. As soon as other non-gap characters are included (e.g. using **R** or **Y** to indicate purines and pyramidines) BEAUti will not recognize the data as nucleotides anymore, unless the type of data is specified in the `*.nexus` file.
+BEAUti will recognize the sequences from the `*.nexus` file as nucleotide data. It will do so for sequence files with the character set of **A | C | G | T | N**, where **N** indicates an unknown nucleotide. As soon as other non-gap characters are included (e.g. using **R** or **Y** to indicate purines and pyramidines) BEAUti will not recognize the data as nucleotides anymore, unless the type of data is specified in the `*.nexus` file.
 
 After we have loaded the sequences into BEAUti, we have to specify the evolutionary model. We will be using the very general GTR model ([Figure 3](fig:model)), which estimates transition probabilities between individual nucleotides separately, meaning that transition probabilities between e.g. **A** and **T** will be inferred separately to the ones between **A** and **C**. Additionally, we should allow for rate heterogeneity among sites. We can do this by changing the Gamma Category Count to 4 (normally between 4 and 6).
 
@@ -109,6 +109,23 @@ Choosing the dimension for the Bayesian Coalescent Skyline can be rather arbitra
 We can leave the priors as they are and save the settings to `*.xml`.
 
 
+
+### Effective Population Size
+
+
+The effective population size is the inverse of the rate of coalescence {% eqinline \lambda %}. The larger the effective population size {% eqinline N_{\mathrm{eff}} %} the less likely lineages are to coalesce.
+
+{% eq 
+
+\lambda = \frac{1}{\mathrm{N}_{\mathrm{eff}}}
+
+%}
+
+For an SIR model (**S**usceptible, **I**nfected and **R**ecovered), it is proportional to the overall population size {% eqinline N %} and the number of infected {% eqinline I %} and inversely proportional to the transmission rate {% eqinline \theta %}. 
+
+{% eq 
+	\mathrm{N}_{\mathrm{eff}} = \frac{\mathrm{I}}{\theta} \frac{\mathrm{N}}{\mathrm{S}}
+%}
 
 
 

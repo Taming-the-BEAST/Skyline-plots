@@ -63,7 +63,7 @@ While the Bayesian Coalescent Skyline plot is integrated in the core of BEAST2, 
 
 <figure>
 	<a id="fig:install"></a>
-	<img src="figures/install_bdsky.png" alt="">
+	<img style="width:50%;" src="figures/install_bdsky.png" alt="">
 	<figcaption>Figure 2: Install the package BDSKY which contains the birth-death skyline functionality.</figcaption>
 </figure>
 <br>
@@ -155,7 +155,7 @@ After the runs have finished, load the finished `*.log` file into Tracer. Altern
 
 <figure>
 	<a id="fig:trees"></a>
-	<img src="figures/open_trees.png" alt="">
+	<img style="width:50%;" src="figures/open_trees.png" alt="">
 	<figcaption>Figure 7: Reconstructing the Bayesian Skyline plot in Tracer.</figcaption>
 </figure>
 <br>
@@ -164,7 +164,7 @@ The output will have the years on the x-axis and the effective population size o
 
 <figure>
 	<a id="fig:skyline"></a>
-	<img src="figures/skyline_analysis.png" alt="">
+	<img style="width:50%;" src="figures/skyline_analysis.png" alt="">
 	<figcaption>Figure 8: Bayesian Coalescent Skyline analysis output. The black line is the median estimate of the estimated effective population size (can be changed to the mean estimate). The two blue lines are the upper an the lower estimates of 95% interval. The x-axis is the time in years.</figcaption>
 </figure>
 <br>
@@ -179,7 +179,7 @@ If we compare the estimates of the population dynamics using different dimension
 
 <figure>
 	<a id="fig:comparison"></a>
-	<img src="figures/comparison_dimension.png" alt="">
+	<img style="width:50%;" src="figures/comparison_dimension.png" alt="">
 	<figcaption>Figure 9: Estimated mean effective population sizes using different dimensions.</figcaption>
 </figure>
 <br>
@@ -188,7 +188,7 @@ The choice of the number of dimensions can also have a direct effect on how fast
 
 <figure>
 	<a id="fig:ess"></a>
-	<img src="figures/ess_vs_dim_coal.png" alt="">
+	<img style="width:50%;" src="figures/ess_vs_dim_coal.png" alt="">
 	<figcaption>Figure 10: The ESS value of the posterior after running an MCMC chain with 10^7 samples, logged every 10^3 steps and a burnin of 10% for using different dimensions of the Bayesian Coalescent Skyline.</figcaption>
 </figure>
 <br>
@@ -207,9 +207,71 @@ In the first analysis, we used the coalescent approach to estimate population dy
 </figure>
 <br>
 
-As in the Bayesian Coalescent Skyline, we need to choose the number of dimensions. Here we choose the dimensions for the {% eqinline R_0 %}, the basic reproduction number, which denotes the number of secondary infections caused by a single infected person in a completely susceptible population, i.e. an {% eqinline R_0 %} R~0 R~0~ of 2 would mean that every infected person causes two new infections on average. Or in other words, an R$_{0}$ above 1 means that the number of cases are increasing, therefore the disease will cause an epidemic, and an R$_{0}$ below 1 means that the epidemic will die out. (Note that since the birth-death skyline infers changes in R$_0$ over time, it technically infers the effective reproduction number, the average number of new infections caused by an infected person at a certain time during the outbreak).
+As in the Bayesian Coalescent Skyline, we need to choose the number of dimensions. Here we choose the dimensions for the {% eqinline R_0 %}, the basic reproduction number, which denotes the number of secondary infections caused by a single infected person in a completely susceptible population, i.e. an {% eqinline R_0 %} of 2 would mean that every infected person causes two new infections on average. Or in other words, an {% eqinline R_0 %} above 1 means that the number of cases are increasing, therefore the disease will cause an epidemic, and an {% eqinline R_0 %} below 1 means that the epidemic will die out. (Note that since the birth-death skyline infers changes in {% eqinline R_0 %} over time, it technically infers the effective reproduction number, the average number of new infections caused by an infected person at a certain time during the outbreak).
 
-The dimension of the R$_{0}$ has to be chosen in the initialization panel. Choosing this dimension can again be arbitrary and may require the testing of a few different values. Too few intervals and not all rate shifts are captured. Too many intervals and the intervals may not contain enough information to infer parameters.
+The dimension of the {% eqinline R_0 %} has to be chosen in the initialization panel. Choosing this dimension can again be arbitrary and may require the testing of a few different values. Too few intervals and not all rate shifts are captured. Too many intervals and the intervals may not contain enough information to infer parameters.
+
+In this case we will keep the default value of 10 dimensions ([Figure 12](#fig:dimensions_bdsky)).
+
+<figure>
+	<a id="fig:dimensions_bdsky"></a>
+	<img src="figures/choose_dimension_bdsky.png" alt="">
+	<figcaption>Figure 12: Setting the dimensions for R$_0$ estimates.</figcaption>
+</figure>
+<br>
+
+<figure>
+	<a id="fig:bdsky_model"></a>
+	<img src="figures/bdsky_model.png" alt="">
+	<figcaption>Figure 13: A schematic of the BDSKY model.</figcaption>
+</figure>
+<br>
+
+BDSKY infers 3 parameters ([Figure 13](#fig:bdsky_model)), the transmission rate {% eqinline \lambda %}, the becoming noninfectious rate {% eqinline \delta %} and the sampling proportion, {% eqinline \rho %} (when the samples were taken at the same time) or the sampling proportion, {% eqinline p %} (when the samples were taken through time). The {% eqinline R_{0} %} is then a function of those values (more about that later).
+The rates we estimate using the birth-death model are per lineage rates. Some of these rates we know or we can estimate them from other data. The becoming noninfectious rate for example, we can get from the average time a patient can transmit a disease. This prior knowledge we can incorporate in the MCMC.
+This we can do in the `Priors` panel. We can use prior information about the {% eqinline R_{0} %}, the becoming noninfectious rate, the origin and {% eqinline \rho %} (Figures [14](#fig:r0prior),[15](#)fig:bURprior),[16](#fig:oriprior),[17](#fig:rhoprior)). Note that the origin inferred by the birth-death skyline is not the time of the most recent common ancestor of the tree (TMRCA), but is earlier and denotes the start of the outbreak, i.e. when there was only one infected person. 
+
+We use a lognormal prior for {% eqinline R_0 %}. This is a good prior distribution to use for rates since it is always positive (a rate cannot be negative) and has a long tail defined over all positive numbers. The long tail allows arbitrarily high estimates of {% eqinline R_0 %}, but does not place much weight on very high rates. This agrees with our prior knowledge about the {% eqinline R_0 %} of other diseases (most diseases have an {% eqinline R_0 %} between 1.2 and 5. Measles is one of the most infectious diseases we know about and has an {% eqinline R_0 %} of around 18). 
+
+If an epidemic is neither growing nor declining, it has an {% eqinline R_0 %} of 1, which we will use as a null hypothesis (we assume that as long as there is no strong signal in an interval for an epidemic to grow or decline that the {% eqinline R_0 %} is 1, i.e. the epidemic stays constant). Thus, we set the mean of the lognormal distribution to 0, which results in a median of 1. We set the variance to 1.25, which places most weight below 7.82 (95% quantile). ([Figure 14](#fig:r0prior)).
+
+<figure>
+	<a id="fig:r0prior"></a>
+	<img src="figures/bdsky_model.png" alt="">
+	<figcaption>Figure 14: Setting the {% eqinline R_0 %} prior.</figcaption>
+</figure>
+<br>
+
+For the becoming noninfectious rate we again use a lognormal prior. The inverse of the becoming noninfectious rate is the average infectious period. In some patients an HCV infection only lasts a few weeks, while in others it is a chronic infection lasting for many years. Setting {% eqinline M=0 %} and {% eqinline S=1.25 %} results in the same prior we used for the {% eqinline R_0 %} ([Figure 15](#fig:bURprior)).  In terms of the becoming noninfectious rate, this translates to the 95% quantiles for the infectious period falling between 0.128 years (46.67 days) and 11.59 years, with a median of 1 year. We will see later that there is a strong signal in the data for a longer becoming noninfectious period. 
+
+<figure>
+	<a id="fig:bURprior"></a>
+	<img src="figures/bdsky_prior_uninf.png" alt="">
+	<figcaption>Figure 15: Setting the becoming noninfectious prior.</figcaption>
+</figure>
+<br>
+
+For the origin of the epidemic we once again use a lognormal prior. Note that the origin also has to be positive and needs to be bigger than the MRCA of the tree. We know that HCV has been circulating in Egypt for at least a hundred years, so we set {% eqinline M=5 %} and {% eqinline S=0.5 %} ([Figure 16](#fig:oriprior)), resulting in a median prior estimate for the origin of 148 years.
+
+<figure>
+	<a id="fig:oriprior"></a>
+	<img src="figures/bdsky_prior_ori.png" alt="">
+	<figcaption>Figure 16: Setting the prior on the origin of the epidemic.</figcaption>
+</figure>
+<br>
+
+Finally, we need a prior for the sampling probability, {% eqinline \rho %}, which represents the proportion of HCV cases in Egypt in 1993, included in the analysis. Egypt had a population of roughly 60 million in 1993, and with a prevalence of at least 15% this translates into millions of cases, whereas we have only 63 sequences. 
+
+We use a beta distribution for the prior on {% eqinline \rho %}. Beta distributions are a very flexible class of distributions that are only defined between 0 and 1, making them ideal to use for proportions. We set Alpha to 1 and Beta to 9999, reflecting our prior knowledge that we have only a minuscule fraction of all cases in our dataset ([Figure 17](#fig:rhoprior)).
+
+<figure>
+	<a id="fig:rhoprior"></a>
+	<img src="figures/bdsky_prior_rho.png" alt="">
+	<figcaption>Figure 17: Setting the prior on {% eqinline \rho %}.</figcaption>
+</figure>
+<br>
+
+We can leave the rest of the priors as they are. First, we should increase the chain length (at least double it). To not get too large log files, we can increase the `sampling every` to 2000 (reducing the sampling frequency). Now we can change the names of the output files. If we want to run the analysis in the same directory as the coalescent analyses, the output files and the `*.xml` name need to be different.
 
 
 

@@ -41,7 +41,7 @@ The aim of this tutorial is to:
 
 
 ## The Data
-The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993 in Egypt {% cite Ray2000 --file Skyline-plots/master_refs %}. This dataset has been used previously to test the performance of skyline methods {% cite Pybus2003,Drummond2005,Stadler2013 --file Skyline-plots/master_refs %}.
+The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993 in Egypt {% cite Ray2000 --file Skyline-plots/master_refs %}. This dataset has been used previously to test the performance of skyline methods {% cite Pybus2003, Drummond2005, Stadler2013 --file Skyline-plots/master_refs %}.
 
 With an estimated 15-25%, Egypt has the highest Hepatits C prevalence in the world. In the mid 20^(th) century, the prevalence of Hepatitis C increased drastically (see [Figure 1](#fig:prevalence) for estimates). We will try to infer this increase from sequence data. 
 
@@ -106,7 +106,7 @@ For this analysis we will set the number of dimensions to 4 (the default value i
 <figure>
 	<a id="fig:dimensions"></a>
 	<img src="figures/set_dimension.png" alt="">
-	<figcaption>Figure 5: Set the dimension of the two parameters, `bPopSizes` and `bGroupSizes`, to 4.</figcaption>
+	<figcaption>Figure 5: Set the dimension of the two parameters, bPopSizes and bGroupSizes, to 4.</figcaption>
 </figure>
 <br>
 
@@ -179,7 +179,7 @@ If we compare the estimates of the population dynamics using different dimension
 
 <figure>
 	<a id="fig:comparison"></a>
-	<img style="width:50%;" src="figures/comparison_dimension.png" alt="">
+	<img style="width:75%;" src="figures/comparison_dimension.png" alt="">
 	<figcaption>Figure 9: Estimated mean effective population sizes using different dimensions.</figcaption>
 </figure>
 <br>
@@ -188,8 +188,8 @@ The choice of the number of dimensions can also have a direct effect on how fast
 
 <figure>
 	<a id="fig:ess"></a>
-	<img style="width:50%;" src="figures/ess_vs_dim_coal.png" alt="">
-	<figcaption>Figure 10: The ESS value of the posterior after running an MCMC chain with 10^7 samples, logged every 10^3 steps and a burnin of 10% for using different dimensions of the Bayesian Coalescent Skyline.</figcaption>
+	<img style="width:75%;" src="figures/ess_vs_dim_coal.png" alt="">
+	<figcaption>Figure 10: The ESS value of the posterior after running an MCMC chain with {% eqinline 10^7 %} samples, logged every {% eqinline 10^3 %} steps and a burnin of 10% for using different dimensions of the Bayesian Coalescent Skyline.</figcaption>
 </figure>
 <br>
 
@@ -216,7 +216,7 @@ In this case we will keep the default value of 10 dimensions ([Figure 12](#fig:d
 <figure>
 	<a id="fig:dimensions_bdsky"></a>
 	<img src="figures/choose_dimension_bdsky.png" alt="">
-	<figcaption>Figure 12: Setting the dimensions for R$_0$ estimates.</figcaption>
+	<figcaption>Figure 12: Setting the dimensions for {% eqinine R_0 %} estimates.</figcaption>
 </figure>
 <br>
 
@@ -300,8 +300,8 @@ The birth-death skyline allows these rates to change over time. This is done by 
 
 <figure>
 	<a id="fig:bdsky_principle"></a>
-	<img src="figures/bdsky_intervals.png" alt="">
-	<figcaption>Figure 18: Example tree where the red dotted lines are an example of where rates could be allowed to change on the tree. The branch at the root (compare [Figure 6](#fig:coal_principle)) is indicating the origin of the epidemic, which is also estimated in the BDSKY.</figcaption>
+	<img style="width:50%;" src="figures/bdsky_intervals.png" alt="">
+	<figcaption>Figure 18: Example tree where the red dotted lines are an example of where rates could be allowed to change on the tree. The branch at the root (compare Figure 6) is indicating the origin of the epidemic, which is also estimated in the BDSKY.</figcaption>
 </figure>
 <br>
 
@@ -409,8 +409,8 @@ xlab="Time", ylab=expression("R"[0]), side=2, yline=2.5, xline=2, xgrid=TRUE, yg
 ```
 
 <figure>
-	<a id="fig:bdsky_output"></a>
-	<img src="figures/bdsky_out.png" alt="">
+	<a id="fig:bdsky_out"></a>
+	<img src="figures/bdsky_output.png" alt="">
 	<figcaption>Figure 21: stimates of the inferred {% eqinline R_0 %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
 </figure>
 <br>

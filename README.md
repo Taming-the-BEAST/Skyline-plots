@@ -193,8 +193,24 @@ The choice of the number of dimensions can also have a direct effect on how fast
 </figure>
 <br>
 
-
 ----
+
+### Birth-Death Skyline
+
+In the first analysis, we used the coalescent approach to estimate population dynamics, we now want to do the inference using the birth-death skyline model. We will mostly need the same setups as for the previous analysis. In case you closed BEAUti, you can reopen the previously used configuration file in BEAUti (`File > Load` the `*.xml`) and modify it to have a birth-death skyline prior on the tree. We will need to set the prior to `Birth Death Skyline Contemporary`, since the sequences were all sampled at the same point in time (see [Figure 11](#fig:bdsky)). For samples that were taken through time, we would take `Birth Death Skyline Serial`.
+
+
+<figure>
+	<a id="fig:bdsky"></a>
+	<img src="figures/choose_bdsky.png" alt="">
+	<figcaption>Figure 11: Setting the prior on the tree to the birth-death skyline.</figcaption>
+</figure>
+<br>
+
+As in the Bayesian Coalescent Skyline, we need to choose the number of dimensions. Here we choose the dimensions for the {% eqinline R_0 %}, the basic reproduction number, which denotes the number of secondary infections caused by a single infected person in a completely susceptible population, i.e. an {% eqinline R_0 %} R~0 R~0~ of 2 would mean that every infected person causes two new infections on average. Or in other words, an R$_{0}$ above 1 means that the number of cases are increasing, therefore the disease will cause an epidemic, and an R$_{0}$ below 1 means that the epidemic will die out. (Note that since the birth-death skyline infers changes in R$_0$ over time, it technically infers the effective reproduction number, the average number of new infections caused by an infected person at a certain time during the outbreak).
+
+The dimension of the R$_{0}$ has to be chosen in the initialization panel. Choosing this dimension can again be arbitrary and may require the testing of a few different values. Too few intervals and not all rate shifts are captured. Too many intervals and the intervals may not contain enough information to infer parameters.
+
 
 
 ----

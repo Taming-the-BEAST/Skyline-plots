@@ -345,7 +345,7 @@ After saving the R script `Skyline_Example.R`, we can now plot the analysis.
 
 First, replace `dir` with the path to the directory where the R scripts are stored and then source the scripts. By default this is the `scripts` directory inside the tutorial. The first 3 R scripts contain functions for reading BEAST2 log files, extracting HPD intervals and plotting skylines. (These files are part of an R package that will be available on CRAN in the nearby future. For the moment, if you are interested you are welcome to check out the development version at \url{http://github.com/laduplessis}  (Beta testers needed!)).
 
-```{R}
+```R
 source('/dir/Figure_Utilities.R');
 source('/dir/Logfile_Utilities.R');
 source('/dir/SkylinePlot.R');
@@ -353,20 +353,11 @@ source('/dir/SkylinePlot.R');
 
 Now you can either step through the commands in `Skyline_Example.R` one by one or source it as with the others,
 
-```{R}
+```R
 source('/dir/Skyline_Example.R');
 ```
 
 First, the script loads the logfile and calculates the HPD intervals for {% eqinline R_0 %} and the becoming noninfectious rate. 
-
-> `lf     <- readLogfile(fname, burnin=0.1)`
-> `R0_sky <- getSkylineSubset(lf,"R0")`
->
-> # Extract the raw HPDs 
-> `R0_hpd    <- getMatrixHPD(R0_sky)`
-> `delta_hpd <- getHPD(lf\$becomeUninfectiousRate)` 
-
-
 
 ```R
 lf     <- readLogfile(fname, burnin=0.1) 
@@ -377,11 +368,72 @@ R0_hpd    <- getMatrixHPD(R0_sky)
 delta_hpd <- getHPD(lf\$becomeUninfectiousRate) 
 ```
 
+Next we plot the raw HPD intervals of {% eqinline R_0 %}. This is equivalent to the output in tracer. 
+
+```R
+plotSkyline(1:10, R0\hpd, type='step')
+```
+
+In order to plot the smooth skyline we have to calculate the HPD on a finer timegrid. To do this we first calculate the marginal posterior at every time of interest using the function `gridSkyline` and then calculate the HPD for each of the finer time intervals. 
+
+```R
+timegrid <- seq(1,400,length.out=100) 
+R0_gridded     <- gridSkyline(R0_sky,    lf\$origin, timegrid) 
+R0_gridded_hpd <- getMatrixHPD(R0_gridded)
+```
+
+Now we are ready to plot the smooth skyline
+
+```R
+# The plotting times, the most recent sample is 1993 
+times <- 1993-timegrid 
+plotSkyline(times, R0_gridded_hpd, type='smooth')
+```
+
+We can plot the gridded skyline (not its HPDs) for a few of the samples to see what it really looks like. Note that the intervals overlap between different posterior samples. This is because the origin is different in each sample. As we add more samples to the plot we start to see the smooth skyline appear. 
+
+```R
+plotSkyline(times, R0_gridded, type='steplines', traces=10, col=pal.dark(cblue,0.5),ylims=c(0,5)) 
+plotSkyline(times, R0_gridded, type='steplines', traces=100, col=pal.dark(cblue,0.5),ylims=c(0,5)) 
+plotSkyline(times, R0_gridded, type='steplines', traces=1000, col=pal.dark(cblue,0.1),ylims=c(0,5))
+```
+
+Finally, we can plot both the {% eqinline R_0 %} and the becoming noninfectious rate on a single set of axes. Since we left the dimension of the becoming noninfectious rate at 1, it is constant through time. (Normally we would not plot constant parameters over a time period). The output should be similar to [Figure 21](#fig:bdsky_out).
+
+```R
+plotSkylinePretty(range(times), as.matrix(delta_hpd), type='step', axispadding=0.0, col=pal.dark(cblue), fill=pal.dark(cblue, 0.5), col.axis=pal.dark(cblue), 
+ylab=expression(delta), side=4, yline=2, ylims=c(0,1), xaxis=FALSE) 
+
+plotSkylinePretty(times, R0_gridded_hpd, type='smooth', axispadding=0.0, col=pal.dark(corange), fill=pal.dark(corange, 0.5), col.axis=pal.dark(corange), 
+xlab="Time", ylab=expression("R"[0]), side=2, yline=2.5, xline=2, xgrid=TRUE, ygrid=TRUE, gridcol=pal.dark(cgray), ylims=c(0,3), new=TRUE, add=TRUE) 
+```
+
+<figure>
+	<a id="fig:bdsky_output"></a>
+	<img src="figures/bdsky_out.png" alt="">
+	<figcaption>Figure 21: stimates of the inferred {% eqinline R_0 %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
+</figure>
+<br>
+
+----
+
+## Some considerations for using skyline plots
+
+Both the coalescent and the birth-death skylines assume that the population is well-mixed. That is, they assume that there is no significant population structure and that the sequences are a random sample from the population. However, if there is population structure, for instance sequences were sampled from two different villages and there is much more contact within than between villages, then the results will be biased {% cite Heller2013 --file Skyline-plots/master_refs %}. Instead a structured model should be used to account for these biases.
 
 
 ----
 
-This tutorial was written by Author Name for [Taming the BEAST](https://taming-the-beast.github.io) and is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/). 
+# Useful Links
+
+- [Bayesian Evolutionary Analysis with BEAST 2](http://www.beast2.org/book.html) {% cite BEAST2book2014 --file Skyline-plots/master_refs %}
+- BEAST 2 website and documentation: [http://www.beast2.org/](http://www.beast2.org/)
+- BEAST 1 website and documentation: [http://beast.bio.ed.ac.uk](http://beast.bio.ed.ac.uk)
+- Join the BEAST user discussion: [http://groups.google.com/group/beast-users](http://groups.google.com/group/beast-users) 
+
+----
+
+This tutorial was written by Nicola Müller and Louis du Plessis for [Taming the BEAST](https://taming-the-beast.github.io) and is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/). 
 
 ----
 

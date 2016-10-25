@@ -138,7 +138,7 @@ Estimates of the effective population size {% eqinline N_{\mathrm{eff}} %} there
 
 <figure>
 	<a id="fig:coal_principle"></a>
-	<img src="figures/coalescent_intervals.png" alt="">
+	<img src="figures/coalescent_intervals.pdf" alt="">
 	<figcaption>Figure 6: Example tree where the red dotted lines show the time-points of coalescent events.</figcaption>
 </figure>
 <br>
@@ -179,7 +179,7 @@ If we compare the estimates of the population dynamics using different dimension
 
 <figure>
 	<a id="fig:comparison"></a>
-	<img src="figures/comparison_dimension.png" alt="">
+	<img src="figures/comparison_dimension.eps" alt="">
 	<figcaption>Figure 9: Estimated mean effective population sizes using different dimensions.</figcaption>
 </figure>
 <br>
@@ -188,7 +188,7 @@ The choice of the number of dimensions can also have a direct effect on how fast
 
 <figure>
 	<a id="fig:ess"></a>
-	<img src="figures/ess_vs_dim_coal.png" alt="">
+	<img src="figures/ess_vs_dim_coal.eps" alt="">
 	<figcaption>Figure 10: The ESS value of the posterior after running an MCMC chain with 10^7 samples, logged every 10^3 steps and a burnin of 10% for using different dimensions of the Bayesian Coalescent Skyline.</figcaption>
 </figure>
 <br>

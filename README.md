@@ -237,7 +237,7 @@ If an epidemic is neither growing nor declining, it has an {% eqinline R_0 %} of
 
 <figure>
 	<a id="fig:r0prior"></a>
-	<img src="figures/bdsky_model.png" alt="">
+	<img src="figures/bdsky_prior_r0.png" alt="">
 	<figcaption>Figure 14: Setting the {% eqinline R_0 %} prior.</figcaption>
 </figure>
 <br>
@@ -272,6 +272,110 @@ We use a beta distribution for the prior on {% eqinline \rho %}. Beta distributi
 <br>
 
 We can leave the rest of the priors as they are. First, we should increase the chain length (at least double it). To not get too large log files, we can increase the `sampling every` to 2000 (reducing the sampling frequency). Now we can change the names of the output files. If we want to run the analysis in the same directory as the coalescent analyses, the output files and the `*.xml` name need to be different.
+
+
+### The parameterization of the Birth-Death Model
+
+The Birth-Death model is parameterized very differently from the coalescent model. While the coalescent uses the effective population size, which as the name already tells us is defined on a population level, the birth-death model uses per lineage rates. The transmission rate {% eqinline \lambda %} tells us at which rate infected individuals infect susceptibles. This rate is also referred to as the birth rate. The sampling rate {% eqinline \psi %} and the sampling probability {% eqinline \rho %} describe how likely it is for an infected individual to be sampled and therefore how likely they are to appear in the tree as tips. The becoming noninfectious rate {% eqinline \delta %} is the sum of the death rate {% eqinline \mu %} and the sampling rate {% eqinline \psi %}.
+
+{% eq
+\delta = \psi + \mu
+%}
+
+The death rate {% eqinline \mu %} is the rate at which lineages disappear (go extinct) from a population without being sampled. You can also see from the above equation that we assume that a sampled lineage cannot transmit anymore. The consequence for the phylogeny is that a sampled lineage cannot be an ancestor of any lineage. This assumption can be relaxed, but we will not do so during this tutorial.
+
+The {% eqinline R_0 %} we estimate is then defined as follows:
+
+{% eq
+R_{0} = \frac{\lambda}{\psi + \mu} = \frac{\lambda}{\delta}
+%}
+
+    |                                                          |         
+--------------------------------------------------------------:|:----------------------
+if {% eqinline \lambda > \delta %} then {% eqinline R_0 > 1 %} | epidemic grows
+if {% eqinline \lambda = \delta %} then {% eqinline R_0 = 1 %} | epidemic stays constant
+if {% eqinline \lambda < \delta %} then {% eqinline R_0 < 1 %} | epidemic declines
+
+The birth-death skyline allows these rates to change over time. This is done by dividing the time from the origin (of the epidemic, which is not necessarily the same as the root of the tree) to the most recent sample into dimension {% eqinline d %} equally spaced intervals (see [Figure 18](#fig:bdsky_principle)). The rates are then allowed to change between two intervals. Within an interval rates are constant. In principle, all rates in all intervals could be different. Since the transmission rate and the becoming noninfectious rate are highly correlated, this is not always practical. Often we assume the becoming noninfectious rate to be the same in all intervals while changing the transmission rate {% eqinline \lambda %}. 
+
+<figure>
+	<a id="fig:bdsky_principle"></a>
+	<img src="figures/bdsky_intervals.png" alt="">
+	<figcaption>Figure 18: Example tree where the red dotted lines are an example of where rates could be allowed to change on the tree. The branch at the root (compare [Figure 6](#fig:coal_principle)) is indicating the origin of the epidemic, which is also estimated in the BDSKY.</figcaption>
+</figure>
+<br>
+
+
+There are some clear differences between the birth-death and the coalescent skyline. First, the way intervals are defined. In the coalescent skyline, intervals are always between coalescent events, while this restriction does not exist for the birth-death skyline. Second, the birth-death skyline does not infer changes in population sizes.
+
+The coalescent on the other hand does infer the effective population size, which is a parameter proportional to absolute sizes. The third difference is the inference of the origin of an epidemic by the birth death model, which is not done by the coalescent.
+
+
+### Visualizing the Birth-Death Skyline Output
+
+There is no equivalent visualization of the `*.log` file of a BDSKY analysis in tracer as there is for the Bayesian Coalescent Skyline. But because BDSKY separates the full tree into equally spaced intervals, we can already get an idea of the inference just by looking at the inferred {$ eqinline R_0 %} values (see [Figure 19](#fig:bdsky_dynamics)). This gives us a good idea of the trend, but it is not completely accurate. Since every posterior sample has a different origin, the time spanned by each interval is slightly different in each posterior sample. Thus, the different intervals overlap slightly. The advantage to this is that we get a smooth estimate through time. The disadvantage is that we need to do some extra post-processing to plot the skyline.
+
+<figure>
+	<a id="fig:bdsky_dynamics"></a>
+	<img src="figures/bdsky_tracer.png" alt="">
+	<figcaption>Figure 19: Estimated population dynamics by BDSKY in Tracer.</figcaption>
+</figure>
+<br>
+
+
+We will instead use some R scripts to plot the output of the bdsky. 
+Open R and install two package using:
+
+```{R}
+install.packages("boa");
+install.packages("RColorBrewer");
+```
+
+The first package is needed for statistical analyses of the run and the second one contains color schemes needed by the other R scripts. 
+To plot the results, we need to describe in the file `Skyline_Example.R` where our `*.log` file is ([Figure 20](#fig:r_script)).
+
+<figure>
+	<a id="fig:r_script"></a>
+	<img src="figures/find_log_file.png" alt="">
+	<figcaption>Figure 20: Put the path to the log file to fname in the R script.</figcaption>
+</figure>
+<br>
+
+After saving the R script `Skyline_Example.R`, we can now plot the analysis.
+
+First, replace `dir` with the path to the directory where the R scripts are stored and then source the scripts. By default this is the `scripts` directory inside the tutorial. The first 3 R scripts contain functions for reading BEAST2 log files, extracting HPD intervals and plotting skylines. (These files are part of an R package that will be available on CRAN in the nearby future. For the moment, if you are interested you are welcome to check out the development version at \url{http://github.com/laduplessis}  (Beta testers needed!)).
+
+```{R}
+source('/dir/Figure_Utilities.R');
+source('/dir/Logfile_Utilities.R');
+source('/dir/SkylinePlot.R');
+```
+
+Now you can either step through the commands in `Skyline_Example.R` one by one or source it as with the others,
+
+```{R}
+source('/dir/Skyline_Example.R');
+```
+
+First, the script loads the logfile and calculates the HPD intervals for {% eqinline R_0 %} and the becoming noninfectious rate. 
+
+> `lf     <- readLogfile(fname, burnin=0.1)`
+> `R0_sky <- getSkylineSubset(lf,"R0")`
+>
+> # Extract the raw HPDs 
+> `R0_hpd    <- getMatrixHPD(R0_sky)`
+> `delta_hpd <- getHPD(lf\$becomeUninfectiousRate)` 
+
+
+
+```R
+lf     <- readLogfile(fname, burnin=0.1) 
+R0_sky <- getSkylineSubset(lf,"R0")
+
+# Extract the raw HPDs 
+R0_hpd    <- getMatrixHPD(R0_sky) 
+delta_hpd <- getHPD(lf\$becomeUninfectiousRate) 
+```
 
 
 

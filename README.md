@@ -138,7 +138,7 @@ Estimates of the effective population size {% eqinline N_{\mathrm{eff}} %} there
 
 <figure>
 	<a id="fig:coal_principle"></a>
-	<img src="figures/coalescent_intervals.png" alt="">
+	<img style="width:50%;" src="figures/coalescent_intervals.png" alt="">
 	<figcaption>Figure 6: Example tree where the red dotted lines show the time-points of coalescent events.</figcaption>
 </figure>
 <br>

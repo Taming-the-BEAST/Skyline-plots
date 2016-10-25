@@ -43,7 +43,7 @@ The aim of this tutorial is to:
 ## The Data
 The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993 in Egypt {% cite Ray2000 --file Skyline-plots/master_refs %}. This dataset has been used previously to test the performance of skyline methods {% cite Pybus2003,Drummond2005,Stadler2013 --file Skyline-plots/master_refs %}.
 
-With an estimated 15-25%, Egypt has the highest Hepatits C prevalence in the world. In the mid 20^(th) century, the prevalence of Hepatitis C increased drastically (see Figure 1](#fig:prevalence) for estimates). We will try to infer this increase from sequence data. 
+With an estimated 15-25%, Egypt has the highest Hepatits C prevalence in the world. In the mid 20^(th) century, the prevalence of Hepatitis C increased drastically (see [Figure 1](#fig:prevalence) for estimates). We will try to infer this increase from sequence data. 
 
 <figure>
 	<a id="fig:prevalence"></a>
@@ -71,31 +71,44 @@ While the Bayesian Coalescent Skyline plot is integrated in the core of BEAST2, 
 
 To import the aligned sequences into BEAUti, use `File > Import Alignment` to select the `*.nexus` file.
 
-<figure>
-	<a id="fig:import"></a>
-	<img src="figures/import_alignment.png" alt="">
-	<figcaption>Figure 3: Import the alignment.</figcaption>
-</figure>
-
 BEAUti will recognize the sequences from the `*.nexus` file as nucleotide data. It will do so for sequence files with the character set of ** A | C | G | T | N **, where ** N ** indicates an unknown nucleotide. As soon as other non-gap characters are included (e.g. using **R** or **Y** to indicate purines and pyramidines) BEAUti will not recognize the data as nucleotides anymore, unless the type of data is specified in the `*.nexus` file.
 
-After we have loaded the sequences into BEAUti, we have to specify the evolutionary model. We will be using the very general GTR model ([Figure 4](fig:model)), which estimates transition probabilities between individual nucleotides separately, meaning that transition probabilities between e.g. **A** and **T** will be inferred separately to the ones between **A** and **C**. Additionally, we should allow for rate heterogeneity among sites. We can do this by changing the Gamma Category Count to 4 (normally between 4 and 6).
+After we have loaded the sequences into BEAUti, we have to specify the evolutionary model. We will be using the very general GTR model ([Figure 3](fig:model)), which estimates transition probabilities between individual nucleotides separately, meaning that transition probabilities between e.g. **A** and **T** will be inferred separately to the ones between **A** and **C**. Additionally, we should allow for rate heterogeneity among sites. We can do this by changing the Gamma Category Count to 4 (normally between 4 and 6).
 
 <figure>
 	<a id="fig:model"></a>
 	<img src="figures/choose_gtr.png" alt="">
-	<figcaption>Figure 4: Set GTR as a site model. Also use a Gamma Category Count of 4.</figcaption>
+	<figcaption>Figure 3: Set GTR as a site model. Also use a Gamma Category Count of 4.</figcaption>
 </figure>
 
 As we use sequences that were sampled at the same point in time, we need to fix the clock rate (for more information on this please refer to the tutorial on molecular clocks). We will use an estimate inferred in {% cite Pybus2001 --file Skyline-plots/master_refs %} to fix the clock rate. In this case all the samples were contemporaneous (at the same time) and the clock rate works as a mapping of the estimated tree branch lengths into calendar time.
 
 We will keep the strict clock model and will set `Clock.rate` to 0.00079.
 
+Next, we need to go the the `Priors` tab and set the Bayesian Coalescent Skyline as a tree prior ([Figure 4](fig:coalescent)).
+
 <figure>
-	<a id="fig:clockrate"></a>
-	<img src="figures/set_clockrate.png" alt="">
-	<figcaption>Figure 5: Set the clock rate to 0.00079.</figcaption>
+	<a id="fig:coalescent"></a>
+	<img src="figures/choose_coalescentSkyline.png" alt="">
+	<figcaption>Figure 4: Choose the Coalescent Bayesian Skyline as a population prior.</figcaption>
 </figure>
+
+The Bayesian Coalescent Skyline works by dividing the time between the present and the root of the tree into intervals, thus the number of these intervals has to be defined. Each interval will have a different effective population size. 
+The Bayesian Coalescent Skyline will estimate the number of coalescent events within each interval (which is captured in the Group Size parameter) as well as the effective population size for that interval. The number of intervals is equal to the dimension specified. If we have {% eqinline d %}  intervals, the effective population size is allowed to change {% eqinline d-1 %} times. To specify the number of dimensions, we need to first go to the initialization panel. This is by default not visible `View > Show Initialization Panel`.
+
+For this analysis we will set the number of dimensions to 4 (the default value is 5). Keep in mind that one has to change the dimension of `bPopSizes` as well as `bGroupSizes`. The dimension of both parameters has to be the same ([Figure 5](fig:dimensions)).
+
+<figure>
+	<a id="fig:dimensions"></a>
+	<img src="figures/set_dimension.png" alt="">
+	<figcaption>Figure 5: Set the dimension of the two parameters, `bPopSizes` and `bGroupSizes`, to 4.</figcaption>
+</figure>
+
+Choosing the dimension for the Bayesian Coalescent Skyline can be rather arbitrary. If the dimension is chosen too low, not all population changes are captured, if it is chosen too large, there might be too little information in an interval to support an estimate of a population size. There are implementations in BEAST of the coalescent skyline that either sample dimensions (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plot/master_refs %}) or do not require dimensions to be specified (Skyride {% cite Minin2008 --file Skyline-plot/master_refs %}).
+
+We can leave the priors as they are and save the settings to `*.xml`.
+
+
 
 
 

@@ -104,7 +104,7 @@ For this analysis we will set the number of dimensions to 4 (the default value i
 	<figcaption>Figure 5: Set the dimension of the two parameters, `bPopSizes` and `bGroupSizes`, to 4.</figcaption>
 </figure>
 
-Choosing the dimension for the Bayesian Coalescent Skyline can be rather arbitrary. If the dimension is chosen too low, not all population changes are captured, if it is chosen too large, there might be too little information in an interval to support an estimate of a population size. There are implementations in BEAST of the coalescent skyline that either sample dimensions (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plot/master_refs %}) or do not require dimensions to be specified (Skyride {% cite Minin2008 --file Skyline-plot/master_refs %}).
+Choosing the dimension for the Bayesian Coalescent Skyline can be rather arbitrary. If the dimension is chosen too low, not all population changes are captured, if it is chosen too large, there might be too little information in an interval to support an estimate of a population size. There are implementations in BEAST of the coalescent skyline that either sample dimensions (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plots/master_refs %}) or do not require dimensions to be specified (Skyride {% cite Minin2008 --file Skyline-plots/master_refs %}).
 
 We can leave the priors as they are and save the settings to `*.xml`.
 

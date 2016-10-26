@@ -123,14 +123,14 @@ The effective population size is the inverse of the rate of coalescence {% eqinl
 
 {% eq 
 
-\lambda = \frac{1}{\mathrm{N}_{\mathrm{eff}}}
+\lambda = \frac{1}{N_{\mathrm{eff}}}
 
 %}
 
 For an SIR model (**S**usceptible, **I**nfected and **R**ecovered), it is proportional to the overall population size {% eqinline N %} and the number of infected {% eqinline I %} and inversely proportional to the transmission rate {% eqinline \theta %}. 
 
 {% eq 
-	\mathrm{N}_{\mathrm{eff}} = \frac{\mathrm{I}}{\theta} \frac{\mathrm{N}}{\mathrm{S}}
+	N_{\mathrm{eff}} = \frac{I}{\theta} \frac{N}{S}
 %}
 
 
@@ -143,7 +143,7 @@ Estimates of the effective population size {% eqinline N_{\mathrm{eff}} %} there
 </figure>
 <br>
 
-What the Bayesian Coalescent Skyline is doing is dividing the full tree into dimension {% eqinline d %} intervals between coalescent events. It then estimates based on what happens in those intervals, what the effective population size is (the actual estimation additionally involves smoothing priors which restrict the difference in effective population sizes between two intervals). The length of an interval is therefore not a fixed value but dependent on where the coalescent events are ([Figure 6](#fig:coal_principle), compare later to [Figure XX](#fig:bdsky_principle) for the birth-death skyline), as well as the number of events contained within an interval (the `GroupSize` parameter). Intervals are grouped together, because as [Figure 6](#fig:coal_principle) shows, some of the intervals can be very small, which may lead to erratic estimates. Grouping intervals together leads to smoother estimates.
+What the Bayesian Coalescent Skyline is doing is dividing the full tree into dimension {% eqinline d %} intervals between coalescent events. It then estimates based on what happens in those intervals, what the effective population size is (the actual estimation additionally involves smoothing priors which restrict the difference in effective population sizes between two intervals). The length of an interval is therefore not a fixed value but dependent on where the coalescent events are ([Figure 6](#fig:coal_principle), compare later to [Figure 18](#fig:bdsky_principle) for the birth-death skyline), as well as the number of events contained within an interval (the `GroupSize` parameter). Intervals are grouped together, because as [Figure 6](#fig:coal_principle) shows, some of the intervals can be very small, which may lead to erratic estimates. Grouping intervals together leads to smoother estimates.
 
 
 
@@ -164,7 +164,7 @@ The output will have the years on the x-axis and the effective population size o
 
 <figure>
 	<a id="fig:skyline"></a>
-	<img style="width:50%;" src="figures/skyline_analysis.png" alt="">
+	<img style="width:75%;" src="figures/skyline_analysis.png" alt="">
 	<figcaption>Figure 8: Bayesian Coalescent Skyline analysis output. The black line is the median estimate of the estimated effective population size (can be changed to the mean estimate). The two blue lines are the upper an the lower estimates of 95% interval. The x-axis is the time in years.</figcaption>
 </figure>
 <br>
@@ -410,7 +410,7 @@ xlab="Time", ylab=expression("R"[0]), side=2, yline=2.5, xline=2, xgrid=TRUE, yg
 
 <figure>
 	<a id="fig:bdsky_out"></a>
-	<img src="figures/bdsky_output.png" alt="">
+	<img style="width:75%;" src="figures/bdsky_output.png" alt="">
 	<figcaption>Figure 21: stimates of the inferred {% eqinline R_0 %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
 </figure>
 <br>

@@ -216,7 +216,7 @@ In this case we will keep the default value of 10 dimensions ([Figure 12](#fig:d
 <figure>
 	<a id="fig:dimensions_bdsky"></a>
 	<img src="figures/choose_dimension_bdsky.png" alt="">
-	<figcaption>Figure 12: Setting the dimensions for {% eqinine R_0 %} estimates.</figcaption>
+	<figcaption>Figure 12: Setting the dimensions for {% eqinline R_0 %} estimates.</figcaption>
 </figure>
 <br>
 
@@ -313,7 +313,7 @@ The coalescent on the other hand does infer the effective population size, which
 
 ### Visualizing the Birth-Death Skyline Output
 
-There is no equivalent visualization of the `*.log` file of a BDSKY analysis in tracer as there is for the Bayesian Coalescent Skyline. But because BDSKY separates the full tree into equally spaced intervals, we can already get an idea of the inference just by looking at the inferred {$ eqinline R_0 %} values (see [Figure 19](#fig:bdsky_dynamics)). This gives us a good idea of the trend, but it is not completely accurate. Since every posterior sample has a different origin, the time spanned by each interval is slightly different in each posterior sample. Thus, the different intervals overlap slightly. The advantage to this is that we get a smooth estimate through time. The disadvantage is that we need to do some extra post-processing to plot the skyline.
+There is no equivalent visualization of the `*.log` file of a BDSKY analysis in tracer as there is for the Bayesian Coalescent Skyline. But because BDSKY separates the full tree into equally spaced intervals, we can already get an idea of the inference just by looking at the inferred {$ eqinline R_0 %} values (see [Figure 19](#fig:bdsky_dynamics)). This gives us a good idea of the trend, but it is not completely accurate. Since every posterior sample has a different origin, the time spanned by each interval is slightly different in each posterior sample. Thus, the different intervals overlap slightly. The advantage to this is that we get a smooth estimate through time. The disadvantage is that we need to do some extra post-processingx to plot the skyline.
 
 <figure>
 	<a id="fig:bdsky_dynamics"></a>

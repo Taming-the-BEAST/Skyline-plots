@@ -1,3 +1,6 @@
+---
+author: Nicola Müller, Louis du Plessis
+---
 
 # Background
 

@@ -1,5 +1,5 @@
 ---
-author: Nicola Müller, Louis du Plessis
+author: Nicola F. Müller,Louis du Plessis
 ---
 
 # Background

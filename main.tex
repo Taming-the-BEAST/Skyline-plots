@@ -453,10 +453,10 @@ There is no equivalent visualization of the \texttt{*.log} file of a BDSKY analy
 
 We will instead use some R scripts to plot the output of the bdsky. 
 Open R and install two package using:
-\begin{framed}
-install.packages("boa");\\
-install.packages("RColorBrewer");\\
-\end{framed}
+\begin{lstlisting}[language=R]
+install.packages("boa");
+install.packages("RColorBrewer");
+\end{lstlisting}
 
 The first package is needed for statistical analyses of the run and the second one contains color schemes needed by the other R scripts. 
 To plot the results, we need to describe in the file \texttt{Skyline$\_$Example.R} where our \texttt{*.log} file is (Figure~\ref{fig:r_script}).
@@ -472,68 +472,77 @@ After saving the R script \texttt{Skyline$\_$Example.R}, we can now plot the ana
 First, replace \texttt{dir} with the path to the directory where the R scripts are stored and then source the scripts. By default this is the \texttt{data} directory inside the tutorial. The first 3 R scripts contain functions for reading BEAST2 log files, extracting HPD intervals and plotting skylines\footnote{These files are part of an R package that will be available on CRAN in the nearby future. For the moment, if you are interested you are welcome to check out the development version at \url{http://github.com/laduplessis}  (Beta testers needed!)}.
 
 
-\begin{framed}
-source('/dir/Figure$\_$Utilities.R');\\
-source('/dir/Logfile$\_$Utilities.R');\\
+\begin{lstlisting}[language=R]
+source('/dir/Figure_Utilities.R');
+source('/dir/Logfile_Utilities.R');
 source('/dir/SkylinePlot.R');
-\end{framed}
+\end{lstlisting}
 
 Now you can either step through the commands in \texttt{Skyline$\_$Example.R} one by one or source it as with the others. 
 
-\begin{framed}
-source('/dir/Skyline$\_$Example.R');
-\end{framed}
+\begin{lstlisting}[language=R]
+source('/dir/Skyline_Example.R');
+\end{lstlisting}
 
 First, the script loads the logfile and calculates the HPD intervals for $R_0$ and the becoming noninfectious rate. 
 
-\begin{framed}
-lf     <- readLogfile(fname, burnin=0.1) \\
-R0\_sky <- getSkylineSubset(lf, \"R0\") \\
- \\
-\# Extract the raw HPDs \\
-R0\_hpd    <- getMatrixHPD(R0\_sky) \\
-delta\_hpd <- getHPD(lf\$becomeUninfectiousRate) 
-\end{framed}
+\begin{lstlisting}[language=R]
+lf     <- readLogfile(fname, burnin=0.1) 
+R0_sky <- getSkylineSubset(lf, "R0") 
+
+# Extract the raw HPDs 
+R0_hpd    <- getMatrixHPD(R0_sky) 
+delta_hpd <- getHPD(lf$becomeUninfectiousRate) 
+\end{lstlisting}
 
 Next we plot the raw HPD intervals of $R_0$. This is equivalent to the output in tracer. 
 
-\begin{framed}
-plotSkyline(1:10, R0\_hpd, type=\'step\')
-\end{framed}
+\begin{lstlisting}[language=R]
+plotSkyline(1:10, R0_hpd, type='step')
+\end{lstlisting}
 
 In order to plot the smooth skyline we have to calculate the HPD on a finer timegrid. To do this we first calculate the marginal posterior at every time of interest using the function \texttt{gridSkyline} and then calculate the HPD for each of the finer time intervals. 
 
-\begin{framed}
-timegrid <- seq(1,400,length.out=100) \\
-R0\_gridded     <- gridSkyline(R0\_sky,    lf\$origin, timegrid) \\
-R0\_gridded\_hpd <- getMatrixHPD(R0\_gridded)
-\end{framed}
+\begin{lstlisting}[language=R]
+timegrid       <- seq(1,400,length.out=100) 
+R0_gridded     <- gridSkyline(R0_sky,    lf$origin, timegrid) \\
+R0_gridded_hpd <- getMatrixHPD(R0_gridded)
+\end{lstlisting}
 
 Now we are ready to plot the smooth skyline
 
-\begin{framed}
-\# The plotting times, the most recent sample is 1993 \\
-times     <- 1993-timegrid \\
-plotSkyline(times, R0\_gridded\_hpd, type='smooth')
-\end{framed}
+\begin{lstlisting}[language=R]
+# The plotting times, the most recent sample is 1993 
+times <- 1993-timegrid 
+plotSkyline(times, R0_gridded_hpd, type='smooth')
+\end{lstlisting}
 
 
 We can plot the gridded skyline (not its HPDs) for a few of the samples to see what it really looks like. Note that the intervals overlap between different posterior samples. This is because the origin is different in each sample. As we add more samples to the plot we start to see the smooth skyline appear. 
 
-\begin{framed}
-plotSkyline(times, R0\_gridded, type='steplines', traces=10, col=pal.dark(cblue,0.5),ylims=c(0,5)) \\
-plotSkyline(times, R0\_gridded, type='steplines', traces=100, col=pal.dark(cblue,0.5),ylims=c(0,5)) \\
-plotSkyline(times, R0\_gridded, type='steplines', traces=1000, col=pal.dark(cblue,0.1),ylims=c(0,5))
-\end{framed}
+\begin{lstlisting}[language=R]
+plotSkyline(times, R0_gridded, type='steplines', traces=10, 
+			col=pal.dark(cblue,0.5),ylims=c(0,5)) 
+
+plotSkyline(times, R0_gridded, type='steplines', traces=100, 
+			col=pal.dark(cblue,0.5),ylims=c(0,5)) 
+
+plotSkyline(times, R0_gridded, type='steplines', traces=1000, 
+			col=pal.dark(cblue,0.1),ylims=c(0,5))
+\end{lstlisting}
 
 Finally, we can plot both the $R_0$ and the becoming noninfectious rate on a single set of axes. Since we left the dimension of the becoming noninfectious rate at 1, it is constant through time. (Normally we would not plot constant parameters over a time period). The output should be similar to figure~\ref{fig:bdsky_out}
 
-\begin{framed}
-plotSkylinePretty(range(times), as.matrix(delta\_hpd), type='step', axispadding=0.0, col=pal.dark(cblue), fill=pal.dark(cblue, 0.5), col.axis=pal.dark(cblue), \\
-ylab=expression(delta), side=4, yline=2, ylims=c(0,1), xaxis=FALSE) \\
-plotSkylinePretty(times, R0\_gridded\_hpd, type='smooth', axispadding=0.0, col=pal.dark(corange), fill=pal.dark(corange, 0.5), col.axis=pal.dark(corange), \\
-xlab="Time", ylab=expression(\"R\"[0]), side=2, yline=2.5, xline=2, xgrid=TRUE, ygrid=TRUE, gridcol=pal.dark(cgray), ylims=c(0,3), new=TRUE, add=TRUE) 
-\end{framed}
+\begin{lstlisting}[language=R]
+plotSkylinePretty(range(times), as.matrix(delta_hpd), type='step', axispadding=0.0, 
+				  col=pal.dark(cblue), fill=pal.dark(cblue, 0.5), col.axis=pal.dark(cblue), 
+				  ylab=expression(delta), side=4, yline=2, ylims=c(0,1), xaxis=FALSE) 
+
+plotSkylinePretty(times, R0_gridded_hpd, type='smooth', axispadding=0.0, 
+				  col=pal.dark(corange), fill=pal.dark(corange, 0.5), col.axis=pal.dark(corange), 
+				  xlab="Time", ylab=expression("R"[0]), side=2, yline=2.5, xline=2, xgrid=TRUE, 
+				  ygrid=TRUE, gridcol=pal.dark(cgray), ylims=c(0,3), new=TRUE, add=TRUE) 
+\end{lstlisting}
 
 \begin{figure}[h!]
 \centering

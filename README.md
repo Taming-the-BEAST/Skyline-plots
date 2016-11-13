@@ -173,7 +173,7 @@ The output will have the years on the x-axis and the effective population size o
 </figure>
 <br>
 
-There are two ways to save the analysis, it can either be saved as a `*.pdf` or as a tab delimited file. To save it as a tab delimited file, you can go to `File > Export Data`. The exported file will have five rows, the time, the mean, median lower 95\% interval and the upper 95\% interval of the estimates, which you can use to plot the data with other software (R, Matlab, etc).
+There are two ways to save the analysis, it can either be saved as a `*.pdf` or as a tab delimited file. To save it as a tab delimited file, you can go to `File > Export Data`. The exported file will have five rows, the time, the mean, median lower 95% interval and the upper 95% interval of the estimates, which you can use to plot the data with other software (R, Matlab, etc).
 
 
 ### Choosing the Dimension

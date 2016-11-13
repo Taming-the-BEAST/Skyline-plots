@@ -347,7 +347,7 @@ To plot the results, we need to describe in the file `Skyline_Example.R` where o
 
 After saving the R script `Skyline_Example.R`, we can now plot the analysis.
 
-First, replace `dir` with the path to the directory where the R scripts are stored and then source the scripts. By default this is the `scripts` directory inside the tutorial. The first 3 R scripts contain functions for reading BEAST2 log files, extracting HPD intervals and plotting skylines. (These files are part of an R package that will be available on CRAN in the nearby future. For the moment, if you are interested you are welcome to check out the development version at \url{http://github.com/laduplessis}  (Beta testers needed!)).
+First, replace `dir` with the path to the directory where the R scripts are stored and then source the scripts. By default this is the `scripts` directory inside the tutorial. The first 3 R scripts contain functions for reading BEAST2 log files, extracting HPD intervals and plotting skylines. (These files are part of an R package that will be available on CRAN in the nearby future. For the moment, if you are interested you are welcome to check out the development version at [http://github.com/laduplessis](http://github.com/laduplessis)  (Beta testers needed!)).
 
 ```R
 source('/dir/Figure_Utilities.R');

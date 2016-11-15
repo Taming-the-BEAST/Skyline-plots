@@ -233,7 +233,7 @@ In this case we will keep the default value of 10 dimensions ([Figure 12](#fig:d
 
 BDSKY infers 3 parameters ([Figure 13](#fig:bdsky_model)), the transmission rate {% eqinline \lambda %}, the becoming noninfectious rate {% eqinline \delta %} and the sampling proportion, {% eqinline \rho %} (when the samples were taken at the same time) or the sampling proportion, {% eqinline p %} (when the samples were taken through time). The {% eqinline R_{0} %} is then a function of those values (more about that later).
 The rates we estimate using the birth-death model are per lineage rates. Some of these rates we know or we can estimate them from other data. The becoming noninfectious rate for example, we can get from the average time a patient can transmit a disease. This prior knowledge we can incorporate in the MCMC.
-This we can do in the `Priors` panel. We can use prior information about the {% eqinline R_{0} %}, the becoming noninfectious rate, the origin and {% eqinline \rho %} (Figures [14](#fig:r0prior),[15](#)fig:bURprior),[16](#fig:oriprior),[17](#fig:rhoprior)). Note that the origin inferred by the birth-death skyline is not the time of the most recent common ancestor of the tree (TMRCA), but is earlier and denotes the start of the outbreak, i.e. when there was only one infected person. 
+This we can do in the `Priors` panel. We can use prior information about the {% eqinline R_{0} %}, the becoming noninfectious rate, the origin and {% eqinline \rho %} (Figures [14](#fig:r0prior),[15](#fig:bURprior),[16](#fig:oriprior),[17](#fig:rhoprior)). Note that the origin inferred by the birth-death skyline is not the time of the most recent common ancestor of the tree (TMRCA), but is earlier and denotes the start of the outbreak, i.e. when there was only one infected person. 
 
 We use a lognormal prior for {% eqinline R_0 %}. This is a good prior distribution to use for rates since it is always positive (a rate cannot be negative) and has a long tail defined over all positive numbers. The long tail allows arbitrarily high estimates of {% eqinline R_0 %}, but does not place much weight on very high rates. This agrees with our prior knowledge about the {% eqinline R_0 %} of other diseases (most diseases have an {% eqinline R_0 %} between 1.2 and 5. Measles is one of the most infectious diseases we know about and has an {% eqinline R_0 %} of around 18). 
 
@@ -304,7 +304,7 @@ The birth-death skyline allows these rates to change over time. This is done by 
 
 <figure>
 	<a id="fig:bdsky_principle"></a>
-	<img style="width:50%;" src="figures/bdsky_intervals.png" alt="">
+	<img style="width:50%;" src="figures/bdsky_intervals5.png" alt="">
 	<figcaption>Figure 18: Example tree where the red dotted lines are an example of where rates could be allowed to change on the tree. The branch at the root (compare Figure 6) is indicating the origin of the epidemic, which is also estimated in the BDSKY.</figcaption>
 </figure>
 <br>

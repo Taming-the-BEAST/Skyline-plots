@@ -1,11 +1,14 @@
 ---
 author: Nicola F. Müller,Louis du Plessis
 level: Intermediate
+title: Skyline Plots
+subtitle: Inference of past population dynamics using Bayesian Coalescent Skyline and Birth-Death Skyline plots.
+beastversion: 2.4.2
 ---
 
 # Background
 
-Population dynamics influence the shape of the tree and consequently, the shape of the tree contains some information about past population dynamics. The so-called Skyline methods allow to extract this information from phylogenetic trees in a non-parametric manner. It is non-parametric since there is no underlying system of differential equations governing the inference of these dynamics. In this tutorial we will look at two different methods to infer these dynamics from sequence data. The first one is the Bayesian Coalescent Skyline plot {% cite Drummond2005 --file Skyline-plots/master_refs %}, which is based on the coalescent model, and the second one is the Birth-Death skyline {% cite Stadler2013 --file Skyline-plots/master_refs %} plot based on the birth-death model. The conceptual difference between coalescent and birth-death approaches lies in the direction of the flow of time. In the coalescent, the time is modeled to go backwards, from present to past, while in the birth-death approach it is modeled to go forwards. Two other fundamental differences are the parameters that are inferred and the way sampling is treated. 
+Population dynamics influence the shape of the tree and consequently, the shape of the tree contains some information about past population dynamics. The so-called Skyline methods allow to extract this information from phylogenetic trees in a non-parametric manner. It is non-parametric since there is no underlying system of differential equations governing the inference of these dynamics. In this tutorial we will look at two different methods to infer these dynamics from sequence data. The first one is the Bayesian Coalescent Skyline plot {% cite Drummond2005 --file Skyline-plots/master-refs %}, which is based on the coalescent model, and the second one is the Birth-Death skyline {% cite Stadler2013 --file Skyline-plots/master-refs %} plot based on the birth-death model. The conceptual difference between coalescent and birth-death approaches lies in the direction of the flow of time. In the coalescent, the time is modeled to go backwards, from present to past, while in the birth-death approach it is modeled to go forwards. Two other fundamental differences are the parameters that are inferred and the way sampling is treated. 
 
 ----
 
@@ -14,7 +17,7 @@ Population dynamics influence the shape of the tree and consequently, the shape 
 
 ### BEAST2 - Bayesian Evolutionary Analysis Sampling Trees 2
 
-BEAST2 is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees {% cite Bouckaert2014 --file Skyline-plots/master_refs %}. This tutorial uses the BEAST2 version 2.4.2.
+BEAST2 is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees {% cite Bouckaert2014 --file Skyline-plots/master-refs %}. This tutorial uses the BEAST2 version 2.4.2.
 
 
 ### BEAUti - Bayesian Evolutionary Analysis Utility
@@ -39,20 +42,21 @@ We will be using [R](\href{https://www.r-project.org) to analyze the output of t
 In this tutorial we will estimate the dynamics of the Egyptian Hepatitis C epidemic from genetic sequence data collected in 1993.
 
 The aim of this tutorial is to:
+
 - Learn how to infer population dynamics;
 - Get to know how to choose the set-up of a skyline analysis;
 - Get to know the advantages and disadvantages of the Bayesian Coalescent Skyline and the Birth-Death Skyline.
 
 
 ## The Data
-The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993 in Egypt {% cite Ray2000 --file Skyline-plots/master_refs %}. This dataset has been used previously to test the performance of skyline methods {% cite Pybus2003, Drummond2005, Stadler2013 --file Skyline-plots/master_refs %}.
+The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993 in Egypt {% cite Ray2000 --file Skyline-plots/master-refs %}. This dataset has been used previously to test the performance of skyline methods {% cite Pybus2003, Drummond2005, Stadler2013 --file Skyline-plots/master-refs %}.
 
 With an estimated 15-25%, Egypt has the highest Hepatits C prevalence in the world. In the mid 20^(th) century, the prevalence of Hepatitis C increased drastically (see [Figure 1](#fig:prevalence) for estimates). We will try to infer this increase from sequence data. 
 
 <figure>
 	<a id="fig:prevalence"></a>
-	<img src="figures/Estimated_number_hcv.png" alt="">
-	<figcaption>Figure 1: The estimated number of Hepatitis C cases in Egypt {% cite Pybus2003 --file Skyline-plots/master_refs.bib %}.</figcaption>
+	<img style="width:50%;" src="figures/Estimated_number_hcv.png" alt="">
+	<figcaption>Figure 1: The estimated number of Hepatitis C cases in Egypt {% cite Pybus2003 --file Skyline-plots/master-refs.bib %}.</figcaption>
 </figure>
 <br>
 
@@ -89,7 +93,7 @@ After we have loaded the sequences into BEAUti, we have to specify the evolution
 </figure>
 <br>
 
-As we use sequences that were sampled at the same point in time, we need to fix the clock rate (for more information on this please refer to the tutorial on molecular clocks). We will use an estimate inferred in {% cite Pybus2001 --file Skyline-plots/master_refs %} to fix the clock rate. In this case all the samples were contemporaneous (at the same time) and the clock rate works as a mapping of the estimated tree branch lengths into calendar time.
+As we use sequences that were sampled at the same point in time, we need to fix the clock rate (for more information on this please refer to the tutorial on molecular clocks). We will use an estimate inferred in {% cite Pybus2001 --file Skyline-plots/master-refs %} to fix the clock rate. In this case all the samples were contemporaneous (at the same time) and the clock rate works as a mapping of the estimated tree branch lengths into calendar time.
 
 We will keep the strict clock model and will set `Clock.rate` to 0.00079.
 
@@ -114,7 +118,7 @@ For this analysis we will set the number of dimensions to 4 (the default value i
 </figure>
 <br>
 
-Choosing the dimension for the Bayesian Coalescent Skyline can be rather arbitrary. If the dimension is chosen too low, not all population changes are captured, if it is chosen too large, there might be too little information in an interval to support an estimate of a population size. There are implementations in BEAST of the coalescent skyline that either sample dimensions (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plots/master_refs %}) or do not require dimensions to be specified (Skyride {% cite Minin2008 --file Skyline-plots/master_refs %}).
+Choosing the dimension for the Bayesian Coalescent Skyline can be rather arbitrary. If the dimension is chosen too low, not all population changes are captured, if it is chosen too large, there might be too little information in an interval to support an estimate of a population size. There are implementations in BEAST of the coalescent skyline that either sample dimensions (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plots/master-refs %}) or do not require dimensions to be specified (Skyride {% cite Minin2008 --file Skyline-plots/master-refs %}).
 
 We can leave the priors as they are and save the settings to `*.xml`.
 
@@ -168,7 +172,7 @@ The output will have the years on the x-axis and the effective population size o
 
 <figure>
 	<a id="fig:skyline"></a>
-	<img style="width:75%;" src="figures/skyline_analysis.png" alt="">
+	<img style="width:50%;" src="figures/skyline_analysis.png" alt="">
 	<figcaption>Figure 8: Bayesian Coalescent Skyline analysis output. The black line is the median estimate of the estimated effective population size (can be changed to the mean estimate). The two blue lines are the upper an the lower estimates of 95% interval. The x-axis is the time in years.</figcaption>
 </figure>
 <br>
@@ -183,7 +187,7 @@ If we compare the estimates of the population dynamics using different dimension
 
 <figure>
 	<a id="fig:comparison"></a>
-	<img style="width:75%;" src="figures/comparison_dimension.png" alt="">
+	<img style="width:50%;" src="figures/comparison_dimension.png" alt="">
 	<figcaption>Figure 9: Estimated mean effective population sizes using different dimensions.</figcaption>
 </figure>
 <br>
@@ -192,7 +196,7 @@ The choice of the number of dimensions can also have a direct effect on how fast
 
 <figure>
 	<a id="fig:ess"></a>
-	<img style="width:75%;" src="figures/ess_vs_dim_coal.png" alt="">
+	<img style="width:50%;" src="figures/ess_vs_dim_coal.png" alt="">
 	<figcaption>Figure 10: The ESS value of the posterior after running an MCMC chain with {% eqinline 10^7 %} samples, logged every {% eqinline 10^3 %} steps and a burnin of 10% for using different dimensions of the Bayesian Coalescent Skyline.</figcaption>
 </figure>
 <br>
@@ -226,7 +230,7 @@ In this case we will keep the default value of 10 dimensions ([Figure 12](#fig:d
 
 <figure>
 	<a id="fig:bdsky_model"></a>
-	<img src="figures/bdsky_model.png" alt="">
+	<img style="width:25%;" src="figures/bdsky_model.png" alt="">
 	<figcaption>Figure 13: A schematic of the BDSKY model.</figcaption>
 </figure>
 <br>
@@ -414,7 +418,7 @@ xlab="Time", ylab=expression("R"[0]), side=2, yline=2.5, xline=2, xgrid=TRUE, yg
 
 <figure>
 	<a id="fig:bdsky_out"></a>
-	<img style="width:75%;" src="figures/bdsky_output.png" alt="">
+	<img style="width:50%;" src="figures/bdsky_output.png" alt="">
 	<figcaption>Figure 21: stimates of the inferred {% eqinline R_0 %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
 </figure>
 <br>
@@ -423,27 +427,22 @@ xlab="Time", ylab=expression("R"[0]), side=2, yline=2.5, xline=2, xgrid=TRUE, yg
 
 ## Some considerations for using skyline plots
 
-Both the coalescent and the birth-death skylines assume that the population is well-mixed. That is, they assume that there is no significant population structure and that the sequences are a random sample from the population. However, if there is population structure, for instance sequences were sampled from two different villages and there is much more contact within than between villages, then the results will be biased {% cite Heller2013 --file Skyline-plots/master_refs %}. Instead a structured model should be used to account for these biases.
+Both the coalescent and the birth-death skylines assume that the population is well-mixed. That is, they assume that there is no significant population structure and that the sequences are a random sample from the population. However, if there is population structure, for instance sequences were sampled from two different villages and there is much more contact within than between villages, then the results will be biased {% cite Heller2013 --file Skyline-plots/master-refs %}. Instead a structured model should be used to account for these biases.
 
 
 ----
 
 # Useful Links
 
-- [Bayesian Evolutionary Analysis with BEAST 2](http://www.beast2.org/book.html) {% cite BEAST2book2014 --file Skyline-plots/master_refs %}
+- [Bayesian Evolutionary Analysis with BEAST 2](http://www.beast2.org/book.html) {% cite BEAST2book2014 --file Skyline-plots/master-refs %}
 - BEAST 2 website and documentation: [http://www.beast2.org/](http://www.beast2.org/)
 - BEAST 1 website and documentation: [http://beast.bio.ed.ac.uk](http://beast.bio.ed.ac.uk)
 - Join the BEAST user discussion: [http://groups.google.com/group/beast-users](http://groups.google.com/group/beast-users) 
 
-----
-
-This tutorial was written by Nicola Müller and Louis du Plessis for [Taming the BEAST](https://taming-the-beast.github.io) and is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/). 
-
-----
 
 # Relevant References
 
-{% bibliography --cited --file Skyline-plots/master_refs %}
+{% bibliography --cited --file Skyline-plots/master-refs %}
 
 
 

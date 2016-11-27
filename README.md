@@ -439,6 +439,7 @@ Both the coalescent and the birth-death skylines assume that the population is w
 - BEAST 1 website and documentation: [http://beast.bio.ed.ac.uk](http://beast.bio.ed.ac.uk)
 - Join the BEAST user discussion: [http://groups.google.com/group/beast-users](http://groups.google.com/group/beast-users) 
 
+----
 
 # Relevant References
 

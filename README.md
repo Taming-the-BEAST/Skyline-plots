@@ -1,7 +1,7 @@
 ---
 author: Nicola F. Müller,Louis du Plessis
 level: Intermediate
-title: Skyline Plots
+title: Skyline plots
 subtitle: Inference of past population dynamics using Bayesian Coalescent Skyline and Birth-Death Skyline plots.
 beastversion: 2.4.2
 ---

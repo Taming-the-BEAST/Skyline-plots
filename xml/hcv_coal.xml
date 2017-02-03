@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood" version="2.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood" required="" version="2.4">
 
 
     <data
@@ -96,15 +96,14 @@ name="alignment">
                 <alignment idref="hcv"/>
             </taxonset>
         </tree>
+        <parameter id="gammaShape.s:hcv" name="stateNode">1.0</parameter>
         <parameter id="rateAC.s:hcv" lower="0.0" name="stateNode">1.0</parameter>
         <parameter id="rateAG.s:hcv" lower="0.0" name="stateNode">1.0</parameter>
         <parameter id="rateAT.s:hcv" lower="0.0" name="stateNode">1.0</parameter>
         <parameter id="rateCG.s:hcv" lower="0.0" name="stateNode">1.0</parameter>
         <parameter id="rateGT.s:hcv" lower="0.0" name="stateNode">1.0</parameter>
-        <parameter id="proportionInvariant.s:hcv" lower="0.0" name="stateNode" upper="1.0">0.001</parameter>
         <parameter id="bPopSizes.t:hcv" dimension="4" lower="0.0" name="stateNode" upper="380000.0">380.0</parameter>
         <stateNode id="bGroupSizes.t:hcv" spec="parameter.IntegerParameter" dimension="4">1</stateNode>
-        <parameter id="gammaShape.s:hcv" name="stateNode">1.0</parameter>
         <parameter id="freqParameter.s:hcv" dimension="4" lower="0.0" name="stateNode" upper="1.0">0.25</parameter>
     </state>
 
@@ -120,49 +119,47 @@ name="alignment">
                 <treeIntervals id="BSPTreeIntervals.t:hcv" spec="TreeIntervals" tree="@Tree.t:hcv"/>
             </distribution>
             <distribution id="MarkovChainedPopSizes.t:hcv" spec="beast.math.distributions.MarkovChainDistribution" jeffreys="true" parameter="@bPopSizes.t:hcv"/>
-            <prior id="PropInvariantPrior.s:hcv" name="distribution" x="@proportionInvariant.s:hcv">
-                <Uniform id="Uniform.0" name="distr"/>
+            <prior id="GammaShapePrior.s:hcv" name="distribution" x="@gammaShape.s:hcv">
+                <Exponential id="Exponential.0" name="distr">
+                    <parameter id="RealParameter.0" lower="0.0" name="mean" upper="0.0">1.0</parameter>
+                </Exponential>
             </prior>
             <prior id="RateACPrior.s:hcv" name="distribution" x="@rateAC.s:hcv">
                 <Gamma id="Gamma.0" name="distr">
-                    <parameter id="RealParameter.0" estimate="false" name="alpha">0.05</parameter>
-                    <parameter id="RealParameter.01" estimate="false" name="beta">10.0</parameter>
+                    <parameter id="RealParameter.01" estimate="false" name="alpha">0.05</parameter>
+                    <parameter id="RealParameter.02" estimate="false" name="beta">10.0</parameter>
                 </Gamma>
             </prior>
             <prior id="RateAGPrior.s:hcv" name="distribution" x="@rateAG.s:hcv">
                 <Gamma id="Gamma.01" name="distr">
-                    <parameter id="RealParameter.02" estimate="false" name="alpha">0.05</parameter>
-                    <parameter id="RealParameter.03" estimate="false" name="beta">20.0</parameter>
+                    <parameter id="RealParameter.03" estimate="false" name="alpha">0.05</parameter>
+                    <parameter id="RealParameter.04" estimate="false" name="beta">20.0</parameter>
                 </Gamma>
             </prior>
             <prior id="RateATPrior.s:hcv" name="distribution" x="@rateAT.s:hcv">
                 <Gamma id="Gamma.02" name="distr">
-                    <parameter id="RealParameter.04" estimate="false" name="alpha">0.05</parameter>
-                    <parameter id="RealParameter.05" estimate="false" name="beta">10.0</parameter>
+                    <parameter id="RealParameter.05" estimate="false" name="alpha">0.05</parameter>
+                    <parameter id="RealParameter.06" estimate="false" name="beta">10.0</parameter>
                 </Gamma>
             </prior>
             <prior id="RateCGPrior.s:hcv" name="distribution" x="@rateCG.s:hcv">
                 <Gamma id="Gamma.03" name="distr">
-                    <parameter id="RealParameter.06" estimate="false" name="alpha">0.05</parameter>
-                    <parameter id="RealParameter.07" estimate="false" name="beta">10.0</parameter>
+                    <parameter id="RealParameter.07" estimate="false" name="alpha">0.05</parameter>
+                    <parameter id="RealParameter.08" estimate="false" name="beta">10.0</parameter>
                 </Gamma>
             </prior>
             <prior id="RateGTPrior.s:hcv" name="distribution" x="@rateGT.s:hcv">
                 <Gamma id="Gamma.04" name="distr">
-                    <parameter id="RealParameter.08" estimate="false" name="alpha">0.05</parameter>
-                    <parameter id="RealParameter.09" estimate="false" name="beta">10.0</parameter>
+                    <parameter id="RealParameter.09" estimate="false" name="alpha">0.05</parameter>
+                    <parameter id="RealParameter.010" estimate="false" name="beta">10.0</parameter>
                 </Gamma>
-            </prior>
-            <prior id="GammaShapePrior.s:hcv" name="distribution" x="@gammaShape.s:hcv">
-                <Exponential id="Exponential.0" name="distr">
-                    <parameter id="RealParameter.010" lower="0.0" name="mean" upper="0.0">1.0</parameter>
-                </Exponential>
             </prior>
         </distribution>
         <distribution id="likelihood" spec="util.CompoundDistribution" useThreads="true">
             <distribution id="treeLikelihood.hcv" spec="ThreadedTreeLikelihood" data="@hcv" tree="@Tree.t:hcv">
-                <siteModel id="SiteModel.s:hcv" spec="SiteModel" gammaCategoryCount="4" proportionInvariant="@proportionInvariant.s:hcv" shape="@gammaShape.s:hcv">
+                <siteModel id="SiteModel.s:hcv" spec="SiteModel" gammaCategoryCount="4" shape="@gammaShape.s:hcv">
                     <parameter id="mutationRate.s:hcv" estimate="false" name="mutationRate">1.0</parameter>
+                    <parameter id="proportionInvariant.s:hcv" estimate="false" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
                     <substModel id="gtr.s:hcv" spec="GTR" rateAC="@rateAC.s:hcv" rateAG="@rateAG.s:hcv" rateAT="@rateAT.s:hcv" rateCG="@rateCG.s:hcv" rateGT="@rateGT.s:hcv">
                         <parameter id="rateCT.s:hcv" estimate="false" lower="0.0" name="rateCT">1.0</parameter>
                         <frequencies id="estimatedFreqs.s:hcv" spec="Frequencies" frequencies="@freqParameter.s:hcv"/>
@@ -175,6 +172,8 @@ name="alignment">
         </distribution>
     </distribution>
 
+    <operator id="gammaShapeScaler.s:hcv" spec="ScaleOperator" parameter="@gammaShape.s:hcv" scaleFactor="0.5" weight="0.1"/>
+
     <operator id="RateACScaler.s:hcv" spec="ScaleOperator" parameter="@rateAC.s:hcv" scaleFactor="0.5" weight="0.1"/>
 
     <operator id="RateAGScaler.s:hcv" spec="ScaleOperator" parameter="@rateAG.s:hcv" scaleFactor="0.5" weight="0.1"/>
@@ -184,8 +183,6 @@ name="alignment">
     <operator id="RateCGScaler.s:hcv" spec="ScaleOperator" parameter="@rateCG.s:hcv" scaleFactor="0.5" weight="0.1"/>
 
     <operator id="RateGTScaler.s:hcv" spec="ScaleOperator" parameter="@rateGT.s:hcv" scaleFactor="0.5" weight="0.1"/>
-
-    <operator id="proportionInvariantScaler.s:hcv" spec="ScaleOperator" parameter="@proportionInvariant.s:hcv" scaleFactor="0.5" weight="0.1"/>
 
     <operator id="BayesianSkylineTreeScaler.t:hcv" spec="ScaleOperator" scaleFactor="0.5" tree="@Tree.t:hcv" weight="3.0"/>
 
@@ -207,8 +204,6 @@ name="alignment">
         <intparameter idref="bGroupSizes.t:hcv"/>
     </operator>
 
-    <operator id="gammaShapeScaler.s:hcv" spec="ScaleOperator" parameter="@gammaShape.s:hcv" scaleFactor="0.5" weight="0.1"/>
-
     <operator id="FrequenciesExchanger.s:hcv" spec="DeltaExchangeOperator" delta="0.01" weight="0.1">
         <parameter idref="freqParameter.s:hcv"/>
     </operator>
@@ -219,16 +214,15 @@ name="alignment">
         <log idref="prior"/>
         <log idref="treeLikelihood.hcv"/>
         <log id="TreeHeight.t:hcv" spec="beast.evolution.tree.TreeHeightLogger" tree="@Tree.t:hcv"/>
+        <log idref="gammaShape.s:hcv"/>
         <log idref="rateAC.s:hcv"/>
         <log idref="rateAG.s:hcv"/>
         <log idref="rateAT.s:hcv"/>
         <log idref="rateCG.s:hcv"/>
         <log idref="rateGT.s:hcv"/>
-        <log idref="proportionInvariant.s:hcv"/>
         <log idref="BayesianSkyline.t:hcv"/>
         <log idref="bPopSizes.t:hcv"/>
         <log idref="bGroupSizes.t:hcv"/>
-        <log idref="gammaShape.s:hcv"/>
         <log idref="freqParameter.s:hcv"/>
     </logger>
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood" version="2.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood" required="BDSKY v1.3.3" version="2.4">
 
 
     <data
@@ -96,18 +96,17 @@ name="alignment">
                 <alignment idref="hcv"/>
             </taxonset>
         </tree>
+        <parameter id="freqParameter.s:hcv" dimension="4" lower="0.0" name="stateNode" upper="1.0">0.25</parameter>
         <parameter id="rateAC.s:hcv" lower="0.0" name="stateNode">1.0</parameter>
         <parameter id="rateAG.s:hcv" lower="0.0" name="stateNode">1.0</parameter>
         <parameter id="rateAT.s:hcv" lower="0.0" name="stateNode">1.0</parameter>
         <parameter id="rateCG.s:hcv" lower="0.0" name="stateNode">1.0</parameter>
         <parameter id="rateGT.s:hcv" lower="0.0" name="stateNode">1.0</parameter>
-        <parameter id="proportionInvariant.s:hcv" lower="0.0" name="stateNode" upper="1.0">0.001</parameter>
         <parameter id="gammaShape.s:hcv" name="stateNode">1.0</parameter>
         <parameter id="origin.t:hcv" lower="0.0" name="stateNode" upper="Infinity">100.0</parameter>
         <parameter id="rho.t:hcv" lower="0.0" name="stateNode" upper="1.0">0.01</parameter>
         <parameter id="becomeUninfectiousRate.t:hcv" lower="0.0" name="stateNode" upper="Infinity">1.0</parameter>
-        <parameter id="R0.t:hcv" dimension="10" lower="0.0" name="stateNode" upper="Infinity">2.0</parameter>
-        <parameter id="freqParameter.s:hcv" dimension="4" lower="0.0" name="stateNode" upper="1.0">0.25</parameter>
+        <parameter id="reproductiveNumber.t:hcv" dimension="10" lower="0.0" name="stateNode" upper="Infinity">2.0</parameter>
     </state>
 
     <init id="RandomTree.t:hcv" spec="beast.evolution.tree.RandomTree" estimate="false" initial="@Tree.t:hcv" taxa="@hcv">
@@ -118,76 +117,74 @@ name="alignment">
 
     <distribution id="posterior" spec="util.CompoundDistribution">
         <distribution id="prior" spec="util.CompoundDistribution">
-            <distribution id="BirthDeathSkyContemporary.t:hcv" spec="beast.evolution.speciation.BirthDeathSkylineModel" R0="@R0.t:hcv" becomeUninfectiousRate="@becomeUninfectiousRate.t:hcv" origin="@origin.t:hcv" rho="@rho.t:hcv" tree="@Tree.t:hcv">
+            <distribution id="BirthDeathSkyContemporary.t:hcv" spec="beast.evolution.speciation.BirthDeathSkylineModel" becomeUninfectiousRate="@becomeUninfectiousRate.t:hcv" origin="@origin.t:hcv" reproductiveNumber="@reproductiveNumber.t:hcv" rho="@rho.t:hcv" tree="@Tree.t:hcv">
                 <parameter id="samplingProportion.t:hcv" name="samplingProportion">0.0</parameter>
             </distribution>
-            <prior id="RPrior.t:hcv" name="distribution" x="@R0.t:hcv">
+            <prior id="becomeUninfectiousRatePriorContemp.t:hcv" name="distribution" x="@becomeUninfectiousRate.t:hcv">
                 <LogNormal id="LogNormalDistributionModel.0" name="distr">
-                    <parameter id="RealParameter.0" lower="0.0" name="M" upper="0.0">0.0</parameter>
-                    <parameter id="RealParameter.01" lower="0.0" name="S" upper="0.0">1.25</parameter>
-                </LogNormal>
-            </prior>
-            <prior id="becomeUninfectiousRatePrior.t:hcv" name="distribution" x="@becomeUninfectiousRate.t:hcv">
-                <LogNormal id="LogNormalDistributionModel.01" name="distr">
-                    <parameter id="RealParameter.02" lower="0.0" name="M" upper="0.0">0.0</parameter>
-                    <parameter id="RealParameter.03" lower="0.0" name="S" upper="0.0">1.25</parameter>
+                    <parameter id="RealParameter.15" estimate="false" name="M">0.0</parameter>
+                    <parameter id="RealParameter.16" estimate="false" name="S">1.25</parameter>
                 </LogNormal>
             </prior>
             <prior id="GammaShapePrior.s:hcv" name="distribution" x="@gammaShape.s:hcv">
                 <Exponential id="Exponential.0" name="distr">
-                    <parameter id="RealParameter.010" lower="0.0" name="mean" upper="0.0">1.0</parameter>
+                    <parameter id="RealParameter.0" lower="0.0" name="mean" upper="0.0">1.0</parameter>
                 </Exponential>
             </prior>
-            <prior id="originPrior.t:hcv" name="distribution" x="@origin.t:hcv">
-                <LogNormal id="LogNormalDistributionModel.02" name="distr">
-                    <parameter id="RealParameter.04" estimate="false" name="M">5.0</parameter>
-                    <parameter id="RealParameter.05" estimate="false" lower="0.0" name="S" upper="5.0">0.5</parameter>
+            <prior id="originPriorContemp.t:hcv" name="distribution" x="@origin.t:hcv">
+                <LogNormal id="LogNormalDistributionModel.2" name="distr">
+                    <parameter id="RealParameter.21" estimate="false" name="M">5.0</parameter>
+                    <parameter id="RealParameter.22" estimate="false" lower="0.0" name="S" upper="5.0">0.5</parameter>
                 </LogNormal>
-            </prior>
-            <prior id="PropInvariantPrior.s:hcv" name="distribution" x="@proportionInvariant.s:hcv">
-                <Uniform id="Uniform.0" name="distr"/>
             </prior>
             <prior id="RateACPrior.s:hcv" name="distribution" x="@rateAC.s:hcv">
                 <Gamma id="Gamma.0" name="distr">
-                    <parameter id="RealParameter.06" estimate="false" name="alpha">0.05</parameter>
-                    <parameter id="RealParameter.011" estimate="false" name="beta">10.0</parameter>
+                    <parameter id="RealParameter.1" estimate="false" name="alpha">0.05</parameter>
+                    <parameter id="RealParameter.2" estimate="false" name="beta">10.0</parameter>
                 </Gamma>
             </prior>
             <prior id="RateAGPrior.s:hcv" name="distribution" x="@rateAG.s:hcv">
-                <Gamma id="Gamma.01" name="distr">
-                    <parameter id="RealParameter.021" estimate="false" name="alpha">0.05</parameter>
-                    <parameter id="RealParameter.031" estimate="false" name="beta">20.0</parameter>
+                <Gamma id="Gamma.1" name="distr">
+                    <parameter id="RealParameter.3" estimate="false" name="alpha">0.05</parameter>
+                    <parameter id="RealParameter.4" estimate="false" name="beta">20.0</parameter>
                 </Gamma>
             </prior>
             <prior id="RateATPrior.s:hcv" name="distribution" x="@rateAT.s:hcv">
-                <Gamma id="Gamma.02" name="distr">
-                    <parameter id="RealParameter.041" estimate="false" name="alpha">0.05</parameter>
-                    <parameter id="RealParameter.051" estimate="false" name="beta">10.0</parameter>
+                <Gamma id="Gamma.2" name="distr">
+                    <parameter id="RealParameter.5" estimate="false" name="alpha">0.05</parameter>
+                    <parameter id="RealParameter.6" estimate="false" name="beta">10.0</parameter>
                 </Gamma>
             </prior>
             <prior id="RateCGPrior.s:hcv" name="distribution" x="@rateCG.s:hcv">
-                <Gamma id="Gamma.03" name="distr">
-                    <parameter id="RealParameter.061" estimate="false" name="alpha">0.05</parameter>
-                    <parameter id="RealParameter.07" estimate="false" name="beta">10.0</parameter>
+                <Gamma id="Gamma.3" name="distr">
+                    <parameter id="RealParameter.7" estimate="false" name="alpha">0.05</parameter>
+                    <parameter id="RealParameter.8" estimate="false" name="beta">10.0</parameter>
                 </Gamma>
             </prior>
             <prior id="RateGTPrior.s:hcv" name="distribution" x="@rateGT.s:hcv">
-                <Gamma id="Gamma.04" name="distr">
-                    <parameter id="RealParameter.08" estimate="false" name="alpha">0.05</parameter>
-                    <parameter id="RealParameter.09" estimate="false" name="beta">10.0</parameter>
+                <Gamma id="Gamma.5" name="distr">
+                    <parameter id="RealParameter.11" estimate="false" name="alpha">0.05</parameter>
+                    <parameter id="RealParameter.12" estimate="false" name="beta">10.0</parameter>
                 </Gamma>
             </prior>
-            <prior id="rhoPrior.t:hcv" name="distribution" x="@rho.t:hcv">
+            <prior id="reproductiveNumberPriorContemp.t:hcv" name="distribution" x="@reproductiveNumber.t:hcv">
+                <LogNormal id="LogNormalDistributionModel.1" name="distr">
+                    <parameter id="RealParameter.17" estimate="false" name="M">0.0</parameter>
+                    <parameter id="RealParameter.18" estimate="false" name="S">1.25</parameter>
+                </LogNormal>
+            </prior>
+            <prior id="rhoPriorContemp.t:hcv" name="distribution" x="@rho.t:hcv">
                 <Beta id="Beta.0" name="distr">
-                    <parameter id="RealParameter.012" lower="0.0" name="alpha" upper="0.0">1.0</parameter>
-                    <parameter id="RealParameter.013" lower="0.0" name="beta" upper="0.0">9999.0</parameter>
+                    <parameter id="RealParameter.13" estimate="false" name="alpha">1.0</parameter>
+                    <parameter id="RealParameter.14" estimate="false" name="beta">9999.0</parameter>
                 </Beta>
             </prior>
         </distribution>
         <distribution id="likelihood" spec="util.CompoundDistribution" useThreads="true">
             <distribution id="treeLikelihood.hcv" spec="ThreadedTreeLikelihood" data="@hcv" tree="@Tree.t:hcv">
-                <siteModel id="SiteModel.s:hcv" spec="SiteModel" gammaCategoryCount="4" proportionInvariant="@proportionInvariant.s:hcv" shape="@gammaShape.s:hcv">
+                <siteModel id="SiteModel.s:hcv" spec="SiteModel" gammaCategoryCount="4" shape="@gammaShape.s:hcv">
                     <parameter id="mutationRate.s:hcv" estimate="false" name="mutationRate">1.0</parameter>
+                    <parameter id="proportionInvariant.s:hcv" estimate="false" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
                     <substModel id="gtr.s:hcv" spec="GTR" rateAC="@rateAC.s:hcv" rateAG="@rateAG.s:hcv" rateAT="@rateAT.s:hcv" rateCG="@rateCG.s:hcv" rateGT="@rateGT.s:hcv">
                         <parameter id="rateCT.s:hcv" estimate="false" lower="0.0" name="rateCT">1.0</parameter>
                         <frequencies id="estimatedFreqs.s:hcv" spec="Frequencies" frequencies="@freqParameter.s:hcv"/>
@@ -200,6 +197,10 @@ name="alignment">
         </distribution>
     </distribution>
 
+    <operator id="FrequenciesExchanger.s:hcv" spec="DeltaExchangeOperator" delta="0.01" weight="0.1">
+        <parameter idref="freqParameter.s:hcv"/>
+    </operator>
+
     <operator id="RateACScaler.s:hcv" spec="ScaleOperator" parameter="@rateAC.s:hcv" scaleFactor="0.5" weight="0.1"/>
 
     <operator id="RateAGScaler.s:hcv" spec="ScaleOperator" parameter="@rateAG.s:hcv" scaleFactor="0.5" weight="0.1"/>
@@ -209,8 +210,6 @@ name="alignment">
     <operator id="RateCGScaler.s:hcv" spec="ScaleOperator" parameter="@rateCG.s:hcv" scaleFactor="0.5" weight="0.1"/>
 
     <operator id="RateGTScaler.s:hcv" spec="ScaleOperator" parameter="@rateGT.s:hcv" scaleFactor="0.5" weight="0.1"/>
-
-    <operator id="proportionInvariantScaler.s:hcv" spec="ScaleOperator" parameter="@proportionInvariant.s:hcv" scaleFactor="0.5" weight="0.1"/>
 
     <operator id="gammaShapeScaler.s:hcv" spec="ScaleOperator" parameter="@gammaShape.s:hcv" scaleFactor="0.5" weight="0.1"/>
 
@@ -232,48 +231,55 @@ name="alignment">
 
     <operator id="rhoScaler.t:hcv" spec="ScaleOperator" parameter="@rho.t:hcv" scaleFactor="0.75" weight="1.0"/>
 
-    <operator id="RScaler.t:hcv" spec="ScaleOperator" parameter="@R0.t:hcv" scaleFactor="0.75" weight="10.0"/>
+    <operator id="reproductiveNumberScaler.t:hcv" spec="ScaleOperator" parameter="@reproductiveNumber.t:hcv" scaleFactor="0.75" weight="10.0"/>
 
     <operator id="updownBD.t:hcv" spec="UpDownOperator" scaleFactor="0.75" weight="2.0">
-        <up idref="R0.t:hcv"/>
+        <up idref="reproductiveNumber.t:hcv"/>
         <down idref="becomeUninfectiousRate.t:hcv"/>
     </operator>
 
     <operator id="origScaler.t:hcv" spec="ScaleOperator" parameter="@origin.t:hcv" scaleFactor="0.75" weight="1.0"/>
 
-    <operator id="FrequenciesExchanger.s:hcv" spec="DeltaExchangeOperator" delta="0.01" weight="0.1">
-        <parameter idref="freqParameter.s:hcv"/>
-    </operator>
-
-    <logger id="tracelog" fileName="hcv_bdsky.log" logEvery="4000" model="@posterior" sanitiseHeaders="true" sort="smart">
+    <logger id="tracelog" fileName="hcv-bdsk.log" logEvery="4000" model="@posterior" sanitiseHeaders="true" sort="smart">
         <log idref="posterior"/>
         <log idref="likelihood"/>
         <log idref="prior"/>
         <log idref="treeLikelihood.hcv"/>
         <log id="TreeHeight.t:hcv" spec="beast.evolution.tree.TreeHeightLogger" tree="@Tree.t:hcv"/>
+        <log idref="freqParameter.s:hcv"/>
         <log idref="rateAC.s:hcv"/>
         <log idref="rateAG.s:hcv"/>
         <log idref="rateAT.s:hcv"/>
         <log idref="rateCG.s:hcv"/>
         <log idref="rateGT.s:hcv"/>
-        <log idref="proportionInvariant.s:hcv"/>
         <log idref="gammaShape.s:hcv"/>
         <log idref="BirthDeathSkyContemporary.t:hcv"/>
         <log idref="origin.t:hcv"/>
         <log idref="rho.t:hcv"/>
         <log idref="becomeUninfectiousRate.t:hcv"/>
-        <log idref="R0.t:hcv"/>
-        <log idref="freqParameter.s:hcv"/>
+        <log idref="reproductiveNumber.t:hcv"/>
+        <log id="birth.t:hcv" spec="beast.math.statistic.RPNcalculator" expression="reproductiveNumber.t:hcv becomeUninfectiousRate.t:hcv *">
+            <parameter idref="becomeUninfectiousRate.t:hcv"/>
+            <parameter idref="reproductiveNumber.t:hcv"/>
+        </log>
+        <log id="death.t:hcv" spec="beast.math.statistic.RPNcalculator" expression="becomeUninfectiousRate.t:hcv 1 samplingProportion.t:hcv - *">
+            <parameter idref="becomeUninfectiousRate.t:hcv"/>
+            <parameter idref="samplingProportion.t:hcv"/>
+        </log>
+        <log id="sampling.t:hcv" spec="beast.math.statistic.RPNcalculator" expression="becomeUninfectiousRate.t:hcv samplingProportion.t:hcv *">
+            <parameter idref="becomeUninfectiousRate.t:hcv"/>
+            <parameter idref="samplingProportion.t:hcv"/>
+        </log>
     </logger>
 
-    <logger id="screenlog" logEvery="1000">
+    <logger id="screenlog" logEvery="10000">
         <log idref="posterior"/>
         <log id="ESS.0" spec="util.ESS" arg="@posterior"/>
         <log idref="likelihood"/>
         <log idref="prior"/>
     </logger>
 
-    <logger id="treelog.t:hcv" fileName="hcv_bdsky.trees" logEvery="4000" mode="tree">
+    <logger id="treelog.t:hcv" fileName="hcv-bdsk$(tree).trees" logEvery="4000" mode="tree">
         <log id="TreeWithMetaDataLogger.t:hcv" spec="beast.evolution.tree.TreeWithMetaDataLogger" tree="@Tree.t:hcv"/>
     </logger>
 

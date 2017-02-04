@@ -1,6 +1,6 @@
 ---
 author: Nicola F. Müller,Louis du Plessis
-level: Intermediate
+level: Beginner
 title: Skyline plots
 subtitle: Inference of past population dynamics using Bayesian Coalescent Skyline and Birth-Death Skyline plots.
 beastversion: 2.4.2
@@ -215,16 +215,16 @@ In the first analysis, we used the coalescent approach to estimate population dy
 </figure>
 <br>
 
-As in the Bayesian Coalescent Skyline, we need to choose the number of dimensions. Here we choose the dimensions for the {% eqinline R_0 %}, the basic reproduction number, which denotes the number of secondary infections caused by a single infected person in a completely susceptible population, i.e. an {% eqinline R_0 %} of 2 would mean that every infected person causes two new infections on average. Or in other words, an {% eqinline R_0 %} above 1 means that the number of cases are increasing, therefore the disease will cause an epidemic, and an {% eqinline R_0 %} below 1 means that the epidemic will die out. (Note that since the birth-death skyline infers changes in {% eqinline R_0 %} over time, it technically infers the effective reproduction number, the average number of new infections caused by an infected person at a certain time during the outbreak).
+As in the Bayesian Coalescent Skyline, we need to choose the number of dimensions. Here we choose the dimensions for the {% eqinline R_e %}, the basic reproduction number, which denotes the number of secondary infections caused by a single infected person in a completely susceptible population, i.e. an {% eqinline R_e %} of 2 would mean that every infected person causes two new infections on average. Or in other words, an {% eqinline R_e %} above 1 means that the number of cases are increasing, therefore the disease will cause an epidemic, and an {% eqinline R_e %} below 1 means that the epidemic will die out. (Note that since the birth-death skyline infers changes in {% eqinline R_e %} over time, it technically infers the effective reproduction number, the average number of new infections caused by an infected person at a certain time during the outbreak).
 
-The dimension of the {% eqinline R_0 %} has to be chosen in the initialization panel. Choosing this dimension can again be arbitrary and may require the testing of a few different values. Too few intervals and not all rate shifts are captured. Too many intervals and the intervals may not contain enough information to infer parameters.
+The dimension of the {% eqinline R_e %} has to be chosen in the initialization panel. Choosing this dimension can again be arbitrary and may require the testing of a few different values. Too few intervals and not all rate shifts are captured. Too many intervals and the intervals may not contain enough information to infer parameters.
 
 In this case we will keep the default value of 10 dimensions ([Figure 12](#fig:dimensions_bdsky)).
 
 <figure>
 	<a id="fig:dimensions_bdsky"></a>
 	<img src="figures/choose_dimension_bdsky.png" alt="">
-	<figcaption>Figure 12: Setting the dimensions for {% eqinline R_0 %} estimates.</figcaption>
+	<figcaption>Figure 12: Setting the dimensions for {% eqinline R_e %} estimates.</figcaption>
 </figure>
 <br>
 
@@ -239,18 +239,18 @@ BDSKY infers 3 parameters ([Figure 13](#fig:bdsky_model)), the transmission rate
 The rates we estimate using the birth-death model are per lineage rates. Some of these rates we know or we can estimate them from other data. The becoming noninfectious rate for example, we can get from the average time a patient can transmit a disease. This prior knowledge we can incorporate in the MCMC.
 This we can do in the `Priors` panel. We can use prior information about the {% eqinline R_{0} %}, the becoming noninfectious rate, the origin and {% eqinline \rho %} (Figures [14](#fig:r0prior),[15](#fig:bURprior),[16](#fig:oriprior),[17](#fig:rhoprior)). Note that the origin inferred by the birth-death skyline is not the time of the most recent common ancestor of the tree (TMRCA), but is earlier and denotes the start of the outbreak, i.e. when there was only one infected person. 
 
-We use a lognormal prior for {% eqinline R_0 %}. This is a good prior distribution to use for rates since it is always positive (a rate cannot be negative) and has a long tail defined over all positive numbers. The long tail allows arbitrarily high estimates of {% eqinline R_0 %}, but does not place much weight on very high rates. This agrees with our prior knowledge about the {% eqinline R_0 %} of other diseases (most diseases have an {% eqinline R_0 %} between 1.2 and 5. Measles is one of the most infectious diseases we know about and has an {% eqinline R_0 %} of around 18). 
+We use a lognormal prior for {% eqinline R_e %}. This is a good prior distribution to use for rates since it is always positive (a rate cannot be negative) and has a long tail defined over all positive numbers. The long tail allows arbitrarily high estimates of {% eqinline R_e %}, but does not place much weight on very high rates. This agrees with our prior knowledge about the {% eqinline R_e %} of other diseases (most diseases have an {% eqinline R_e %} between 1.2 and 5. Measles is one of the most infectious diseases we know about and has an {% eqinline R_e %} of around 18). 
 
-If an epidemic is neither growing nor declining, it has an {% eqinline R_0 %} of 1, which we will use as a null hypothesis (we assume that as long as there is no strong signal in an interval for an epidemic to grow or decline that the {% eqinline R_0 %} is 1, i.e. the epidemic stays constant). Thus, we set the mean of the lognormal distribution to 0, which results in a median of 1. We set the variance to 1.25, which places most weight below 7.82 (95% quantile). ([Figure 14](#fig:r0prior)).
+If an epidemic is neither growing nor declining, it has an {% eqinline R_e %} of 1, which we will use as a null hypothesis (we assume that as long as there is no strong signal in an interval for an epidemic to grow or decline that the {% eqinline R_e %} is 1, i.e. the epidemic stays constant). Thus, we set the mean of the lognormal distribution to 0, which results in a median of 1. We set the variance to 1.25, which places most weight below 7.82 (95% quantile). ([Figure 14](#fig:r0prior)).
 
 <figure>
 	<a id="fig:r0prior"></a>
 	<img src="figures/bdsky_prior_r0.png" alt="">
-	<figcaption>Figure 14: Setting the {% eqinline R_0 %} prior.</figcaption>
+	<figcaption>Figure 14: Setting the {% eqinline R_e %} prior.</figcaption>
 </figure>
 <br>
 
-For the becoming noninfectious rate we again use a lognormal prior. The inverse of the becoming noninfectious rate is the average infectious period. In some patients an HCV infection only lasts a few weeks, while in others it is a chronic infection lasting for many years. Setting {% eqinline M=0 %} and {% eqinline S=1.25 %} results in the same prior we used for the {% eqinline R_0 %} ([Figure 15](#fig:bURprior)).  In terms of the becoming noninfectious rate, this translates to the 95% quantiles for the infectious period falling between 0.128 years (46.67 days) and 11.59 years, with a median of 1 year. We will see later that there is a strong signal in the data for a longer becoming noninfectious period. 
+For the becoming noninfectious rate we again use a lognormal prior. The inverse of the becoming noninfectious rate is the average infectious period. In some patients an HCV infection only lasts a few weeks, while in others it is a chronic infection lasting for many years. Setting {% eqinline M=0 %} and {% eqinline S=1.25 %} results in the same prior we used for the {% eqinline R_e %} ([Figure 15](#fig:bURprior)).  In terms of the becoming noninfectious rate, this translates to the 95% quantiles for the infectious period falling between 0.128 years (46.67 days) and 11.59 years, with a median of 1 year. We will see later that there is a strong signal in the data for a longer becoming noninfectious period. 
 
 <figure>
 	<a id="fig:bURprior"></a>
@@ -292,7 +292,7 @@ The Birth-Death model is parameterized very differently from the coalescent mode
 
 The death rate {% eqinline \mu %} is the rate at which lineages disappear (go extinct) from a population without being sampled. You can also see from the above equation that we assume that a sampled lineage cannot transmit anymore. The consequence for the phylogeny is that a sampled lineage cannot be an ancestor of any lineage. This assumption can be relaxed, but we will not do so during this tutorial.
 
-The {% eqinline R_0 %} we estimate is then defined as follows:
+The {% eqinline R_e %} we estimate is then defined as follows:
 
 {% eq
 R_{0} = \frac{\lambda}{\psi + \mu} = \frac{\lambda}{\delta}
@@ -300,9 +300,9 @@ R_{0} = \frac{\lambda}{\psi + \mu} = \frac{\lambda}{\delta}
 
     |                                                          |         
 --------------------------------------------------------------:|:----------------------
-if {% eqinline \lambda > \delta %} then {% eqinline R_0 > 1 %} | epidemic grows
-if {% eqinline \lambda = \delta %} then {% eqinline R_0 = 1 %} | epidemic stays constant
-if {% eqinline \lambda < \delta %} then {% eqinline R_0 < 1 %} | epidemic declines
+if {% eqinline \lambda > \delta %} then {% eqinline R_e > 1 %} | epidemic grows
+if {% eqinline \lambda = \delta %} then {% eqinline R_e = 1 %} | epidemic stays constant
+if {% eqinline \lambda < \delta %} then {% eqinline R_e < 1 %} | epidemic declines
 
 The birth-death skyline allows these rates to change over time. This is done by dividing the time from the origin (of the epidemic, which is not necessarily the same as the root of the tree) to the most recent sample into dimension {% eqinline d %} equally spaced intervals (see [Figure 18](#fig:bdsky_principle)). The rates are then allowed to change between two intervals. Within an interval rates are constant. In principle, all rates in all intervals could be different. Since the transmission rate and the becoming noninfectious rate are highly correlated, this is not always practical. Often we assume the becoming noninfectious rate to be the same in all intervals while changing the transmission rate {% eqinline \lambda %}. 
 
@@ -321,7 +321,7 @@ The coalescent on the other hand does infer the effective population size, which
 
 ### Visualizing the Birth-Death Skyline Output
 
-There is no equivalent visualization of the `*.log` file of a BDSKY analysis in tracer as there is for the Bayesian Coalescent Skyline. But because BDSKY separates the full tree into equally spaced intervals, we can already get an idea of the inference just by looking at the inferred {$ eqinline R_0 %} values (see [Figure 19](#fig:bdsky_dynamics)). This gives us a good idea of the trend, but it is not completely accurate. Since every posterior sample has a different origin, the time spanned by each interval is slightly different in each posterior sample. Thus, the different intervals overlap slightly. The advantage to this is that we get a smooth estimate through time. The disadvantage is that we need to do some extra post-processingx to plot the skyline.
+There is no equivalent visualization of the `*.log` file of a BDSKY analysis in tracer as there is for the Bayesian Coalescent Skyline. But because BDSKY separates the full tree into equally spaced intervals, we can already get an idea of the inference just by looking at the inferred {% eqinline R_e %} values (see [Figure 19](#fig:bdsky_dynamics)). This gives us a good idea of the trend, but it is not completely accurate. Since every posterior sample has a different origin, the time spanned by each interval is slightly different in each posterior sample. Thus, the different intervals overlap slightly. The advantage to this is that we get a smooth estimate through time. The disadvantage is that we need to do some extra post-processing to plot the skyline.
 
 <figure>
 	<a id="fig:bdsky_dynamics"></a>
@@ -365,7 +365,7 @@ Now you can either step through the commands in `Skyline_Example.R` one by one o
 source('/dir/Skyline_Example.R');
 ```
 
-First, the script loads the logfile and calculates the HPD intervals for {% eqinline R_0 %} and the becoming noninfectious rate. 
+First, the script loads the logfile and calculates the HPD intervals for {% eqinline R_e %} and the becoming noninfectious rate. 
 
 ```R
 lf     <- readLogfile(fname, burnin=0.1) 
@@ -376,7 +376,7 @@ R0_hpd    <- getMatrixHPD(R0_sky)
 delta_hpd <- getHPD(lf\$becomeUninfectiousRate) 
 ```
 
-Next we plot the raw HPD intervals of {% eqinline R_0 %}. This is equivalent to the output in tracer. 
+Next we plot the raw HPD intervals of {% eqinline R_e %}. This is equivalent to the output in tracer. 
 
 ```R
 plotSkyline(1:10, R0\hpd, type='step')
@@ -406,7 +406,7 @@ plotSkyline(times, R0_gridded, type='steplines', traces=100, col=pal.dark(cblue,
 plotSkyline(times, R0_gridded, type='steplines', traces=1000, col=pal.dark(cblue,0.1),ylims=c(0,5))
 ```
 
-Finally, we can plot both the {% eqinline R_0 %} and the becoming noninfectious rate on a single set of axes. Since we left the dimension of the becoming noninfectious rate at 1, it is constant through time. (Normally we would not plot constant parameters over a time period). The output should be similar to [Figure 21](#fig:bdsky_out).
+Finally, we can plot both the {% eqinline R_e %} and the becoming noninfectious rate on a single set of axes. Since we left the dimension of the becoming noninfectious rate at 1, it is constant through time. (Normally we would not plot constant parameters over a time period). The output should be similar to [Figure 21](#fig:bdsky_out).
 
 ```R
 plotSkylinePretty(range(times), as.matrix(delta_hpd), type='step', axispadding=0.0, col=pal.dark(cblue), fill=pal.dark(cblue, 0.5), col.axis=pal.dark(cblue), 
@@ -419,7 +419,7 @@ xlab="Time", ylab=expression("R"[0]), side=2, yline=2.5, xline=2, xgrid=TRUE, yg
 <figure>
 	<a id="fig:bdsky_out"></a>
 	<img style="width:50%;" src="figures/bdsky_output.png" alt="">
-	<figcaption>Figure 21: stimates of the inferred {% eqinline R_0 %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
+	<figcaption>Figure 21: stimates of the inferred {% eqinline R_e %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
 </figure>
 <br>
 

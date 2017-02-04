@@ -1,3 +1,6 @@
+# Install the package with devtools::install_github(laduplessis/bdskytools)
+# If you cannot install the package source the R files in the folder and make sure the 
+# packages boa and RColorBrewer are installed
 library(bdskytools)
 
 
@@ -11,6 +14,21 @@ lf    <- readLogfile(fname, burnin=0.1)
 Re_sky    <- getSkylineSubset(lf, "reproductiveNumber")
 Re_hpd    <- getMatrixHPD(Re_sky)
 delta_hpd <- getHPD(lf$becomeUninfectiousRate)
+
+
+# The non-gridded intervals
+###########################
+# Since here they are equidistant from the origin to the present they should probably not be plotted this way
+# Use this when the shift-times in bdsky are fixed (needs to be manually set in the xml at the moment)
+# or when the origin is fixed (automatically fixes the shift-times)
+# When doing this do NOT plot with type='smooth' as it gives a misleading result!!!
+plotSkyline(1:10, Re_hpd, type='step', ylab="R")
+
+# Why is the result below misleading?
+plotSkyline(1:10, Re_hpd, type='smooth', ylab="R")
+
+# Delta only has a dimension of 1, so the skyline is not really insightful
+plotSkyline(range(times), as.matrix(delta_hpd), type='step', ylab="Delta")
 
 
 # Extract gridded HPDs  
@@ -29,8 +47,8 @@ Re_gridded_hpd <- getMatrixHPD(Re_gridded)
 #####################
 # The plotting times, the most recent sample is from 1993
 times     <- 1993-timegrid
-plotSkyline(times, Re_gridded_hpd, type='smooth')
-plotSkyline(times, Re_gridded_hpd, type='lines')
+plotSkyline(times, Re_gridded_hpd, type='smooth', xlab="Time", ylab="R")
+plotSkyline(times, Re_gridded_hpd, type='lines', xlab="Time", ylab="R")
 
 
 # Where do the smooth skyline come from?
@@ -39,24 +57,12 @@ plotSkyline(times, Re_gridded_hpd, type='lines')
 # First 10, then 100, then 1000 of the individual MCMC steps. Now if we take the HPD 
 # interval at every fourth year and only plot that we get the smooth skyline in the
 # previous step.
-plotSkyline(times, Re_gridded, type='steplines', traces=10, col=pal.dark(cblue,0.5),ylims=c(0,5))
-plotSkyline(times, Re_gridded, type='steplines', traces=100, col=pal.dark(cblue,0.5),ylims=c(0,5))
-plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue,0.1),ylims=c(0,5))
+par(mfrow=c(3,1), mar=c(5,4,1,4)+0.1)
+plotSkyline(times, Re_gridded, type='steplines', traces=10, col=pal.dark(cblue,0.5),ylims=c(0,5), xlab="Time", ylab="R", main="10 traces")
+plotSkyline(times, Re_gridded, type='steplines', traces=100, col=pal.dark(cblue,0.5),ylims=c(0,5), xlab="Time", ylab="R", main="100 traces")
+plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue,0.1),ylims=c(0,5), xlab="Time", ylab="R", main="1000 traces")
 
 
-# The non-gridded intervals
-###########################
-# Since here they are equidistant from the origin to the present they should probably not be plotted this way
-# Use this when the shift-times in bdsky are fixed (needs to be manually set in the xml at the moment)
-# or when the origin is fixed (automatically fixes the shift-times)
-# When doing this do NOT plot with type='smooth' as it gives a misleading result!!!
-plotSkyline(1:10, Re_hpd, type='step')
-
-# Why is the result below misleading?
-plotSkyline(1:10, Re_hpd, type='smooth')
-
-# Delta only has a dimension of 1, so the skyline is not really insightful
-plotSkyline(range(times), as.matrix(delta_hpd), type='step')
 
 
 # Pretty skyline plots
@@ -75,4 +81,4 @@ par(mar=c(5,4,4,4)+0.1)
 plotSkylinePretty(range(times), as.matrix(delta_hpd), type='step', axispadding=0.0, col=pal.dark(cblue), fill=pal.dark(cblue, 0.5), col.axis=pal.dark(cblue),
 ylab=expression(delta), side=4, yline=2, ylims=c(0,1), xaxis=FALSE)
 plotSkylinePretty(times, Re_gridded_hpd, type='smooth', axispadding=0.0, col=pal.dark(corange), fill=pal.dark(corange, 0.5), col.axis=pal.dark(corange),
-xlab="Time", ylab=expression("R"[0]), side=2, yline=2.5, xline=2, xgrid=TRUE, ygrid=TRUE, gridcol=pal.dark(cgray), ylims=c(0,3), new=TRUE, add=TRUE)
+xlab="Time", ylab=expression("R"[e]), side=2, yline=2.5, xline=2, xgrid=TRUE, ygrid=TRUE, gridcol=pal.dark(cgray), ylims=c(0,3), new=TRUE, add=TRUE)

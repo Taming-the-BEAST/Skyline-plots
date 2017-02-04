@@ -331,95 +331,98 @@ There is no equivalent visualization of the `*.log` file of a BDSKY analysis in 
 <br>
 
 
-We will instead use some R scripts to plot the output of the bdsky. 
-Open R and install two package using:
+We will instead use the R package `bdskytools` to plot the output of the bdsky. The package is still in development and currently not available over CRAN. Thus, we have to install the package directly over GitHub: 
 
 ```{R}
-install.packages("boa");
-install.packages("RColorBrewer");
+install.packages("devtools")
+library(devtools)
+
+devtools::install_github("laduplessis/bdskytools")
 ```
 
-The first package is needed for statistical analyses of the run and the second one contains color schemes needed by the other R scripts. 
+If the package cannot be installed from GitHub the relevant scripts are also provided in the `/scripts/` directory.
+
 To plot the results, we need to describe in the file `Skyline_Example.R` where our `*.log` file is ([Figure 20](#fig:r_script)).
 
-<figure>
-	<a id="fig:r_script"></a>
-	<img src="figures/find_log_file.png" alt="">
-	<figcaption>Figure 20: Put the path to the log file to fname in the R script.</figcaption>
-</figure>
-<br>
+To plot the results, we need to tell R where to find the `*.log` file of our run and load it into R (discarding 10% of samples as burn-in): 
 
-After saving the R script `Skyline_Example.R`, we can now plot the analysis.
-
-First, replace `dir` with the path to the directory where the R scripts are stored and then source the scripts. By default this is the `scripts` directory inside the tutorial. The first 3 R scripts contain functions for reading BEAST2 log files, extracting HPD intervals and plotting skylines. (These files are part of an R package that will be available on CRAN in the nearby future. For the moment, if you are interested you are welcome to check out the development version at [http://github.com/laduplessis](http://github.com/laduplessis)  (Beta testers needed!)).
-
-```R
-source('/dir/Figure_Utilities.R');
-source('/dir/Logfile_Utilities.R');
-source('/dir/SkylinePlot.R');
+```{R}
+fname <- <<Enter the path to your log file here>>
+lf    <- readLogfile(fname, burnin=0.1)
 ```
 
-Now you can either step through the commands in `Skyline_Example.R` one by one or source it as with the others,
+Next, we can extract the HPDs of {% eqinline R_e %} and the becoming noninfectious rate: 
 
-```R
-source('/dir/Skyline_Example.R');
+```{R}
+Re_sky    <- getSkylineSubset(lf, "reproductiveNumber")
+Re_hpd    <- getMatrixHPD(Re_sky)
+delta_hpd <- getHPD(lf$becomeUninfectiousRate)
 ```
 
-First, the script loads the logfile and calculates the HPD intervals for {% eqinline R_e %} and the becoming noninfectious rate. 
-
-```R
-lf     <- readLogfile(fname, burnin=0.1) 
-R0_sky <- getSkylineSubset(lf,"R0")
-
-# Extract the raw HPDs 
-R0_hpd    <- getMatrixHPD(R0_sky) 
-delta_hpd <- getHPD(lf\$becomeUninfectiousRate) 
-```
 
 Next we plot the raw HPD intervals of {% eqinline R_e %}. This is equivalent to the output in tracer. 
 
 ```R
-plotSkyline(1:10, R0\hpd, type='step')
+plotSkyline(1:10, Re_hpd, type='step', ylab="R")
 ```
 
-In order to plot the smooth skyline we have to calculate the HPD on a finer timegrid. To do this we first calculate the marginal posterior at every time of interest using the function `gridSkyline` and then calculate the HPD for each of the finer time intervals. 
+<figure>
+	<a id="fig:bdsky_hpds"></a>
+	<img style="width:50%;" src="figures/bdsky_hpds.png" alt="">
+	<figcaption>Figure 21: The HPDs of {% eqinline R_e %} (equivalent to the previous figure).</figcaption>
+</figure>
+
+In order to plot the smooth skyline we have to calculate the HPD on a finer timegrid. To do this we first calculate the marginal posterior at every time of interest using the function `gridSkyline` and then calculate the HPD for each of the finer time intervals. The times to grid the skyline on (`timegrid`), refers to years in the past. 
 
 ```R
-timegrid <- seq(1,400,length.out=100) 
-R0_gridded     <- gridSkyline(R0_sky,    lf\$origin, timegrid) 
-R0_gridded_hpd <- getMatrixHPD(R0_gridded)
+timegrid <- seq(1,400,length.out=100)
+Re_gridded     <- gridSkyline(Re_sky, lf$origin, timegrid)
+Re_gridded_hpd <- getMatrixHPD(Re_gridded)
 ```
 
-Now we are ready to plot the smooth skyline
+Now we are ready to plot the smooth skyline (remember that the sequences were sampled in 1993):
 
 ```R
-# The plotting times, the most recent sample is 1993 
-times <- 1993-timegrid 
-plotSkyline(times, R0_gridded_hpd, type='smooth')
+times     <- 1993-timegrid
+plotSkyline(times, Re_gridded_hpd, type='smooth', xlab="Time", ylab="R")
 ```
+
+<figure>
+	<a id="fig:bdsky_smooth"></a>
+	<img style="width:50%;" src="figures/bdsky_smooth.png" alt="">
+	<figcaption>Figure 21: The smooth {% eqinline R_e %} skyline.</figcaption>
+</figure>
 
 We can plot the gridded skyline (not its HPDs) for a few of the samples to see what it really looks like. Note that the intervals overlap between different posterior samples. This is because the origin is different in each sample. As we add more samples to the plot we start to see the smooth skyline appear. 
 
 ```R
-plotSkyline(times, R0_gridded, type='steplines', traces=10, col=pal.dark(cblue,0.5),ylims=c(0,5)) 
-plotSkyline(times, R0_gridded, type='steplines', traces=100, col=pal.dark(cblue,0.5),ylims=c(0,5)) 
-plotSkyline(times, R0_gridded, type='steplines', traces=1000, col=pal.dark(cblue,0.1),ylims=c(0,5))
+plotSkyline(times, Re_gridded, type='steplines', traces=10, col=pal.dark(cblue,0.5),ylims=c(0,5), xlab="Time", ylab="R")
+plotSkyline(times, Re_gridded, type='steplines', traces=100, col=pal.dark(cblue,0.5),ylims=c(0,5), xlab="Time", ylab="R")
+plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue,0.1),ylims=c(0,5), xlab="Time", ylab="R")
 ```
+
+<figure>
+	<a id="fig:bdsky_traces"></a>
+	<img style="width:50%;" src="figures/bdsky_traces.png" alt="">
+	<figcaption>Figure 21: Increasing the number of traces plotted from 10 to 100, to 1000.</figcaption>
+</figure>
 
 Finally, we can plot both the {% eqinline R_e %} and the becoming noninfectious rate on a single set of axes. Since we left the dimension of the becoming noninfectious rate at 1, it is constant through time. (Normally we would not plot constant parameters over a time period). The output should be similar to [Figure 21](#fig:bdsky_out).
 
 ```R
-plotSkylinePretty(range(times), as.matrix(delta_hpd), type='step', axispadding=0.0, col=pal.dark(cblue), fill=pal.dark(cblue, 0.5), col.axis=pal.dark(cblue), 
-ylab=expression(delta), side=4, yline=2, ylims=c(0,1), xaxis=FALSE) 
+par(mar=c(5,4,4,4)+0.1)
 
-plotSkylinePretty(times, R0_gridded_hpd, type='smooth', axispadding=0.0, col=pal.dark(corange), fill=pal.dark(corange, 0.5), col.axis=pal.dark(corange), 
-xlab="Time", ylab=expression("R"[0]), side=2, yline=2.5, xline=2, xgrid=TRUE, ygrid=TRUE, gridcol=pal.dark(cgray), ylims=c(0,3), new=TRUE, add=TRUE) 
+plotSkylinePretty(range(times), as.matrix(delta_hpd), type='step', axispadding=0.0, col=pal.dark(cblue), fill=pal.dark(cblue, 0.5), col.axis=pal.dark(cblue),
+ylab=expression(delta), side=4, yline=2, ylims=c(0,1), xaxis=FALSE)
+
+plotSkylinePretty(times, Re_gridded_hpd, type='smooth', axispadding=0.0, col=pal.dark(corange), fill=pal.dark(corange, 0.5), col.axis=pal.dark(corange),
+xlab="Time", ylab=expression("R"[e]), side=2, yline=2.5, xline=2, xgrid=TRUE, ygrid=TRUE, gridcol=pal.dark(cgray), ylims=c(0,3), new=TRUE, add=TRUE)
 ```
 
 <figure>
 	<a id="fig:bdsky_out"></a>
 	<img style="width:50%;" src="figures/bdsky_output.png" alt="">
-	<figcaption>Figure 21: stimates of the inferred {% eqinline R_e %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
+	<figcaption>Figure 21: Estimates of the inferred {% eqinline R_e %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
 </figure>
 <br>
 

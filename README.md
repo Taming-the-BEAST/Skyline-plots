@@ -340,10 +340,6 @@ library(devtools)
 devtools::install_github("laduplessis/bdskytools")
 ```
 
-If the package cannot be installed from GitHub the relevant scripts are also provided in the `/scripts/` directory.
-
-To plot the results, we need to describe in the file `Skyline_Example.R` where our `*.log` file is ([Figure 20](#fig:r_script)).
-
 To plot the results, we need to tell R where to find the `*.log` file of our run and load it into R (discarding 10% of samples as burn-in): 
 
 ```{R}
@@ -368,8 +364,8 @@ plotSkyline(1:10, Re_hpd, type='step', ylab="R")
 
 <figure>
 	<a id="fig:bdsky_hpds"></a>
-	<img style="width:50%;" src="figures/bdsky_hpds.png" alt="">
-	<figcaption>Figure 21: The HPDs of {% eqinline R_e %} (equivalent to the previous figure).</figcaption>
+	<img style="width:80%;" src="figures/bdsky_hpds.png" alt="">
+	<figcaption>Figure 20: The HPDs of {% eqinline R_e %} (equivalent to the previous figure).</figcaption>
 </figure>
 
 In order to plot the smooth skyline we have to calculate the HPD on a finer timegrid. To do this we first calculate the marginal posterior at every time of interest using the function `gridSkyline` and then calculate the HPD for each of the finer time intervals. The times to grid the skyline on (`timegrid`), refers to years in the past. 
@@ -389,7 +385,7 @@ plotSkyline(times, Re_gridded_hpd, type='smooth', xlab="Time", ylab="R")
 
 <figure>
 	<a id="fig:bdsky_smooth"></a>
-	<img style="width:50%;" src="figures/bdsky_smooth.png" alt="">
+	<img style="width:80%;" src="figures/bdsky_smooth.png" alt="">
 	<figcaption>Figure 21: The smooth {% eqinline R_e %} skyline.</figcaption>
 </figure>
 
@@ -403,11 +399,11 @@ plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue
 
 <figure>
 	<a id="fig:bdsky_traces"></a>
-	<img style="width:50%;" src="figures/bdsky_traces.png" alt="">
-	<figcaption>Figure 21: Increasing the number of traces plotted from 10 to 100, to 1000.</figcaption>
+	<img style="width:80%;" src="figures/bdsky_traces.png" alt="">
+	<figcaption>Figure 22: Increasing the number of traces plotted from 10 to 100, to 1000.</figcaption>
 </figure>
 
-Finally, we can plot both the {% eqinline R_e %} and the becoming noninfectious rate on a single set of axes. Since we left the dimension of the becoming noninfectious rate at 1, it is constant through time. (Normally we would not plot constant parameters over a time period). The output should be similar to [Figure 21](#fig:bdsky_out).
+Finally, we can plot both the {% eqinline R_e %} and the becoming noninfectious rate on a single set of axes. Since we left the dimension of the becoming noninfectious rate at 1, it is constant through time. (Normally we would not plot constant parameters over a time period). The output should be similar to [Figure 23](#fig:bdsky_out).
 
 ```R
 par(mar=c(5,4,4,4)+0.1)
@@ -421,10 +417,14 @@ xlab="Time", ylab=expression("R"[e]), side=2, yline=2.5, xline=2, xgrid=TRUE, yg
 
 <figure>
 	<a id="fig:bdsky_out"></a>
-	<img style="width:50%;" src="figures/bdsky_output.png" alt="">
-	<figcaption>Figure 21: Estimates of the inferred {% eqinline R_e %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
+	<img style="width:80%;" src="figures/bdsky_output.png" alt="">
+	<figcaption>Figure 23: Estimates of the inferred {% eqinline R_e %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
 </figure>
 <br>
+
+An R script with the above commands (and a few extras) is in the `scripts/` directory (`Skyline_Example.R`). 
+If the bdskytools package cannot be installed from GitHub the relevant scripts are also provided in the `scripts/` directory.
+
 
 ----
 

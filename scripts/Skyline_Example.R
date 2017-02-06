@@ -1,13 +1,15 @@
 # Install the package with devtools::install_github(laduplessis/bdskytools)
 # If you cannot install the package source the R files in the folder and make sure the 
 # packages boa and RColorBrewer are installed
+
+# Load the package
 library(bdskytools)
 
 
 # Extract the data and HPDs from the logfile
 ############################################
 
-# Enter the path to your logfile here!
+# Change this to the path of your logfile here!
 fname <- "~/Documents/Taming_the_BEAST/Tutorials-Git/Skyline-plots/precooked_runs/hcv_bdsky.log"
 lf    <- readLogfile(fname, burnin=0.1)
 
@@ -26,9 +28,6 @@ plotSkyline(1:10, Re_hpd, type='step', ylab="R")
 
 # Why is the result below misleading?
 plotSkyline(1:10, Re_hpd, type='smooth', ylab="R")
-
-# Delta only has a dimension of 1, so the skyline is not really insightful
-plotSkyline(range(times), as.matrix(delta_hpd), type='step', ylab="Delta")
 
 
 # Extract gridded HPDs  
@@ -57,12 +56,9 @@ plotSkyline(times, Re_gridded_hpd, type='lines', xlab="Time", ylab="R")
 # First 10, then 100, then 1000 of the individual MCMC steps. Now if we take the HPD 
 # interval at every fourth year and only plot that we get the smooth skyline in the
 # previous step.
-par(mfrow=c(3,1), mar=c(5,4,1,4)+0.1)
 plotSkyline(times, Re_gridded, type='steplines', traces=10, col=pal.dark(cblue,0.5),ylims=c(0,5), xlab="Time", ylab="R", main="10 traces")
 plotSkyline(times, Re_gridded, type='steplines', traces=100, col=pal.dark(cblue,0.5),ylims=c(0,5), xlab="Time", ylab="R", main="100 traces")
 plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue,0.1),ylims=c(0,5), xlab="Time", ylab="R", main="1000 traces")
-
-
 
 
 # Pretty skyline plots
@@ -76,7 +72,9 @@ abline(h=1, col=pal.dark(cred), lty=2)
 
 
 # Plot both Re and delta skylines on one set of axes
+# Delta only has a dimension of 1, so the skyline is not really insightful
 # Can also use this to compare skylines of the same parameter between different models (eg. changing the priors or number of shifts)
+plotSkyline(c(0,1), as.matrix(delta_hpd), type='step', ylab="Delta")
 par(mar=c(5,4,4,4)+0.1)
 plotSkylinePretty(range(times), as.matrix(delta_hpd), type='step', axispadding=0.0, col=pal.dark(cblue), fill=pal.dark(cblue, 0.5), col.axis=pal.dark(cblue),
 ylab=expression(delta), side=4, yline=2, ylims=c(0,1), xaxis=FALSE)

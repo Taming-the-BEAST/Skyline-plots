@@ -25,11 +25,10 @@
 \begin{center}
 
 	% Enter the name of your tutorial here
-	\textbf{\LARGE Skyline plots}\\\vspace{2mm}
+	\textbf{\LARGE Tutorial using BEAST v2.4.2}\\\vspace{2mm}
 
 	% Enter a short description of your tutorial here
-	\textbf{\textcolor{mycol}{\Large Inference of past population dynamics using Bayesian Coalescent Skyline
-and Birth-Death Skyline plots.}}\\
+	\textbf{\textcolor{mycol}{\Large Skyline plots}}\\
 
 	\vspace{4mm}
 
@@ -37,6 +36,8 @@ and Birth-Death Skyline plots.}}\\
 	{\Large {\em Nicola F. Müller and Louis du Plessis}}
 \end{center}
 
+Inference of past population dynamics using Bayesian Coalescent Skyline
+and Birth-Death Skyline plots.
 
 %%%%%%%%%%%%%%%%%
 % Tutorial body %
@@ -647,7 +648,7 @@ post-processing to plot the skyline.
 We will instead use the R package \lstinline!bdskytools! to plot the
 output of the bdsky. The package is still in development and currently
 not available over CRAN. Thus, we have to install the package directly
-over GitHub:
+over GitHub (note that you only have to install the package once):
 
 \begin{lstlisting}
 install.packages("devtools")
@@ -656,12 +657,15 @@ library(devtools)
 devtools::install_github("laduplessis/bdskytools")
 \end{lstlisting}
 
-To plot the results, we need to tell R where to find the
-\lstinline!*.log! file of our run and load it into R (discarding 10\% of
-samples as burn-in):
+Once the package is installed we have to load the package into our R
+workspace before we can use the functions in the package. To plot the
+results, we need to tell R where to find the \lstinline!*.log! file of
+our run and load it into R (discarding 10\% of samples as burn-in):
 
 \begin{lstlisting}
-fname <- <<Enter the path to your log file here>>
+library(bdskytools)
+
+fname <- "Replace this string with the path to your log file"
 lf    <- readLogfile(fname, burnin=0.1)
 \end{lstlisting}
 

@@ -331,7 +331,7 @@ There is no equivalent visualization of the `*.log` file of a BDSKY analysis in 
 <br>
 
 
-We will instead use the R package `bdskytools` to plot the output of the bdsky. The package is still in development and currently not available over CRAN. Thus, we have to install the package directly over GitHub: 
+We will instead use the R package `bdskytools` to plot the output of the bdsky. The package is still in development and currently not available over CRAN. Thus, we have to install the package directly over GitHub (note that you only have to install the package once): 
 
 ```{R}
 install.packages("devtools")
@@ -340,10 +340,13 @@ library(devtools)
 devtools::install_github("laduplessis/bdskytools")
 ```
 
+Once the package is installed we have to load the package into our R workspace before we can use the functions in the package.
 To plot the results, we need to tell R where to find the `*.log` file of our run and load it into R (discarding 10% of samples as burn-in): 
 
 ```{R}
-fname <- <<Enter the path to your log file here>>
+library(bdskytools)
+
+fname <- "Replace this string with the path to your log file"
 lf    <- readLogfile(fname, burnin=0.1)
 ```
 

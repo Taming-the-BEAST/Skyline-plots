@@ -49,6 +49,15 @@ times     <- 1993-timegrid
 plotSkyline(times, Re_gridded_hpd, type='smooth', xlab="Time", ylab="R")
 plotSkyline(times, Re_gridded_hpd, type='lines', xlab="Time", ylab="R")
 
+Re_rev <- revMatrix(Re_sky)
+Re_rev_gridded     <- gridSkyline(Re_rev, lf$origin, timegrid)
+Re_rev_gridded_hpd <- getMatrixHPD(Re_rev_gridded)
+plotSkyline(times, Re_rev_gridded_hpd, type='smooth', xlab="Time", ylab="R")
+
+Re_rev_gridded2     <- gridSkyline(Re_sky, lf$origin, timegrid, reverse=TRUE)
+Re_rev_gridded_hpd2 <- getMatrixHPD(Re_rev_gridded2)
+plotSkyline(times, Re_rev_gridded_hpd2, type='smooth', xlab="Time", ylab="R")
+
 
 # Where do the smooth skyline come from?
 ########################################

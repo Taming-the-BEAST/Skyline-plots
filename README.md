@@ -3,7 +3,7 @@ author: Nicola F. Müller,Louis du Plessis
 level: Beginner
 title: Skyline plots
 subtitle: Inference of past population dynamics using Bayesian Coalescent Skyline and Birth-Death Skyline plots.
-beastversion: 2.4.2
+beastversion: 2.5.x
 ---
 
 # Background
@@ -17,7 +17,7 @@ Population dynamics influence the shape of the tree and consequently, the shape 
 
 ### BEAST2 - Bayesian Evolutionary Analysis Sampling Trees 2
 
-BEAST2 is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees {% cite Bouckaert2014 --file Skyline-plots/master-refs %}. This tutorial uses the BEAST2 version 2.4.2.
+BEAST2 is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees {% cite Bouckaert2014 --file Skyline-plots/master-refs %}. This tutorial uses the BEAST2 version 2.5.x.
 
 
 ### BEAUti - Bayesian Evolutionary Analysis Utility

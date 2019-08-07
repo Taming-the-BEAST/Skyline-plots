@@ -7,6 +7,7 @@ beastversion: 2.5.x
 tracerversion: 1.7.x
 ---
 
+
 # Background
 
 Population dynamics influence the shape of the tree and consequently, the shape of the tree contains some information about past population dynamics. The so-called Skyline methods allow to extract this information from phylogenetic trees in a non-parametric manner. It is non-parametric since there is no underlying system of differential equations governing the inference of these dynamics. In this tutorial we will look at two different methods to infer these dynamics from sequence data. The first one is the Bayesian Skyline plot {% cite Drummond2005 --file Skyline-plots/master-refs %}, which is based on the coalescent model, and the second one is the Birth-Death skyline {% cite Stadler2013 --file Skyline-plots/master-refs %} plot based on the birth-death model. The conceptual difference between coalescent and birth-death approaches lies in the direction of the flow of time. In the coalescent, the time is modeled to go backwards, from present to past, while in the birth-death approach it is modeled to go forwards. Two other fundamental differences are the parameters that are inferred and the way sampling is treated. 
@@ -40,7 +41,7 @@ We will be using [R](\href{https://www.r-project.org) to analyze the output of t
 ----
 
 
-# Practical: Bayesian and birth-death skyline plots
+# Practical: Bayesian and birth-death skyline plot
 
 In this tutorial we will estimate the dynamics of the Egyptian Hepatitis C epidemic from genetic sequence data collected in 1993.
 
@@ -48,16 +49,13 @@ The aim of this tutorial is to:
 
 - Learn how to infer population dynamics;
 - Get to know how to choose the set-up of a skyline analysis;
-- Get to know the advantages and disadvantages of the Bayesian Skyline Plot and the Birth-Death Skyline.
+- Get to know the advantages and disadvantages of the Coalescent Bayesian Skyline Plot and the Birth-Death Skyline.
 
 
 ## The Data
 The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993 in Egypt {% cite Ray2000 --file Skyline-plots/master-refs %}. This dataset has been used previously to test the performance of skyline methods {% cite Drummond2005 --file Skyline-plots/master-refs %} {% cite Stadler2013 --file Skyline-plots/master-refs %}.
 
 With an estimated 15-25%, Egypt has the highest Hepatits C prevalence in the world. In the mid 20^(th) century, the prevalence of Hepatitis C increased drastically (see [Figure 1](#fig:prevalence) for estimates). We will try to infer this increase from sequence data. 
-
-The alignment file can be downloaded from the Taming the BEAST website at [https://taming-the-beast.org/tutorials/Skyline-plots/](https://taming-the-beast.org/tutorials/Skyline-plots/) by downloading the file `hcv.nexus` from the left-hand panel, under the heading **Date**.
-
 
 <figure>
 	<a id="fig:prevalence"></a>
@@ -78,7 +76,7 @@ While the coalescent-based Bayesian Skyline Plot is integrated in the BEAST2 cor
 
 > Open the **BEAST2 Package Manager** by navigating to **File > Manage Packages**. 
 > 
-> Install the **BDSKY** package by selecting it and clicking the **Install/Upgrade** button ([Figure 2](#fig:install)).
+> Install the **BDSKY** package by selecting it and clicking the **Install/Upgrade** button. ([Figure 2](#fig:install)
 >
 
 After the installation of a package, the program is on your computer, but BEAUti is unable to load the template files for the newly installed model unless it is restarted. So, let's restart BEAUti to make sure we have the **BDSKY** model at hand.
@@ -96,21 +94,13 @@ After the installation of a package, the program is on your computer, but BEAUti
 
 ----
 
-### Setting up the analysis with Bayesian Skyline Plot
+### Setting up the analysis with Bayesian Coalescent Skyline
 
-To start we have to import the alignment into BEAUti.
+To import the aligned sequences into BEAUti, use `File > Import Alignment` to select the `*.nexus` file.
 
-> In the **Partitions** panel, import the nexus file with the alignment by navigating to **File > Import Alignment** in the menu and then finding the `hcv.nex` file on your computer **or** simply drag and drop the file into the **BEAUti** window.
-> 
+BEAUti will recognize the sequences from the `*.nexus` file as nucleotide data. It will do so for sequence files with the character set of **A | C | G | T | N**, where **N** indicates an unknown nucleotide. As soon as other non-gap characters are included (e.g. using **R** or **Y** to indicate purines and pyramidines) BEAUti will not recognize the data as nucleotides anymore, unless the type of data is specified in the `*.nexus` file.
 
-BEAUti will recognize the sequences from the `*.nexus` file as nucleotide data. It will do so for sequence files with the character set of **A | C | G | T | N**, where **N** indicates an unknown nucleotide. As soon as other non-gap characters are included (e.g. using **R** or **Y** to indicate purines and pyramidines) BEAUti will not recognize the data as nucleotides anymore (unless the type of data is specified in the `*.nexus` file) and open a dialogue box to confirm the data type.
-
-The sequences were all sampled in 1993 so we are dealing with a homochronous alignment and do not need to specify tip dates. 
-
-> Skip the **Tip Dates** panel and navigate to the **Site Model** panel.
->
-
-The next step is to specify the model of nucleotide evolution (the site model). We will be using the GTR model ([Figure 3](#fig:model)), which is the most general reversible model and estimates transition probabilities between individual nucleotides separately. That means that the transition probabilities between e.g. **A** and **T** will be inferred separately to the ones between **A** and **C**, however transition probabilities from **A** to **C** will be the same as **C** to **A** etc. Additionally, we allow for rate heterogeneity among sites. We do this by changing the Gamma Category Count to 4 (normally between 4 and 6).
+After we have loaded the sequences into BEAUti, we have to specify the evolutionary model. We will be using the very general GTR model ([Figure 3](#fig:model)), which estimates transition probabilities between individual nucleotides separately, meaning that transition probabilities between e.g. **A** and **T** will be inferred separately to the ones between **A** and **C**. Additionally, we should allow for rate heterogeneity among sites. We can do this by changing the Gamma Category Count to 4 (normally between 4 and 6).
 
 <figure>
 	<a id="fig:model"></a>
@@ -347,7 +337,7 @@ The coalescent on the other hand does infer the effective population size, which
 
 ### Visualizing the Birth-Death Skyline Output
 
-There is no equivalent visualization of the `*.log` file of a BDSKY analysis in tracer as there is for the Bayesian Coalescent Skyline. But because BDSKY separates the full tree into equally spaced intervals, we can already get an idea of the inference just by looking at the inferred {% eqinline R_e %} values (see [Figure 19](#fig:bdsky_dynamics)). This gives us a good idea of the trend, but it is not completely accurate. Since every posterior sample has a different origin, the time spanned by each interval is slightly different in each posterior sample. Thus, the different intervals overlap slightly. The advantage to this is that we get a smooth estimate through time. The disadvantage is that we need to do some extra post-processing to plot the skyline.
+There is no equivalent visualization of the skyline plot of a Birth-death Skyline (BDSKY) analysis in Tracer as there is for the Coalescent Bayesian Skyline. But because BDSKY separates the full tree into equally spaced intervals, we can already get an idea of the inference just by looking at the inferred {% eqinline R_e %} values (see [Figure 19](#fig:bdsky_dynamics)). This gives us a good idea of the trend, but it is not completely accurate. Since we are also estimating the origin parameter, the interval times are slightly different in each posterior sample. Thus, the different intervals overlap slightly. The advantage of this is that we get a smooth estimate through time. The disadvantage is that we need to do some extra post-processing to plot the smooth skyline.
 
 <figure>
 	<a id="fig:bdsky_dynamics"></a>
@@ -357,7 +347,7 @@ There is no equivalent visualization of the `*.log` file of a BDSKY analysis in 
 <br>
 
 
-We will instead use the R package `bdskytools` to plot the output of the bdsky. The package is still in development and currently not available over CRAN. Thus, we have to install the package directly over GitHub (note that you only have to install the package once): 
+We will use the R-package `bdskytools` to plot the output of the BDSKY analysis. The package is still in development and currently not available over CRAN. Thus, we have to install the package directly over GitHub (note that you only have to install the package once): 
 
 ```{R}
 install.packages("devtools")
@@ -367,16 +357,18 @@ devtools::install_github("laduplessis/bdskytools")
 ```
 
 Once the package is installed we have to load the package into our R workspace before we can use the functions in the package.
-To plot the results, we need to tell R where to find the `*.log` file of our run and load it into R (discarding 10% of samples as burn-in): 
+To plot the results, we need to first tell R where to find the `*.log` file of our run and then load it into R (discarding 10% of samples as burn-in). If you are using RStudio, you can change the working directory to the directory where you stored your log files, which makes it easier to load the files in R.
 
 ```{R}
 library(bdskytools)
 
-fname <- "Replace this string with the path to your log file"
+# Navigate to Session > Set Working Directory > Choose Directory (on RStudio)
+# or change fname to the full path to the log file
+fname <- "hcv_bdsky.log"   
 lf    <- readLogfile(fname, burnin=0.1)
 ```
 
-Next, we can extract the HPDs of {% eqinline R_e %} and the becoming noninfectious rate: 
+Next, we can extract the HPDs of {% eqinline R_e %} and the becoming uninfectious rate: 
 
 ```{R}
 Re_sky    <- getSkylineSubset(lf, "reproductiveNumber")
@@ -385,9 +377,9 @@ delta_hpd <- getHPD(lf$becomeUninfectiousRate)
 ```
 
 
-Next we plot the raw HPD intervals of {% eqinline R_e %}. This is equivalent to the output in tracer. 
+Next we plot the raw HPD intervals of {% eqinline R_e %}. This is equivalent to the output in Tracer. 
 
-```R
+```{R}
 plotSkyline(1:10, Re_hpd, type='step', ylab="R")
 ```
 
@@ -396,12 +388,13 @@ plotSkyline(1:10, Re_hpd, type='step', ylab="R")
 	<img style="width:80%;" src="figures/bdsky_hpds.png" alt="">
 	<figcaption>Figure 20: The HPDs of {% eqinline R_e %} (equivalent to the previous figure).</figcaption>
 </figure>
+<br>
 
-In order to plot the smooth skyline we have to calculate the HPD on a finer timegrid. To do this we first calculate the marginal posterior at every time of interest using the function `gridSkyline` and then calculate the HPD for each of the finer time intervals. The times to grid the skyline on (`timegrid`), refers to years in the past. 
+In order to plot the smooth skyline we have to marginalise our {% eqinline R_e %} estimates on a regular timegrid and calculate the HPD at each gridpoint. It is usually a good idea to use a grid with more cells than the dimension of {% eqinline R_e %}. To do this we first calculate the marginal posterior at every time of interest using the function `gridSkyline` and then calculate the HPD for each of the finer time intervals. The times to grid the skyline on (`timegrid`), refers to years in the past. 
 
 ```R
-timegrid <- seq(1,400,length.out=100)
-Re_gridded     <- gridSkyline(Re_sky, lf$origin, timegrid)
+timegrid       <- seq(0,400,length.out=101)
+Re_gridded     <- gridSkyline(Re_sky,    lf$origin, timegrid)
 Re_gridded_hpd <- getMatrixHPD(Re_gridded)
 ```
 
@@ -417,13 +410,19 @@ plotSkyline(times, Re_gridded_hpd, type='smooth', xlab="Time", ylab="R")
 	<img style="width:80%;" src="figures/bdsky_smooth.png" alt="">
 	<figcaption>Figure 21: The smooth {% eqinline R_e %} skyline.</figcaption>
 </figure>
+<br>
 
-We can plot the gridded skyline (not its HPDs) for a few of the samples to see what it really looks like. Note that the intervals overlap between different posterior samples. This is because the origin is different in each sample. As we add more samples to the plot we start to see the smooth skyline appear. 
+We can plot the gridded {% eqinline R_e %} skyline (not its HPDs) for a few of the MCMC samples to see what it really looks like as the Markov chain samples parameters. Note that the intervals overlap between different posterior samples. This is because the origin is different in each of the plotted samples. As we add more samples to the plot we start to see the smooth skyline appear. 
 
 ```R
-plotSkyline(times, Re_gridded, type='steplines', traces=10, col=pal.dark(cblue,0.5),ylims=c(0,5), xlab="Time", ylab="R")
-plotSkyline(times, Re_gridded, type='steplines', traces=100, col=pal.dark(cblue,0.5),ylims=c(0,5), xlab="Time", ylab="R")
-plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue,0.1),ylims=c(0,5), xlab="Time", ylab="R")
+plotSkyline(times, Re_gridded, type='steplines', traces=1, col=pal.dark(cblue,1),ylims=c(0,5), 
+            xlab="Time", ylab="R", main="1 random sample")
+plotSkyline(times, Re_gridded, type='steplines', traces=10, col=pal.dark(cblue,0.5),ylims=c(0,5), 
+            xlab="Time", ylab="R", main="10 random samples")
+plotSkyline(times, Re_gridded, type='steplines', traces=100, col=pal.dark(cblue,0.5),ylims=c(0,5), 
+            xlab="Time", ylab="R", main="100 random samples")
+plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue,0.1),ylims=c(0,5), 
+            xlab="Time", ylab="R", main="1000 random samples")
 ```
 
 <figure>
@@ -431,17 +430,21 @@ plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue
 	<img style="width:80%;" src="figures/bdsky_traces.png" alt="">
 	<figcaption>Figure 22: Increasing the number of traces plotted from 10 to 100, to 1000.</figcaption>
 </figure>
+<br>
 
-Finally, we can plot both the {% eqinline R_e %} and the becoming noninfectious rate on a single set of axes. Since we left the dimension of the becoming noninfectious rate at 1, it is constant through time. (Normally we would not plot constant parameters over a time period). The output should be similar to [Figure 23](#fig:bdsky_out).
+Finally, we can plot both the {% eqinline R_e %} and {% eqinline \delta %} (the becoming uninfectious rate) on a single set of axes. Since we left the dimension of the becoming uninfectious rate at 1, it is constant through time. (Normally we would not plot constant parameters over a time period)! The output should be similar to [Figure 23](#fig:bdsky_out).
 
 ```R
 par(mar=c(5,4,4,4)+0.1)
 
-plotSkylinePretty(range(times), as.matrix(delta_hpd), type='step', axispadding=0.0, col=pal.dark(cblue), fill=pal.dark(cblue, 0.5), col.axis=pal.dark(cblue),
-ylab=expression(delta), side=4, yline=2, ylims=c(0,1), xaxis=FALSE)
+plotSkylinePretty(range(times), as.matrix(delta_hpd), type='step', axispadding=0.0, 
+                  col=pal.dark(cblue), fill=pal.dark(cblue, 0.5), col.axis=pal.dark(cblue), 
+                  ylab=expression(delta), side=4, yline=2, ylims=c(0,1), xaxis=FALSE)
 
-plotSkylinePretty(times, Re_gridded_hpd, type='smooth', axispadding=0.0, col=pal.dark(corange), fill=pal.dark(corange, 0.5), col.axis=pal.dark(corange),
-xlab="Time", ylab=expression("R"[e]), side=2, yline=2.5, xline=2, xgrid=TRUE, ygrid=TRUE, gridcol=pal.dark(cgray), ylims=c(0,3), new=TRUE, add=TRUE)
+plotSkylinePretty(times, Re_gridded_hpd, type='smooth', axispadding=0.0, 
+                  col=pal.dark(corange), fill=pal.dark(corange, 0.5), col.axis=pal.dark(corange), 
+                  xlab="Time", ylab=expression("R"[e]), side=2, yline=2.5, xline=2, xgrid=TRUE, 
+                  ygrid=TRUE, gridcol=pal.dark(cgray), ylims=c(0,3), new=TRUE, add=TRUE)
 ```
 
 <figure>
@@ -451,7 +454,7 @@ xlab="Time", ylab=expression("R"[e]), side=2, yline=2.5, xline=2, xgrid=TRUE, yg
 </figure>
 <br>
 
-An R script with the above commands (and a few extras) is in the `scripts/` directory (`Skyline_Example.R`). 
+An R-script with the above commands (and a few extras) is in the `scripts/` directory (`Skyline_Example.R`). 
 If the bdskytools package cannot be installed from GitHub the relevant scripts are also provided in the `scripts/` directory.
 
 
@@ -476,10 +479,4 @@ Both the coalescent and the birth-death skylines assume that the population is w
 # Relevant References
 
 {% bibliography --cited --file Skyline-plots/master-refs %}
-
-
-
-
-
-
 

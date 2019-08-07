@@ -40,7 +40,7 @@ We will be using [R](\href{https://www.r-project.org) to analyze the output of t
 ----
 
 
-# Practical: Bayesian and birth-death skyline plot
+# Practical: Bayesian and birth-death skyline plots
 
 In this tutorial we will estimate the dynamics of the Egyptian Hepatitis C epidemic from genetic sequence data collected in 1993.
 
@@ -48,13 +48,16 @@ The aim of this tutorial is to:
 
 - Learn how to infer population dynamics;
 - Get to know how to choose the set-up of a skyline analysis;
-- Get to know the advantages and disadvantages of the Coalescent Bayesian Skyline Plot and the Birth-Death Skyline.
+- Get to know the advantages and disadvantages of the Bayesian Skyline Plot and the Birth-Death Skyline.
 
 
 ## The Data
 The dataset consists of an alignment of 63 Hepatitis C sequences sampled in 1993 in Egypt {% cite Ray2000 --file Skyline-plots/master-refs %}. This dataset has been used previously to test the performance of skyline methods {% cite Drummond2005 --file Skyline-plots/master-refs %} {% cite Stadler2013 --file Skyline-plots/master-refs %}.
 
 With an estimated 15-25%, Egypt has the highest Hepatits C prevalence in the world. In the mid 20^(th) century, the prevalence of Hepatitis C increased drastically (see [Figure 1](#fig:prevalence) for estimates). We will try to infer this increase from sequence data. 
+
+The alignment file can be downloaded from the Taming the BEAST website at [https://taming-the-beast.org/tutorials/Skyline-plots/](https://taming-the-beast.org/tutorials/Skyline-plots/) by downloading the file `hcv.nexus` from the left-hand panel, under the heading **Date**.
+
 
 <figure>
 	<a id="fig:prevalence"></a>
@@ -75,7 +78,7 @@ While the coalescent-based Bayesian Skyline Plot is integrated in the BEAST2 cor
 
 > Open the **BEAST2 Package Manager** by navigating to **File > Manage Packages**. 
 > 
-> Install the **BDSKY** package by selecting it and clicking the **Install/Upgrade** button. ([Figure 2](#fig:install)
+> Install the **BDSKY** package by selecting it and clicking the **Install/Upgrade** button ([Figure 2](#fig:install)).
 >
 
 After the installation of a package, the program is on your computer, but BEAUti is unable to load the template files for the newly installed model unless it is restarted. So, let's restart BEAUti to make sure we have the **BDSKY** model at hand.
@@ -93,13 +96,21 @@ After the installation of a package, the program is on your computer, but BEAUti
 
 ----
 
-### Setting up the analysis with Bayesian Coalescent Skyline
+### Setting up the analysis with Bayesian Skyline Plot
 
-To import the aligned sequences into BEAUti, use `File > Import Alignment` to select the `*.nexus` file.
+To start we have to import the alignment into BEAUti.
 
-BEAUti will recognize the sequences from the `*.nexus` file as nucleotide data. It will do so for sequence files with the character set of **A | C | G | T | N**, where **N** indicates an unknown nucleotide. As soon as other non-gap characters are included (e.g. using **R** or **Y** to indicate purines and pyramidines) BEAUti will not recognize the data as nucleotides anymore, unless the type of data is specified in the `*.nexus` file.
+> In the **Partitions** panel, import the nexus file with the alignment by navigating to **File > Import Alignment** in the menu and then finding the `hcv.nex` file on your computer **or** simply drag and drop the file into the **BEAUti** window.
+> 
 
-After we have loaded the sequences into BEAUti, we have to specify the evolutionary model. We will be using the very general GTR model ([Figure 3](#fig:model)), which estimates transition probabilities between individual nucleotides separately, meaning that transition probabilities between e.g. **A** and **T** will be inferred separately to the ones between **A** and **C**. Additionally, we should allow for rate heterogeneity among sites. We can do this by changing the Gamma Category Count to 4 (normally between 4 and 6).
+BEAUti will recognize the sequences from the `*.nexus` file as nucleotide data. It will do so for sequence files with the character set of **A | C | G | T | N**, where **N** indicates an unknown nucleotide. As soon as other non-gap characters are included (e.g. using **R** or **Y** to indicate purines and pyramidines) BEAUti will not recognize the data as nucleotides anymore (unless the type of data is specified in the `*.nexus` file) and open a dialogue box to confirm the data type.
+
+The sequences were all sampled in 1993 so we are dealing with a homochronous alignment and do not need to specify tip dates. 
+
+> Skip the **Tip Dates** panel and navigate to the **Site Model** panel.
+>
+
+The next step is to specify the model of nucleotide evolution (the site model). We will be using the GTR model ([Figure 3](#fig:model)), which is the most general reversible model and estimates transition probabilities between individual nucleotides separately. That means that the transition probabilities between e.g. **A** and **T** will be inferred separately to the ones between **A** and **C**, however transition probabilities from **A** to **C** will be the same as **C** to **A** etc. Additionally, we allow for rate heterogeneity among sites. We do this by changing the Gamma Category Count to 4 (normally between 4 and 6).
 
 <figure>
 	<a id="fig:model"></a>

@@ -7,9 +7,10 @@ beastversion: 2.5.x
 tracerversion: 1.7.x
 ---
 
+
 # Background
 
-Population dynamics influence the shape of the tree and consequently, the shape of the tree contains some information about past population dynamics. The so-called Skyline methods allow to extract this information from phylogenetic trees in a non-parametric manner. It is non-parametric since there is no underlying system of differential equations governing the inference of these dynamics. In this tutorial we will look at two different methods to infer these dynamics from sequence data. The first one is the Bayesian Skyline plot {% cite Drummond2005 --file Skyline-plots/master-refs %}, which is based on the coalescent model, and the second one is the Birth-Death skyline {% cite Stadler2013 --file Skyline-plots/master-refs %} plot based on the birth-death model. The conceptual difference between coalescent and birth-death approaches lies in the direction of the flow of time. In the coalescent, the time is modeled to go backwards, from present to past, while in the birth-death approach it is modeled to go forwards. Two other fundamental differences are the parameters that are inferred and the way sampling is treated. 
+Population dynamics influence the shape of the tree and consequently, the shape of the tree contains some information about past population dynamics. The so-called Skyline methods allow to extract this information from phylogenetic trees in a non-parametric manner. It is non-parametric since there is no underlying system of differential equations governing the inference of these dynamics. In this tutorial we will look at two different methods to infer these dynamics from sequence data. The first one is the Coalescent Bayesian Skyline plot {% cite Drummond2005 --file Skyline-plots/master-refs %}, which is based on the coalescent model, and the second one is the Birth-Death skyline {% cite Stadler2013 --file Skyline-plots/master-refs %} plot based on the birth-death model. The conceptual difference between coalescent and birth-death approaches lies in the direction of the flow of time. In the coalescent, the time is modeled to go backwards, from present to past, while in the birth-death approach it is modeled to go forwards. Two other fundamental differences are the parameters that are inferred and the way sampling is treated. 
 
 ----
 
@@ -40,7 +41,7 @@ We will be using [R](\href{https://www.r-project.org) to analyze the output of t
 ----
 
 
-# Practical: Bayesian and birth-death skyline plots
+# Practical: Bayesian and Birth-death Skyline Plots
 
 In this tutorial we will estimate the dynamics of the Egyptian Hepatitis C epidemic from genetic sequence data collected in 1993.
 
@@ -48,7 +49,7 @@ The aim of this tutorial is to:
 
 - Learn how to infer population dynamics;
 - Get to know how to choose the set-up of a skyline analysis;
-- Get to know the advantages and disadvantages of the Bayesian Skyline Plot and the Birth-Death Skyline.
+- Get to know the advantages and disadvantages of the Coalescent Bayesian Skyline Plot and the Birth-Death Skyline.
 
 
 ## The Data
@@ -183,14 +184,22 @@ The Coalescent Bayesian Skyline divides the time between the present and the roo
 
 This sets the number of segments equal to 4 (the parameter dimension), which means {% eqinline N_e %} will be allowed to change 3 times between the tMRCA and the present (if we have {% eqinline d %}  segments, {% eqinline N_e %} is allowed to change {% eqinline d-1 %} times. 
 
-Choosing the dimension for the Bayesian Skyline can be rather arbitrary. If the dimension is chosen too low, not all population size changes are captured (the resulting skyline plot is too smooth), but if it is chosen too large, there may be too little information in an segment to support a robust estimate of the population size (the resulting skyline plot is too noisy). There are extensions in BEAST of the coalescent skyline that either sample the number of segments (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plots/master-refs %}) or do not require the number of segments to be specified (Skyride {% cite Minin2008 --file Skyline-plots/master-refs %}).
-
-We can leave the rest of the priors (for the site model parameters) as they are and save the XML file.
+We can leave the rest of the priors as they are and save the XML file. We want to shorten the chain length and decrease the sampling frequency so the analysis completes in a reasonable time and the output files stay small. (Keep in mind that it will be necessary to run a longer chain for parameters to mix properly).
 
 > Navigate to the **MCMC** panel. 
 >
-> Leave all settings at their default values and save the file as `hcv_coal.xml`.
+> Change the **Chain Length** from 10'000'000 to 3'000'000.
+> 
+> Click on the arrow next to the **tracelog** and change the **File Name** to `$(filebase).log` and set the 
+> **Log Every** to 3'000.
+> 
+> Click on the arrow next to the **treelog** and change the **File Name** to `$(filebase).$(tree).log` and set the 
+> **Log Every** to 3'000.
+> 
+> Leave all other settings at their default values and save the file as `hcv_coal.xml`.
 >
+
+When we run the analysis `$(filebase)` in the name of the `*.log` and `*.trees` files will be replaced by the name of the XML file. This is a good idea, since it makes it easy to keep track of which XML files produced which output files.
 
 Now we are ready to run the analysis.
 
@@ -201,7 +210,7 @@ Now we are ready to run the analysis.
 > Hit **Run** to start the analysis.
 >
 
-Read through the next section while waiting for your results or start preparing the XML file for the [birth-death skyline](#sec:bdsky) analysis.
+The analysis will take 5-10 minutes to run. Read through the next section while waiting for your results or start preparing the XML file for the [birth-death skyline](#sec:bdsky) analysis.
 
 
 
@@ -246,26 +255,38 @@ Estimates of {% eqinline N_e %} therefore do not directly tell us something abou
 
 For the reconstruction of the population dynamics, we need two files, the `*.log` file and the `*.trees` file. The log file contains the information about the group sizes and population sizes of each segment, while the trees file is needed for the times of the coalescent events. 
 
-> Load the logfile into **Tracer** to check mixing and parameter estimates. 
+> Load the logfile into **Tracer** to check mixing and parameter estimates ([Figure 9](#fig:tracer_bsp)).  
 >
+
+<figure>
+	<a id="fig:tracer_bsp"></a>
+	<img src="figures/bsp_tracer.png" alt="">
+	<figcaption>Figure 9: Loading the log file into Tracer.</figcaption>
+</figure>
+<br>
+
+Because we shortened the chain most parameters have very low ESS values. If you like, you can compare your results with the example results we obtained with identical settings and a chain of 30,000,000 (`hcv_coal_30M.log`).  
+
 > Navigate to **Analysis > Bayesian Skyline Reconstruction**. From there open the `*.trees` file. To get the correct dates in the analysis we should specify the **Age of the youngest tip**. In our case it is 1993, the year where all the samples were taken. If the samples were taken through time (heterochronous data), the age of the youngest tip is the time when the most recent sample was taken. 
 > 
-> Press **OK** to reconstruct the past population dynamics will be performed ([Figure 7](#fig:trees)).
+> Press **OK** to reconstruct the past population dynamics ([Figure 10](#fig:trees)).
 >
 
 <figure>
 	<a id="fig:trees"></a>
-	<img style="width:50%;" src="figures/open_trees.png" alt="">
-	<figcaption>Figure 7: Reconstructing the Bayesian Skyline plot in Tracer.</figcaption>
+	<img style="width:75%;" src="figures/open_trees.png" alt="">
+	<figcaption>Figure 10: Reconstructing the Bayesian Skyline plot in Tracer.</figcaption>
 </figure>
 <br>
 
-The output will have the years on the x-axis and the effective population size on the y-axis. By default, the y-axis is on a log-scale. If everything worked as it is supposed to work you will see a sharp increase in the effective population size in the mid 20^(th) century, similar to what is seen on [Figure 8](#fig:skyline).
+The output will have the years on the x-axis and the effective population size on the y-axis. By default, the y-axis is on a log-scale. If everything worked as it is supposed to work you will see a sharp increase in the effective population size in the mid 20^(th) century, similar to what is seen on [Figure 11](#fig:skyline).
+
+(Note that the reconstruction will only work if the `*.log` and `*.trees` files contain the same number of states and both files were logged at the same frequency).
 
 <figure>
 	<a id="fig:skyline"></a>
-	<img style="width:50%;" src="figures/skyline_analysis.png" alt="">
-	<figcaption>Figure 8: Bayesian Coalescent Skyline analysis output. The black line is the median estimate of the estimated effective population size (can be changed to the mean estimate). The two blue lines are the upper an the lower estimates of 95% interval. The x-axis is the time in years.</figcaption>
+	<img style="width:75%;" src="figures/skyline_analysis.png" alt="">
+	<figcaption>Figure 11: Coalescent Bayesian Skyline analysis output. The black line is the median estimate of the estimated effective population size (can be changed to the mean estimate). The two blue lines are the upper and lower bounds of the 95% HPD interval. The x-axis is the time in years and the y-axis is on a log-scale.</figcaption>
 </figure>
 <br>
 
@@ -283,6 +304,10 @@ The exported file will have five rows, the time, the mean, median, lower and upp
 
 ### Choosing the Dimension
 
+Choosing the dimension for the Bayesian Skyline can be rather arbitrary. If the dimension is chosen too low, not all population size changes are captured (the resulting skyline plot is too smooth), but if it is chosen too large, there may be too little information in an segment to support a robust estimate of the population size (the resulting skyline plot is too noisy). There are extensions in BEAST of the coalescent skyline that either sample the number of segments (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plots/master-refs %}) or do not require the number of segments to be specified (Skyride {% cite Minin2008 --file Skyline-plots/master-refs %}).
+
+
+
 If we compare the estimates of the population dynamics using different dimensions, we see that most of the dynamics are already captured with having only 2 dimensions, as shown in [Figure 9](#fig:comparison). Adding more dimensions only changes the inferred effective population size before 1900. Note that adding more dimensions adds a slight dip before the increase in the effective population size (around 1900). When comparing to the HPD intervals ([Figure 8](#fig:skyline)) we see that this dip is not significant and may not be indicative of a real decrease in the effective population size before the subsequent increase.
 
 
@@ -298,7 +323,7 @@ The choice of the number of dimensions can also have a direct effect on how fast
 <figure>
 	<a id="fig:ess"></a>
 	<img style="width:50%;" src="figures/ess_vs_dim_coal.png" alt="">
-	<figcaption>Figure 10: The ESS value of the posterior after running an MCMC chain with {% eqinline 10^7 %} samples, logged every {% eqinline 10^3 %} steps and a burnin of 10% for using different dimensions of the Bayesian Coalescent Skyline.</figcaption>
+	<figcaption>Figure 10: The ESS value of the posterior after running an MCMC chain with {% eqinline 10^7 %} samples, logged every {% eqinline 10^3 %} steps and a burnin of 10% for using different dimensions of the Coalescent Bayesian Skyline.</figcaption>
 </figure>
 <br>
 
@@ -406,12 +431,20 @@ The rest of the priors pertain to the site model parameters and we can leave the
 
 > Navigate to the **MCMC** panel. 
 >
-> Leave all settings at their default values and save the file as `hcv_bdsky.xml`.
+> Change the **Chain Length** from 10'000'000 to 3'000'000.
+> 
+> Click on the arrow next to the **tracelog** and change the **File Name** to `$(filebase).log` and set the 
+> **Log Every** to 3'000.
+> 
+> Click on the arrow next to the **treelog** and change the **File Name** to `$(filebase).$(tree).log` and set the 
+> **Log Every** to 3'000.
+> 
+> Leave all other settings at their default values and save the file as `hcv_bdsky.xml`.
 >
 
 Now we are ready to run the analysis.
 
-> Start **BEAST2** and choose the file `hcv_coal.xml`. 
+> Start **BEAST2** and choose the file `hcv_bdsky.xml`. 
 > 
 > If you have **BEAGLE** installed tick the box to **Use BEAGLE library if available**, which will make the run faster.
 >
@@ -462,6 +495,8 @@ The coalescent on the other hand does infer the effective population size, which
 
 There is no equivalent visualization of the skyline plot of a Birth-death Skyline (BDSKY) analysis in Tracer as there is for the Coalescent Bayesian Skyline. But because BDSKY separates the full tree into equally spaced intervals, we can already get an idea of the inference just by looking at the inferred {% eqinline R_e %} values (see [Figure 19](#fig:bdsky_dynamics)). This gives us a good idea of the trend, but it is not completely accurate. Since we are also estimating the origin parameter, the interval times are slightly different in each posterior sample. Thus, the different intervals overlap slightly. The advantage of this is that we get a smooth estimate through time. The disadvantage is that we need to do some extra post-processing to plot the smooth skyline.
 
+As with the Coalescent Bayesian Skyline, because we shortened the chain most parameters have very low ESS values. If you like, you can compare your results with the example results we obtained with identical settings and a chain of 30,000,000 (`hcv_bdsky_30M.log`).  
+
 <figure>
 	<a id="fig:bdsky_dynamics"></a>
 	<img src="figures/bdsky_tracer.png" alt="">
@@ -509,7 +544,7 @@ plotSkyline(1:10, Re_hpd, type='step', ylab="R")
 <figure>
 	<a id="fig:bdsky_hpds"></a>
 	<img style="width:80%;" src="figures/bdsky_hpds.png" alt="">
-	<figcaption>Figure 20: The HPDs of {% eqinline R_e %} (equivalent to the previous figure).</figcaption>
+	<figcaption>Figure 20: The HPDs of {% eqinline R_e %} (equivalent to the previous figure from Tracer).</figcaption>
 </figure>
 <br>
 
@@ -551,7 +586,7 @@ plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue
 <figure>
 	<a id="fig:bdsky_traces"></a>
 	<img style="width:80%;" src="figures/bdsky_traces.png" alt="">
-	<figcaption>Figure 22: Increasing the number of traces plotted from 10 to 100, to 1000.</figcaption>
+	<figcaption>Figure 22: Increasing the number of traces plotted from 1 to 10, to 100, to 1000.</figcaption>
 </figure>
 <br>
 
@@ -573,7 +608,7 @@ plotSkylinePretty(times, Re_gridded_hpd, type='smooth', axispadding=0.0,
 <figure>
 	<a id="fig:bdsky_out"></a>
 	<img style="width:80%;" src="figures/bdsky_output_pretty.png" alt="">
-	<figcaption>Figure 23: Estimates of the inferred {% eqinline R_e %} (orange) over time and the estimate of the becoming un-infectious rate (blue), for which we only used one value.</figcaption>
+	<figcaption>Figure 23: Estimates of the inferred {% eqinline R_e %} (orange) over time and the estimate of the becoming uninfectious rate (blue), for which we only used one value.</figcaption>
 </figure>
 <br>
 
@@ -585,7 +620,7 @@ If the bdskytools package cannot be installed from GitHub the relevant scripts a
 
 ## Some considerations for using skyline plots
 
-Both the coalescent and the birth-death skylines assume that the population is well-mixed. That is, they assume that there is no significant population structure and that the sequences are a random sample from the population. However, if there is population structure, for instance sequences were sampled from two different villages and there is much more contact within than between villages, then the results will be biased {% cite Heller2013 --file Skyline-plots/master-refs %}. Instead a structured model should be used to account for these biases.
+Both the coalescent and the birth-death skylines assume that the population is well-mixed. That is, they assume that there is no significant population structure and that the sequences are a random sample from the population. However, if there is population structure, for instance sequences were sampled from two different villages and there is much more contact within than between villages, then the results will be biased {% cite Heller2013 --file Skyline-plots/master-refs %}. Instead a structured model should then be used to account for these biases.
 
 
 ----

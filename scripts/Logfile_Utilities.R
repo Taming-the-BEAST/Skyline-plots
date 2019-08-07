@@ -2,7 +2,8 @@
 # Utilities for reading BEAST2 logfiles and getting HPDs
 
 #' Wrapper for timing a function
-#' (probably not accurate)
+#' 
+#' (probably not very accurate)
 #' 
 #' @export
 timer <- function(fun, ...) {
@@ -27,6 +28,7 @@ revMatrix <- function(data, margin=1) {
 
 
 #' Get HPD of a posterior sample
+#' 
 #' Uses Chen and Shao algorithm as implemented in boa package.
 #' 
 #' @param data The samples from the posterior.
@@ -42,6 +44,7 @@ getHPD <- function(data, alpha=0.05) {
 
 
 #' Get HPD of a matrix of values e.g. a skyline
+#' 
 #' Uses Chen and Shao algorithm as implemented in boa package.
 #'  
 #' @param data The samples from the posterior. Assumes by default that each row represents a posterior sample and each column a parameter (interval).
@@ -55,7 +58,8 @@ getMatrixHPD <- function(datamat, margin=2, alpha=0.05) {
 
 
 #' Extract all matching parameters from the logfile
-#' e.g. if par="R0" extract (R0s.1 R0s.2 R0s.3 etc.)
+#' 
+#' if par="R0" extract (R0s.1 R0s.2 R0s.3 etc.)
 #' 
 #' par needs to be at the start of the string
 #' @export
@@ -79,16 +83,17 @@ readLogfile <- function(filename, burnin=0.1, maxsamples=-1) {
 
 
 #' Interpolates skyline on a time grid (returns a matrix)
-#' Assumes that samples are rows and skyline variables are columns (in order)
-#' Every sample has the skyline from times[1] to origin[i] (or origin[i] to times[1] if reverse=TRUE)
+#' 
+#' Assumes that generations are rows and skyline variables are columns (in order)
+#' Every generation has the skyline from times[1] to origin[i] (or origin[i] to times[1] if reverse=TRUE)
 #' Assumes that intervals in the skyline are equidistant
 #' 
-#' @param skyline Matrix of the skyline variables from the BEAST2 logfile. 
-#'                Each column is a dimension in the skyline and rows are samples in the MCMC chain
-#' @param origin  The time between the origin and the most recent sample
-#' @param times   Times to grid the skyline to
+#' @param skyline The skyline matrix (rows = mcmc generations, columns = skyline variables)
+#' @param origin  The origin of the skyline, for each row in the skyline
+#' @param times   The regular timegrid to return the marginal posterior on
 #' @param reverse If FALSE assumes that skyline[,1] is the oldest interval (skyline is forward in time - oldest to newest), 
 #'                else if TRUE assume skyline[,1] is the most recent interval (skyline is backward in time - newest to oldest).
+#'                Setting reverse == TRUE is equivalent to reversing the skyline and then running the function with reverse == FALSE
 #' 
 #' @export
 gridSkyline <- function(skyline, origin, times, reverse=FALSE) {
@@ -112,7 +117,6 @@ gridSkyline <- function(skyline, origin, times, reverse=FALSE) {
     skyline_gridded[i,] <- skyline_matrix[i,getIndices(i)]
   }
   
-
   return (skyline_gridded)
 }
 
@@ -135,4 +139,48 @@ gridSkylineVec <- function(skyline, origin, times, reverse=FALSE) {
   
   return(t(skyline_gridded))
 }
+
+
+#' Grid the skyline between two dates
+#' 
+#' This function makes the assumption that the dates in BEAST are in units of years.
+#' enddate, from and to should all be date objects or Strings in the format "yyyy-mm-dd"
+#' 
+#' @param skyline The skyline matrix (rows = mcmc generations, columns = skyline variables)
+#' @param origin  The origin of the skyline, for each row in the skyline
+#' @param enddate End date of the skyline (most recent sample in the tree).
+#' @param from    Start of gridded skyline
+#' @param to      End of gridded skyline
+#' @param intervals Number of intervals between from and to, or 'weeks' or 'months'
+#' 
+#' @export
+gridSkylineDates <- function(skyline, origin, enddate, from, to=NA, intervals='weeks', reverse=FALSE) {
+  
+  # 'to' not specified, go to last date in skyline
+  if (is.na(to))
+    to <- enddate
+  
+  # Get sequence of dates to grid to
+  if (intervals == 'weeks') 
+    dates <- getWeeks(start=as.Date(from), end=as.Date(to), inclusive=FALSE)
+  else
+    if (intervals == 'months')
+      dates <- getMonths(start=as.Date(from), end=as.Date(to))
+    else
+      dates <- seq(from=as.Date(from),to=as.Date(to), length.out=(intervals+1))
+    
+    # Convert to years before enddate (present)
+    timegrid <- getYearDate(enddate) - getYearDate(dates)
+    
+    #if (reverse == FALSE)
+    #    timegrid <- rev(timegrid)
+    
+    # Grid skyline
+    skyline_gridded <- gridSkyline(skyline, origin, timegrid, reverse=reverse)
+    #colnames(skyline_gridded) <- dates
+    
+    return(list(dates=dates, skyline=skyline_gridded))
+    #return(skyline_gridded)
+}
+
 

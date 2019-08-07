@@ -60,7 +60,7 @@ plotSkyline(times, Re_gridded_hpd, type='lines', xlab="Time", ylab="R")
 
 # Where does the smooth skyline come from?
 ##########################################
-# Plot individual samples of the skyline from the MCMC chain, so you can see how we 
+# Plot individual samples of the gridded skyline from the MCMC chain, so you can see how we 
 # get a smooth skyline when marginalising
 # First plot 1, then 10, then 100, then 1000 of the individual MCMC steps. Now if we 
 # take the HPD interval at every fourth year and only plot that we get the smooth skyline

@@ -11,7 +11,7 @@ tracerversion: 1.7.x
 
 # Background
 
-Population dynamics influence the shape of the tree and consequently, the shape of the tree contains some information about past population dynamics. The so-called Skyline methods allow to extract this information from phylogenetic trees in a non-parametric manner. It is non-parametric since there is no underlying system of differential equations governing the inference of these dynamics. In this tutorial we will look at two different methods to infer these dynamics from sequence data. The first one is the Coalescent Bayesian Skyline plot {% cite Drummond2005 --file Skyline-plots/master-refs %}, which is based on the coalescent model, and the second one is the Birth-Death skyline {% cite Stadler2013 --file Skyline-plots/master-refs %} plot based on the birth-death model. The conceptual difference between coalescent and birth-death approaches lies in the direction of the flow of time. In the coalescent, the time is modeled to go backwards, from present to past, while in the birth-death approach it is modeled to go forwards. Two other fundamental differences are the parameters that are inferred and the way sampling is treated. 
+Population dynamics influence the shape of the tree and consequently, the shape of the tree contains some information about past population dynamics. The so-called Skyline methods allow to extract this information from phylogenetic trees in a non-parametric manner. It is non-parametric since there is no underlying system of differential equations governing the inference of these dynamics. In this tutorial we will look at two different methods to infer these dynamics from sequence data. The first one is the Coalescent Bayesian Skyline plot {% cite Drummond2005 --file Skyline-plots/master-refs %}, which is based on the coalescent model, and the second one is the Birth-Death Skyline plot {% cite Stadler2013 --file Skyline-plots/master-refs %} based on the birth-death model. The conceptual difference between coalescent and birth-death approaches lies in the direction of the flow of time. In the coalescent, the time is modeled to go backwards, from present to past, while in the birth-death approach it is modeled to go forwards. Two other fundamental differences are the parameters that are inferred and the way sampling is treated. 
 
 ----
 
@@ -35,14 +35,14 @@ Both BEAST2 and BEAUti2 are Java programs, which means that the exact same code 
 Tracer ([http://beast.community/tracer](http://beast.community/tracer)) is used to summarise the posterior estimates of the various parameters sampled by the Markov Chain. This program can be used for visual inspection and to assess convergence. It helps to quickly view median estimates and 95% highest posterior density intervals of the parameters, and calculates the effective sample sizes (ESS) of parameters. It can also be used to investigate potential parameter correlations. We will be using Tracer v{{ page.tracerversion }}.
 
 
-### R
+### R / RStudio
 
-We will be using [R](\href{https://www.r-project.org) to analyze the output of the birth-death skyline plot. We will start the provided R-script from the terminal, hence there is no need for applications like RStudio, which provides a graphical user interface for R. If you prefer using RStudio feel free to do so.
+We will be using [R](\href{https://www.r-project.org) to analyze the output of the Birth-Death Skyline plot. [RStudio](https://www.rstudio.com/) provides a user-friendly graphical user interface to R that makes it easier to edit and run scripts. (It is not necessary to use RStudio for this tutorial).
 
 ----
 
 
-# Practical: Bayesian and Birth-death Skyline Plots
+# Practical: Bayesian and Birth-Death Skyline Plots
 
 In this tutorial we will estimate the dynamics of the Egyptian Hepatitis C epidemic from genetic sequence data collected in 1993.
 
@@ -74,7 +74,7 @@ We will use BEAUti to generate the configuration file for BEAST2 from the sequen
 
 ### Install BEAST 2 packages
 
-While the coalescent-based Bayesian Skyline Plot is integrated in the BEAST2 core, we need to install the BDSKY package, which contains the birth-death skyline model. Installation of packages is done using the package manager, which is integrated into BEAUti. 
+While the coalescent-based Bayesian Skyline Plot is integrated in the BEAST2 core, we need to install the BDSKY package, which contains the Birth-Death Skyline model. Installation of packages is done using the package manager, which is integrated into BEAUti. 
 
 
 > Open the **BEAST2 Package Manager** by navigating to **File > Manage Packages**. 
@@ -91,7 +91,7 @@ After the installation of a package, the program is on your computer, but BEAUti
 <figure>
 	<a id="fig:install"></a>
 	<img style="width:75%;" src="figures/install_bdsky.png" alt="">
-	<figcaption>Figure 2: Install the BDSKY package which contains the birth-death skyline model.</figcaption>
+	<figcaption>Figure 2: Install the BDSKY package which contains the Birth-Death Skyline model.</figcaption>
 </figure>
 <br>
 
@@ -126,7 +126,7 @@ The next step is to specify the model of nucleotide evolution (the site model). 
 > **Topic for discussion:** Why are only 5 of the 6 rates of the GTR model estimated? 
 >
 
-Because our sequences are contemporaneous (homochronous data) there is no information in our dataset to estimate the clock rate (for more information on this refer to the [prior-selection](../Prior-selection/) tutorial) and we have to use external information to calibrate the clock. We will use an estimate inferred in {% cite Pybus2001 --file Skyline-plots/master-refs %} to fix the clock rate. In this case all the samples were contemporaneous (at the same time) and the clock rate is simply a scaling of the estimated tree branch lengths (in substitutions/site) into calendar time.
+Because our sequences are contemporaneous (homochronous data) there is no information in our dataset to estimate the clock rate (for more information on this refer to the [prior-selection](../Prior-selection/) tutorial) and we have to use external information to calibrate the clock. We will use an estimate inferred in {% cite Pybus2001 --file Skyline-plots/master-refs %} to fix the clock rate. In this case all the samples were contemporaneous (sampled at the same time) and the clock rate is simply a scaling of the estimated tree branch lengths (in substitutions/site) into calendar time.
 
 > Navigate to the **Clock Model** panel.
 > 
@@ -153,7 +153,7 @@ Now we are ready to set up the Coalescent Bayesian Skyline as a tree-prior.
 </figure>
 <br>
 
-The Coalescent Bayesian Skyline divides the time between the present and the root of the tree (the tMRCA) into segments, and estimates a different effective population size ({% eqinline N_e %}) for each segment. The endpoints of segments are tied to the branching times (also called coalescent events) in the tree ([Figure 6](#fig:coal_events)), and the size of segments is measured in the number of coalescent events in each segment. The Coalescent Bayesian Skyline groups coalescent events into segments and jointly estimates the {% eqinline N_e %} (**bPopSizes** parameter in BEAST) and the size (**bGroupSizes** parameter) of each segment. To set the number of segments we have to change the dimension of **bPopSizes** and **bGroupSizes** (note that the dimension of both parameters has to be the same). This means that the length of a segment is therefore not fixed, but dependent on where the coalescent events are ([Figure 6](#fig:coal_events)), as well as the number of events contained within an segment (**bGroupSizes**). 
+The Coalescent Bayesian Skyline divides the time between the present and the root of the tree (the tMRCA) into segments, and estimates a different effective population size ({% eqinline N_e %}) for each segment. The endpoints of segments are tied to the branching times (also called coalescent events) in the tree ([Figure 6](#fig:coal_events)), and the size of segments is measured in the number of coalescent events included in each segment. The Coalescent Bayesian Skyline groups coalescent events into segments and jointly estimates the {% eqinline N_e %} (**bPopSizes** parameter in BEAST) and the size (**bGroupSizes** parameter) of each segment. To set the number of segments we have to change the dimension of **bPopSizes** and **bGroupSizes** (note that the dimension of both parameters has to be the same). Note that the length of a segment is not fixed, but dependent on the timing of coalescent events in the tree ([Figure 6](#fig:coal_events)), as well as the number of events contained within a segment (**bGroupSizes**). 
 
 
 <figure>
@@ -211,7 +211,7 @@ Now we are ready to run the analysis.
 > Hit **Run** to start the analysis.
 >
 
-The analysis will take about 10 minutes to run. Read through the next section while waiting for your results or start preparing the XML file for the [birth-death skyline](#sec:bdsky) analysis.
+The analysis will take about 10 minutes to complete. Read through the next section while waiting for your results or start preparing the XML file for the [birth-death skyline](#sec:bdsky) analysis.
 
 
 
@@ -244,11 +244,11 @@ For an SIR model (**S**usceptible, **I**nfected and **R**ecovered), {% eqinline 
 
 Estimates of {% eqinline N_e %} therefore do not directly tell us something about the number of infected, nor the transmission rate. However, changes in {% eqinline N_e %} can be informative about changes in the transmission rate or the number of infected (if they do not cancel out).
 
-The Coalescent Bayesian Skyline model allows the effective population size ({% eqinline N_e %}) to change over time in a nonparametric fashion (i.e. we do not have to specify an equation governing changes in {% eqinline N_e %} over time). Another way to think about the model is as maximally-parameterized, since it infers {% eqinline n %} change-point times (segment boundaries) and a value for {% eqinline N_e %} in each segment. This makes the Bayesian Skyline flexible enough to model very complicated {% eqinline N_e %} dynamics, provided that enough segments are specified. 
+The Coalescent Bayesian Skyline model allows {% eqinline N_e %} to change over time in a nonparametric fashion (i.e. we do not have to specify an equation governing changes in {% eqinline N_e %} over time). Another way to think about the model is as maximally-parameterized, since it infers {% eqinline d %} change-point times (segment boundaries) and a value for {% eqinline N_e %} in each segment. This makes the Bayesian Skyline flexible enough to model very complicated {% eqinline N_e %} dynamics, provided that enough segments are specified. 
 It may be tempting to specify the maximum dimension for the model (each group contains only one coalescent event, thus {% eqinline N_e %} changes at each branching time in the tree), making it as flexible as possible. This is the parameterization used by the Classic Skyline plot {% cite Pybus2000 --file Skyline-plots/master-refs %}, which is the direct ancestor of the Coalescent Bayesian Skyline plot. 
 However, the only informative events used by the Coalescent Bayesian Skyline plot are the coalescent events. Thus, using a maximally-flexible parameterization with only one informative event per segment often leads to erratic and noisy estimates of {% eqinline N_e %} over time (especially if segments are very short, see [Figure 6](#fig:coal_events)). Grouping segments together leads to smoother and more robust estimates.
 
-Choosing the dimension for the Bayesian Skyline can be rather arbitrary. If the dimension is chosen too low, not all population size changes are captured, but if it is chosen too large, there may be too little information in an segment to support a robust estimate.
+Choosing the dimension for the Bayesian Skyline can be rather arbitrary. If the dimension is chosen too low, not all population size changes are captured, but if it is chosen too large, there may be too little information in a segment to support a robust estimate. When trying to decide if the dimension is appropriate it may be useful to consider the average number of informative (coalescent) events per segment. (A tree of {% eqinline n %} taxa has {% eqinline n-1 %} coalescences, thus {% eqinline N_e %} in each segment is estimated from on average {% eqinline \frac{n-1}{d} %} informative data points). Would this number of random samples drawn from a hypothetical distribution allow you to accurately estimate the distribution? If not, consider decreasing the dimension.
 There are descendants of the coalescent skyline in BEAST that either estimate the number of segments (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plots/master-refs %}) or do not require the number of segments to be specified (Skyride {% cite Minin2008 --file Skyline-plots/master-refs %} and Skygrid {% cite Gill2013 --file Skyline-plots/master-refs %}), but instead makes very strong prior assumptions about changes in {% eqinline N_e %}.
 
 
@@ -329,21 +329,15 @@ The choice of the number of dimensions can also have a direct effect on how fast
 
 <a id="sec:bdsky"></a>
 
-### Setting up the Birth-death Skyline analysis 
+### Setting up the Birth-Death Skyline analysis 
 
 
-In the first analysis, we used the coalescent approach to estimate population dynamics. We now want to repeat the analysis using the birth-death skyline model. We will use the same model setup as in the previous analysis and only change the tree prior. 
+In the first analysis, we used the coalescent approach to estimate population dynamics. We now want to repeat the analysis using the Birth-Death Skyline model. We will use the same model setup as in the previous analysis and only change the tree prior. 
 
 > Restart **BEAUti**, load `hcv.nexus` as before and set up the same site and clock model as in the Coalescent Bayesian Skyline analysis.
 >
 
-We will need to set the prior to **Birth Death Skyline Contemporary**, since the sequences were all sampled at the same point in time. For heterochronous data (sequences sampled at different times), we would use **Birth Death Skyline Serial**. As with the Coalescent Bayesian Skyline, we need to set the number of dimensions. Here we set the dimensions for {% eqinline R_e %}, the effective reproduction number, which denotes the average number of secondary infections caused by an infected person at a given time during the epidemic, i.e. an {% eqinline R_e %} of 2 would mean that every infected person causes two new infections on average. In other words, an {% eqinline R_e %} above 1 means that the number of cases are increasing, therefore the disease will cause an exponentially growing epidemic, and an {% eqinline R_e %} below 1 means that the epidemic will die out. 
-
-    |                                                          |         
---------------------------------------------------------------:|:----------------------
-if {% eqinline \lambda > \delta %} then {% eqinline R_e > 1 %} | epidemic grows
-if {% eqinline \lambda = \delta %} then {% eqinline R_e = 1 %} | epidemic stays constant
-if {% eqinline \lambda < \delta %} then {% eqinline R_e < 1 %} | epidemic declines
+We will need to set the prior to **Birth Death Skyline Contemporary**, since the sequences were all sampled at the same point in time. For heterochronous data (sequences sampled at different times), we would use **Birth Death Skyline Serial**. As with the Coalescent Bayesian Skyline, we need to set the number of dimensions. Here we set the dimension for {% eqinline R_e %}, the effective reproduction number, which denotes the average number of secondary infections caused by an infected person at a given time during the epidemic, i.e. an {% eqinline R_e %} of 2 would mean that every infected person causes two new infections on average. In other words, an {% eqinline R_e %} above 1 means that the number of cases are increasing, therefore the disease will cause an exponentially growing epidemic, and an {% eqinline R_e %} below 1 means that the epidemic will die out. 
 
 
 > Navigate to the **Priors** panel and select **Birth Death Skyline Contemporary** as the tree prior ([Figure 15](#fig:bdsky)).
@@ -356,7 +350,7 @@ if {% eqinline \lambda < \delta %} then {% eqinline R_e < 1 %} | epidemic declin
 <figure>
 	<a id="fig:bdsky"></a>
 	<img src="figures/choose_bdsky.png" alt="">
-	<figcaption>Figure 15: Setting the prior on the tree to the birth-death skyline.</figcaption>
+	<figcaption>Figure 15: Setting the prior on the tree to the Birth-Death Skyline.</figcaption>
 </figure>
 <br>
 
@@ -369,9 +363,9 @@ if {% eqinline \lambda < \delta %} then {% eqinline R_e < 1 %} | epidemic declin
 
 This means that {% eqinline R_e %} will be allowed to change at 9 times equally spaced between the origin of the epidemic and the present time. Choosing this dimension can again be arbitrary and may require the testing of a few different values. Too few intervals and not all rate shifts are captured. Too many intervals and the intervals may not contain enough information to infer parameters. (As with setting the dimension of the Coalescent Bayesian Skyline the dimension of {% eqinline R_e %} can also be set in the initialization panel).
 
-Besides {% eqinline R_e %} (**reproductiveNumber**), the **Birth Death Skyline Contemporary** model has 3 more parameters, **becomeUninfectiousRate** (the rate at which infected patients become uninfectious, {% eqinline \delta %}, through recovery, death or isolation), **rho** (the proportion of lineages sampled in the present, {% eqinline \rho %}) and **origin** (the time at which the index case became infected, which is always earlier than the tMRCA of the tree). We may know some of these parameters from literature or be able to estimate them from external sources. For example, the average time that patients are able to transmit a disease is informative about the **becomeUninfectiousRate**. This prior knowledge we can incorporate in our analysis by setting appropriate priors for these parameters.
+Besides {% eqinline R_e %} (**reproductiveNumber**), the **Birth Death Skyline Contemporary** model has 3 more parameters, **becomeUninfectiousRate** (the rate at which infected patients become uninfectious, {% eqinline \delta %}, through recovery, death or isolation), **rho** (the proportion of lineages sampled in the present, {% eqinline \rho %}) and the **origin** (the time at which the index case became infected, which is always earlier than the tMRCA of the tree). We may know some of these parameters from literature or be able to estimate them from external sources. For example, the average time that patients are able to transmit a disease is informative about the **becomeUninfectiousRate**. This prior knowledge we can incorporate in our analysis by setting appropriate priors for these parameters.
  
-We will use a lognormal prior for {% eqinline R_e %}. This is a good prior distribution to use for rates since it is always positive (a rate cannot be negative) and has a long tail defined over all positive numbers. The long tail allows arbitrarily high estimates of {% eqinline R_e %}, but does not place much weight on very high rates. This agrees with our prior knowledge about the {% eqinline R_e %} (most diseases have an {% eqinline R_e %} between 1.2 and 5. Measles is one of the most infectious diseases we know about and has {% eqinline R_e \approx 18 %}). If an epidemic is neither growing or declining, it has an {% eqinline R_e %} of 1, which we will use as a null hypothesis, by setting a prior on {% eqinline R_e %} centered around 1 (we assume that if there isn't a strong signal in an interval for an epidemic to grow or decline that {% eqinline R_e = 1 %}, i.e. the epidemic stays constant). Note that this prior is used for each of the {% eqinline R_e %} intervals (the birth-death skyline assumes that {% eqinline R_e %} is independent in each of the intervals). 
+We will use a lognormal prior for {% eqinline R_e %}. This is a good prior distribution to use for rates since it is always positive (a rate cannot be negative) and has a long tail defined over all positive numbers. The long tail allows arbitrarily high estimates of {% eqinline R_e %}, but does not place much weight on very high rates. This agrees with our prior knowledge about {% eqinline R_e %} (most diseases have an {% eqinline R_e %} between 1.2 and 5. Measles is one of the most infectious diseases we know about and has {% eqinline R_e \approx 18 %}). If an epidemic is neither growing or declining, it has an {% eqinline R_e %} of 1, which we will use as a null hypothesis, by setting a prior on {% eqinline R_e %} centered around 1 (we assume that if there isn't a strong signal in an interval for an epidemic to grow or decline that {% eqinline R_e = 1 %}, i.e. the epidemic size stays constant). Note that this prior is used for each of the {% eqinline R_e %} intervals (the Birth-Death Skyline assumes that {% eqinline R_e %} is independent in each of the intervals). 
 
 > Select a **Log Normal** distribution for the **reproductiveNumber** prior.
 >
@@ -387,7 +381,7 @@ We will use a lognormal prior for {% eqinline R_e %}. This is a good prior distr
 </figure>
 <br>
 
-For the becoming uninfectious rate we will again use a log normal prior. The inverse of the becoming noninfectious rate is the average infectious period. In some patients an HCV infection only lasts a few weeks, while in others it is a chronic infection lasting for many years. Setting {% eqinline M=0 %} and {% eqinline S=1.25 %} results in the same prior we used for the {% eqinline R_e %}.  In terms of the becoming noninfectious rate, this translates to the 95% quantiles for the infectious period falling between 0.128 years (46.67 days) and 11.59 years, with a median of 1 year. We will see later that there is a strong signal in the data for a longer becoming noninfectious period. 
+For the becoming uninfectious rate we will again use a log normal prior. The inverse of the becoming uninfectious rate is the average infectious period. In some patients an HCV infection only lasts a few weeks, while in others it is a chronic infection lasting for many years. Setting {% eqinline M=0 %} and {% eqinline S=1.25 %} results in the same prior we used for the {% eqinline R_e %}.  In terms of the becoming uninfectious rate, this translates to the 95% quantiles for the infectious period falling between 0.128 years (46.67 days) and 11.59 years, with a median of 1 year. We will see later that there is a strong signal in the data for a longer becoming uninfectious period. 
 
 > Set the same prior for **becomeUninfectiousRate** as for **reproductiveNumber** (Log Normal, with M=0.0, S=1.25) ([Figure 18](#fig:bURprior))
 >
@@ -455,18 +449,17 @@ Now we are ready to run the analysis.
 
 Look at the topics for discussion below and read through the next section while waiting for the analysis to finish.
 
-> **Topic for discussion:** We set a prior on {% eqinline R_e %} in the Birth-death Skyline analysis, but did not set any prior for {% eqinline N_e %} in the Coalescent Bayesian Skyline analysis. Is there a prior on {% eqinline N_e %}? If so, what is it? 
+> **Topics for discussion:** 
 >
-
-
-> **Topic for discussion:** We fixed the clock rate to an independent estimate and set a strict clock. If we had strong prior knowledge that there is substitution rate variation over time in the Egyptian HCV epidemic, could we use a relaxed clock here? 
+> - We set a prior on {% eqinline R_e %} in the Birth-Death Skyline analysis, but did not set any prior for {% eqinline N_e %} in the Coalescent Bayesian Skyline analysis. Is there a prior on {% eqinline N_e %}? If so, what is it? 
+> - We fixed the clock rate to an independent estimate and set a strict clock. If we had strong prior knowledge that there is substitution rate variation over time in the Egyptian HCV epidemic, could we use a relaxed clock here? 
 >
 
 
 
 ### The Birth-Death Skyline parameterization
 
-The Birth-death model is parameterized very differently from the coalescent model, using per lineage rates and an explicit sampling model (whereas the coalescent model conditions on the samples). This makes the Birth-death model more powerful, but also much more complex. A basic birth-death model has a birth rate ({% eqinline \lambda %}), the rate at which lineages are added to the tree, and a death rate ({% eqinline \delta %}), the rate at which lineages are removed from the tree ([Figure 21](#fig:bd_model)). In an infectious disease epidemic {% eqinline \lambda %} can be thought of as the transmission rate, the rate at which rate infected individuals infect susceptibles, while {% eqinline \delta %} can be thought of as the becoming uninfectious rate, the rate at which infected individuals recover, die or are isolated. In species tree inferences these rates can be thought of in terms of speciation and extinction. 
+The birth-death model is parameterized very differently from the coalescent model, using per lineage rates and an explicit sampling model (whereas the coalescent model conditions on the samples). This makes the birth-death model more powerful, but also much more complex. A basic birth-death model has a birth rate ({% eqinline \lambda %}), the rate at which lineages are added to the tree, and a death rate ({% eqinline \delta %}), the rate at which lineages are removed from the tree ([Figure 21](#fig:bd_model)). In an infectious disease epidemic {% eqinline \lambda %} can be thought of as the transmission rate, the rate at which rate infected individuals infect susceptibles, while {% eqinline \delta %} can be thought of as the becoming uninfectious rate, the rate at which infected individuals recover, die or are isolated. In species tree inferences these rates can be thought of in terms of speciation and extinction. 
 
 <figure>
 	<a id="fig:bd_model"></a>
@@ -475,25 +468,32 @@ The Birth-death model is parameterized very differently from the coalescent mode
 </figure>
 <br>
 
-The **Birth Death Skyline Contemporary** model we used was parameterized in terms of {% eqinline R_e %} and {% eqinline \delta %}. {% eqinline R_e %} is defined as:
+The **Birth Death Skyline Contemporary** model we used was parameterized in terms of {% eqinline R_e %} and {% eqinline \delta %}. Recall that {% eqinline R_e > 1 %} means that an epidemic will keep growing. We can see this from the definitioin of {% eqinline R_e %} as the ratio of the birth and death rates.
 
 {% eq
 R_{e} = \frac{\lambda}{\delta}
 %}
 
-We used this paramerization simply because it is often easier to specify priors for {% eqinline R_e %} than the transmission rate, and because {% eqinline R_e %} is often more informative for prevention efforts. The final parameter in the model is the sampling probability ({% eqinline \rho %}) which, in our analysis, describes how likely it is that a person infected with HCV in Egypt in 1993 was sampled in our dataset.
 
-You may have noticed that there are many Birth-death Skyline models available in BEAUti. For example, the **Birth Death Skyline Contemporary BDSParam** model is parameterized in terms of {% eqinline \lambda, \delta %} and {% eqinline \rho %} and is usually more appropriate for macro-evolutionary studies. The **Birth Death Skyline Serial** model assumes that the data are not heterochronous (sampled at different times). The model assumes that: 
+    |                                                          |         
+--------------------------------------------------------------:|:----------------------
+if {% eqinline \lambda > \delta %} then {% eqinline R_e > 1 %} | epidemic grows
+if {% eqinline \lambda = \delta %} then {% eqinline R_e = 1 %} | epidemic stays constant
+if {% eqinline \lambda < \delta %} then {% eqinline R_e < 1 %} | epidemic declines
+
+We used this paramerization simply because it is often easier to specify priors for {% eqinline R_e %} than the transmission rate, and because {% eqinline R_e %} is often more informative for prevention efforts. In addition, the model also has a sampling probability ({% eqinline \rho %}) parameter, which in our analysis describes how likely it is that a person infected with HCV in Egypt in 1993 was sampled in our dataset. The final parameter is the origin. Whereas coalescent models work backward-in-time from the sampled sequences, birth-death models work forward-in-time from the origin. Hence, the model needs an origin time, which can also be jointly estimated along with the other parameters. The origin will always be bigger than the tMRCA of the sampled tree, since the sampled tree is by definition smaller than the complete tree. 
+
+You may have noticed that there are many Birth-Death Skyline models available in BEAUti. For example, the **Birth Death Skyline Contemporary BDSParam** model is parameterized in terms of {% eqinline \lambda, \delta %} and {% eqinline \rho %} and is usually more appropriate for macro-evolutionary studies. The **Birth Death Skyline Serial** model assumes that the data are heterochronous (sampled at different times). It assumes that: 
 
 {% eq
 \delta = \psi + \mu
 %}
 
-where {% eqinline \psi %} is the rate at which lineages are sampled through time and {% eqinline \mu %} is the rate at which lineages are removed from the tree for any other reason (death, recovery, extinction etc.). (In this case the {% eqinline \rho %} parameter is no-longer available, because samples are collected through time, and not just at the present). This model is useful in studying infectious disease dynamics, because samples are often collected over the course of an epidemic. It can also be used for macro-evolutionary studies, when fossil data (morphological traits or ancient DNA) are incorporated. 
+where {% eqinline \psi %} is the rate at which lineages are sampled through time and {% eqinline \mu %} is the rate at which lineages are removed from the tree for any other reason (death, recovery, extinction etc.). (In this case the {% eqinline \rho %} parameter is no-longer available, because samples are collected through time, and not just at one timepoint). This model is useful for studying infectious disease dynamics, because samples are often collected over the course of an epidemic. It can also be used for macro-evolutionary studies, when fossil data (morphological traits or ancient DNA) are incorporated. 
 You can also see that the model assumes that upon sampling a lineage is removed from the tree (e.g. in a disease model the sampled individual cannot transmit the disease after sampling). The consequence for the phylogeny is that a sampled lineage cannot be a direct ancestor of any other lineage in the tree. This assumption can be relaxed, but we will not do so during this tutorial.
 
 
-The Birth-death Skyline model is very flexible and allows any or all of these rates to change independently over time. This is done by dividing the time from the origin (of the epidemic, which is not necessarily the same as the root of the tree) to the most recent sample into dimension {% eqinline d %} equally spaced intervals (see [Figure 22](#fig:bdsky_principle)). The rates are then allowed to change between intervals. Since some rates (e.g. {% eqinline \lambda %} and {% eqinline \delta %}) are highly correlated, it is not always a good idea to let all rates change over time since it can lead to poor mixing or biased estimates (often we assume that the becoming uninfectious rate is constant while allowing {% eqinline R_e %} to change over time, as we did here). It is also possible to specify the change-point times more flexibly, however for now this requires editing the XML file. Some examples are available [here](https://github.com/laduplessis/skylinetools/wiki/TreeSlicer).
+The Birth-Death Skyline model is very flexible and allows any or all of these rates to change independently over time. This is done by dividing the time from the origin to the most recent sample into dimension {% eqinline d %} equally spaced intervals (see [Figure 22](#fig:bdsky_principle)). The rates are then allowed to change between intervals. Since some rates (e.g. {% eqinline \lambda %} and {% eqinline \delta %}) are highly correlated, it is not always a good idea to let all rates change over time because it can lead to poor mixing or biased estimates (often we assume that the becoming uninfectious rate is constant while allowing {% eqinline R_e %} to change over time, as we did here). It is also possible to specify the change-point times more flexibly, or even estimate them, however for now this requires editing the XML file. Some examples are available [here](https://github.com/laduplessis/skylinetools/wiki/TreeSlicer).
 
 <figure>
 	<a id="fig:bdsky_principle"></a>
@@ -507,9 +507,9 @@ The Birth-death Skyline model is very flexible and allows any or all of these ra
 
 ### Visualizing the Birth-Death Skyline Output
 
-There is no equivalent visualization of the skyline plot of a Birth-death Skyline (BDSKY) analysis in Tracer as there is for the Coalescent Bayesian Skyline. But because BDSKY separates the full tree into equally spaced intervals, we can already get an idea of the inference just by looking at the inferred {% eqinline R_e %} values (see [Figure 23](#fig:bdsky_dynamics)). This gives us a good idea of the trend, but it is not completely accurate. Since we are also estimating the origin parameter, the interval times are slightly different in each posterior sample. Thus, the different intervals overlap slightly. The advantage of this is that we get a smooth estimate through time. The disadvantage is that we need to do some extra post-processing to plot the smooth skyline.
+There is no equivalent visualization of the skyline plot of a Birth-Death Skyline (BDSKY) analysis in Tracer as there is for the Coalescent Bayesian Skyline. But because BDSKY separates the full tree into equally spaced intervals, we can already get an idea of the inference just by looking at the inferred {% eqinline R_e %} values (see [Figure 23](#fig:bdsky_dynamics)). This gives us a good idea of the trend, but it is not completely accurate. Since we are also estimating the origin parameter, the interval times are slightly different in each posterior sample and overlap slightly. The advantage of this is that we get a smooth estimate through time. The disadvantage is that we need to do some extra post-processing to plot the smooth skyline.
 
-As with the Coalescent Bayesian Skyline, because we shortened the chain most parameters have very low ESS values. If you like, you can compare your results with the example results we obtained with identical settings and a chain of 30,000,000 (`hcv_bdsky_30M.log`).  
+As with the Coalescent Bayesian Skyline, because we shortened the chain, most parameters have very low ESS values. If you like, you can compare your results with the example results we obtained with identical settings and a chain of 30,000,000 (`hcv_bdsky_30M.log`).  
 
 <figure>
 	<a id="fig:bdsky_dynamics"></a>
@@ -519,7 +519,7 @@ As with the Coalescent Bayesian Skyline, because we shortened the chain most par
 <br>
 
 
-We will use the R-package `bdskytools` to plot the output of the BDSKY analysis. The package is still in development and currently not available over CRAN. Thus, we have to install the package directly over GitHub (note that you only have to install the package once): 
+We will use the R-package `bdskytools` to plot the output of the BDSKY analysis. The package is still in development and not available over CRAN. Thus, we have to install the package directly over GitHub (note that you only have to install the package once): 
 
 ```{R}
 install.packages("devtools")
@@ -528,7 +528,7 @@ library(devtools)
 devtools::install_github("laduplessis/bdskytools")
 ```
 
-Once the package is installed we have to load the package into our R workspace before we can use the functions in the package.
+Once the package is installed we have to load it into our R workspace before we can use the functions in the package.
 To plot the results, we need to first tell R where to find the `*.log` file of our run and then load it into R (discarding 10% of samples as burn-in). If you are using RStudio, you can change the working directory to the directory where you stored your log files, which makes it easier to load the files in R.
 
 ```{R}

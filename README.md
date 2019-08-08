@@ -7,20 +7,6 @@ beastversion: 2.5.x
 tracerversion: 1.7.x
 ---
 
----
-author: Nicola F. Müller,Louis du Plessis
-level: Beginner
-title: Skyline plots
-subtitle: Inference of past population dynamics using Bayesian Coalescent Skyline
-  and Birth-Death Skyline plots.
-beastversion: 2.5.x
-tracerversion: 1.7.x
-layout: tutorial
-tutorial: Skyline-plots
-permalink: "/:path/:basename:output_ext"
----
-
-
 
 
 # Background
@@ -260,7 +246,7 @@ Estimates of {% eqinline N_e %} therefore do not directly tell us something abou
 
 The Coalescent Bayesian Skyline model allows the effective population size ({% eqinline N_e %}) to change over time in a nonparametric fashion (i.e. we do not have to specify an equation governing changes in {% eqinline N_e %} over time). Another way to think about the model is as maximally-parameterized, since it infers {% eqinline n %} change-point times (segment boundaries) and a value for {% eqinline N_e %} in each segment. This makes the Bayesian Skyline flexible enough to model very complicated {% eqinline N_e %} dynamics, provided that enough segments are specified. 
 It may be tempting to specify the maximum dimension for the model (each group contains only one coalescent event, thus {% eqinline N_e %} changes at each branching time in the tree), making it as flexible as possible. This is the parameterization used by the Classic Skyline plot {% cite Pybus2000 --file Skyline-plots/master-refs %}, which is the direct ancestor of the Coalescent Bayesian Skyline plot. 
-However, the only informative events used by the Coalescent Bayesian Skyline plot are the coalescent events. Thus, using a maximally-flexible parameterization with only one informative event per segment often leads to erratic and noisy estimates of {% eqinline N_e %} over time (especially if segments are very short, see [Figure 6](#fig:coal_principle)). Grouping segments together leads to smoother and more robust estimates.
+However, the only informative events used by the Coalescent Bayesian Skyline plot are the coalescent events. Thus, using a maximally-flexible parameterization with only one informative event per segment often leads to erratic and noisy estimates of {% eqinline N_e %} over time (especially if segments are very short, see [Figure 6](#fig:coal_events)). Grouping segments together leads to smoother and more robust estimates.
 
 Choosing the dimension for the Bayesian Skyline can be rather arbitrary. If the dimension is chosen too low, not all population size changes are captured, but if it is chosen too large, there may be too little information in an segment to support a robust estimate.
 There are descendants of the coalescent skyline in BEAST that either estimate the number of segments (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plots/master-refs %}) or do not require the number of segments to be specified (Skyride {% cite Minin2008 --file Skyline-plots/master-refs %} and Skygrid {% cite Gill2013 --file Skyline-plots/master-refs %}), but instead makes very strong prior assumptions about changes in {% eqinline N_e %}.
@@ -360,7 +346,7 @@ if {% eqinline \lambda = \delta %} then {% eqinline R_e = 1 %} | epidemic stays 
 if {% eqinline \lambda < \delta %} then {% eqinline R_e < 1 %} | epidemic declines
 
 
-> Navigate to the **Priors** panel and select **Birth Death Skyline Contemporary** as the tree prior ([Figure 14](#fig:bdsky)).
+> Navigate to the **Priors** panel and select **Birth Death Skyline Contemporary** as the tree prior ([Figure 15](#fig:bdsky)).
 >
 > Then, click on the button where it says **initial = [2.0] [0.0, Infinity]** next to **reproductiveNumber**. A pop-up window will open which allows us to change the dimension of the parameter ([Figure 16](#fig:dimensions_bdsky)). In this case we will keep the default dimension of 10. 
 > 
@@ -480,11 +466,11 @@ Look at the topics for discussion below and read through the next section while 
 
 ### The Birth-Death Skyline parameterization
 
-The Birth-death model is parameterized very differently from the coalescent model, using per lineage rates and an explicit sampling model (whereas the coalescent model conditions on the samples). This makes the Birth-death model more powerful, but also much more complex. A basic birth-death model has a birth rate ({% eqinline \lambda %}), the rate at which lineages are added to the tree, and a death rate ({% eqinline \delta %}), the rate at which lineages are removed from the tree. In an infectious disease epidemic {% eqinline \lambda %} can be thought of as the transmission rate, the rate at which rate infected individuals infect susceptibles, while {% eqinline \delta %} can be thought of as the becoming uninfectious rate, the rate at which infected individuals recover, die or are isolated. In species tree inferences these rates can be thought of in terms of speciation and extinction. 
+The Birth-death model is parameterized very differently from the coalescent model, using per lineage rates and an explicit sampling model (whereas the coalescent model conditions on the samples). This makes the Birth-death model more powerful, but also much more complex. A basic birth-death model has a birth rate ({% eqinline \lambda %}), the rate at which lineages are added to the tree, and a death rate ({% eqinline \delta %}), the rate at which lineages are removed from the tree ([Figure 21](#fig:bd_model)). In an infectious disease epidemic {% eqinline \lambda %} can be thought of as the transmission rate, the rate at which rate infected individuals infect susceptibles, while {% eqinline \delta %} can be thought of as the becoming uninfectious rate, the rate at which infected individuals recover, die or are isolated. In species tree inferences these rates can be thought of in terms of speciation and extinction. 
 
 <figure>
-	<a id="fig:bdsky_model"></a>
-	<img style="width:25%;" src="figures/bdsky_model.png" alt="">
+	<a id="fig:bd_model"></a>
+	<img style="width:25%;" src="figures/bd_model.png" alt="">
 	<figcaption>Figure 21: A schematic of the BDSKY model.</figcaption>
 </figure>
 <br>

@@ -20,7 +20,7 @@ Population dynamics influence the shape of the tree and consequently, the shape 
 
 ### BEAST2 - Bayesian Evolutionary Analysis Sampling Trees 2
 
-BEAST2 ([http://www.beast2.org](http://www.beast2.org)) is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees. This tutorial is written for BEAST v{{ page.beastversion }} {% cite Bouckaert2014 --file Skyline-plots/master-refs %}.
+BEAST2 ([http://www.beast2.org](http://www.beast2.org)) is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees. This tutorial is written for BEAST v{{ page.beastversion }} {% cite Bouckaert2014 --file Skyline-plots/master-refs %}, {% cite Bouckaert2019 --file Skyline-plots/master-refs %}.
 
 
 ### BEAUti - Bayesian Evolutionary Analysis Utility
@@ -489,9 +489,15 @@ You may have noticed that there are many Birth-Death Skyline models available in
 \delta = \psi + \mu
 %}
 
-where {% eqinline \psi %} is the rate at which lineages are sampled through time and {% eqinline \mu %} is the rate at which lineages are removed from the tree for any other reason (death, recovery, extinction etc.). (In this case the {% eqinline \rho %} parameter is no-longer available, because samples are collected through time, and not just at one timepoint). This model is useful for studying infectious disease dynamics, because samples are often collected over the course of an epidemic. It can also be used for macro-evolutionary studies, when fossil data (morphological traits or ancient DNA) are incorporated. 
-You can also see that the model assumes that upon sampling a lineage is removed from the tree (e.g. in a disease model the sampled individual cannot transmit the disease after sampling). The consequence for the phylogeny is that a sampled lineage cannot be a direct ancestor of any other lineage in the tree. This assumption can be relaxed, but we will not do so during this tutorial.
+where {% eqinline \psi %} is the rate at which lineages are sampled through time and {% eqinline \mu %} is the rate at which lineages are removed from the tree for any other reason (death, recovery, extinction etc.). (In this case the {% eqinline \rho %} parameter is no-longer available, because samples are collected through time, and not just at one timepoint). By default, the model is parameterized in terms of {% eqinline R_e , \delta %} and {% eqinline p %}, the sampling proportion:
 
+{% eq
+p = \frac{\psi}{\psi + \mu}
+%} 
+
+The sampling proportion is the proportion of all removed lineages that were sampled, and can be used to obtain a rough estimate of the total population size. This model is useful for studying infectious disease dynamics, because samples are often collected over the course of an epidemic. It can also be used for macro-evolutionary studies, when fossil data (morphological traits or ancient DNA) are incorporated. In that case a parameterization in terms of {% eqinline \lambda, \mu %} and {% eqinline \psi %} is preferable.
+
+You can also see that the model **Birth Death Skyline Serial** assumes that upon sampling a lineage is removed from the tree (e.g. in a disease model the sampled individual cannot transmit the disease after sampling). The consequence for the phylogeny is that a sampled lineage cannot be a direct ancestor of any other lineage in the tree. This assumption can be relaxed, but we will not do so during this tutorial.
 
 The Birth-Death Skyline model is very flexible and allows any or all of these rates to change independently over time. This is done by dividing the time from the origin to the most recent sample into dimension {% eqinline d %} equally spaced intervals (see [Figure 22](#fig:bdsky_principle)). The rates are then allowed to change between intervals. Since some rates (e.g. {% eqinline \lambda %} and {% eqinline \delta %}) are highly correlated, it is not always a good idea to let all rates change over time because it can lead to poor mixing or biased estimates (often we assume that the becoming uninfectious rate is constant while allowing {% eqinline R_e %} to change over time, as we did here). It is also possible to specify the change-point times more flexibly, or even estimate them, however for now this requires editing the XML file. Some examples are available [here](https://github.com/laduplessis/skylinetools/wiki/TreeSlicer).
 
@@ -647,6 +653,8 @@ Both the coalescent and the birth-death skylines assume that the population is w
 - BEAST 2 website and documentation: [http://www.beast2.org/](http://www.beast2.org/)
 - BEAST 1 website and documentation: [http://beast.bio.ed.ac.uk](http://beast.bio.ed.ac.uk)
 - Join the BEAST user discussion: [http://groups.google.com/group/beast-users](http://groups.google.com/group/beast-users) 
+- [bdskytools](https://github.com/laduplessis/bdskytools): An R-package for post-processing Birth-Death Skyline analyses
+- [TreeSlicer](https://github.com/laduplessis/skylinetools/wiki/TreeSlicer): A BEAST2 package (in development) that makes it easier to specify complex change-point times using BDSKY
 
 ----
 

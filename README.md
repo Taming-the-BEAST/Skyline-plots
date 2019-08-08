@@ -249,7 +249,7 @@ It may be tempting to specify the maximum dimension for the model (each group co
 However, the only informative events used by the Coalescent Bayesian Skyline plot are the coalescent events. Thus, using a maximally-flexible parameterization with only one informative event per segment often leads to erratic and noisy estimates of {% eqinline N_e %} over time (especially if segments are very short, see [Figure 6](#fig:coal_events)). Grouping segments together leads to smoother and more robust estimates.
 
 Choosing the dimension for the Bayesian Skyline can be rather arbitrary. If the dimension is chosen too low, not all population size changes are captured, but if it is chosen too large, there may be too little information in a segment to support a robust estimate. When trying to decide if the dimension is appropriate it may be useful to consider the average number of informative (coalescent) events per segment. (A tree of {% eqinline n %} taxa has {% eqinline n-1 %} coalescences, thus {% eqinline N_e %} in each segment is estimated from on average {% eqinline \frac{n-1}{d} %} informative data points). Would this number of random samples drawn from a hypothetical distribution allow you to accurately estimate the distribution? If not, consider decreasing the dimension.
-There are descendants of the coalescent skyline in BEAST that either estimate the number of segments (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plots/master-refs %}) or do not require the number of segments to be specified (Skyride {% cite Minin2008 --file Skyline-plots/master-refs %} and Skygrid {% cite Gill2013 --file Skyline-plots/master-refs %}), but instead makes very strong prior assumptions about changes in {% eqinline N_e %}.
+There are descendants of the coalescent skyline in BEAST that either estimate the number of segments (Extended Bayesian Skyline {% cite Heled2008 --file Skyline-plots/master-refs %}) or do not require the number of segments to be specified (Skyride {% cite Minin2008 --file Skyline-plots/master-refs %}), but instead makes very strong prior assumptions about changes in {% eqinline N_e %}.
 
 
 
@@ -629,6 +629,8 @@ plotSkylinePretty(times, Re_gridded_hpd, type='smooth', axispadding=0.0,
 An R-script with the above commands (and a few extras) is in the `scripts/` directory (`Skyline_Example.R`). 
 If the bdskytools package cannot be installed from GitHub the relevant scripts are also provided in the `scripts/` directory.
 
+> **Topic for discussion:** Do the Birth-Death Skyline results agree with the Coalescent Bayesian Skyline results? How would your conclusions from the two analyses differ? (Hint: Use R to plot the results from both analyses). 
+>
 
 ----
 

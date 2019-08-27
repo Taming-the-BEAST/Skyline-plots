@@ -381,7 +381,7 @@ We will use a lognormal prior for {% eqinline R_e %}. This is a good prior distr
 </figure>
 <br>
 
-For the becoming uninfectious rate we will again use a log normal prior. The inverse of the becoming uninfectious rate is the average infectious period. In some patients an HCV infection only lasts a few weeks, while in others it is a chronic infection lasting for many years. Setting {% eqinline M=0 %} and {% eqinline S=1.25 %} results in the same prior we used for the {% eqinline R_e %}.  In terms of the becoming uninfectious rate, this translates to the 95% quantiles for the infectious period falling between 0.128 years (46.67 days) and 11.59 years, with a median of 1 year. We will see later that there is a strong signal in the data for a longer becoming uninfectious period. 
+For the becoming uninfectious rate we will again use a log normal prior. The inverse of the becoming uninfectious rate is the average infectious period. In some patients an HCV infection only lasts a few weeks, while in others it is a chronic infection lasting for many years. Setting {% eqinline M=0 %} and {% eqinline S=1.25 %} results in the same prior we used for the {% eqinline R_e %}.  In terms of the becoming uninfectious rate, this translates to the 95% quantiles for the infectious period falling between 0.0862 years (31.5 days) and 11.59 years, with a median of 1 year. We will see later that there is a strong signal in the data for a longer becoming uninfectious period. 
 
 > Set the same prior for **becomeUninfectiousRate** as for **reproductiveNumber** (Log Normal, with M=0.0, S=1.25) ([Figure 18](#fig:bURprior))
 >

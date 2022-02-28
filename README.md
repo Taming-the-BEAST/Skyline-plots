@@ -474,12 +474,20 @@ The **Birth Death Skyline Contemporary** model we used was parameterized in term
 R_{e} = \frac{\lambda}{\delta}
 %}
 
-
-    |                                                          |         
---------------------------------------------------------------:|:----------------------
-if {% eqinline \lambda > \delta %} then {% eqinline R_e > 1 %} | epidemic grows
-if {% eqinline \lambda = \delta %} then {% eqinline R_e = 1 %} | epidemic stays constant
-if {% eqinline \lambda < \delta %} then {% eqinline R_e < 1 %} | epidemic declines
+<table>
+<tr>
+<td> if {% eqinline \lambda > \delta %} then {% eqinline R_e > 1 %} </td>
+<td> epidemic grows </td>
+</tr>
+<tr>
+<td> if {% eqinline \lambda = \delta %} then {% eqinline R_e = 1 %} </td>
+<td> epidemic stays constant </td>
+</tr>
+<tr>
+<td> if {% eqinline \lambda < \delta %} then {% eqinline R_e < 1 %} </td>
+<td> epidemic declines </td>
+</tr>
+</table>
 
 We used this paramerization simply because it is often easier to specify priors for {% eqinline R_e %} than the transmission rate, and because {% eqinline R_e %} is often more informative for prevention efforts. In addition, the model also has a sampling probability ({% eqinline \rho %}) parameter, which in our analysis describes how likely it is that a person infected with HCV in Egypt in 1993 was sampled in our dataset. The final parameter is the origin. Whereas coalescent models work backward-in-time from the sampled sequences, birth-death models work forward-in-time from the origin. Hence, the model needs an origin time, which can also be jointly estimated along with the other parameters. The origin will always be bigger than the tMRCA of the sampled tree, since the sampled tree is by definition smaller than the complete tree. 
 

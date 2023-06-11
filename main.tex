@@ -25,7 +25,7 @@
 \begin{center}
 
 	% Enter the name of your tutorial here
-	\textbf{\LARGE Tutorial using BEAST v2.5.x}\\\vspace{2mm}
+	\textbf{\LARGE Tutorial using BEAST v2.7.x}\\\vspace{2mm}
 
 	% Enter a short description of your tutorial here
 	\textbf{\textcolor{mycol}{\Large Skyline plots}}\\
@@ -43,7 +43,8 @@ and Birth-Death Skyline plots.
 % Tutorial body %
 %%%%%%%%%%%%%%%%%
 
-\section{Background}\label{background}
+\hypertarget{background}{%
+\section{Background}\label{background}}
 
 Population dynamics influence the shape of the tree and consequently,
 the shape of the tree contains some information about past population
@@ -55,26 +56,29 @@ will look at two different methods to infer these dynamics from sequence
 data. The first one is the Coalescent Bayesian Skyline plot
 \citep{Drummond2005}, which is based on the coalescent model, and the
 second one is the Birth-Death Skyline plot \citep{Stadler2013} based on
-the birth-death model. The conceptual difference between coalescent and
-birth-death approaches lies in the direction of the flow of time. In the
-coalescent, the time is modeled to go backwards, from present to past,
-while in the birth-death approach it is modeled to go forwards. Two
-other fundamental differences are the parameters that are inferred and
-the way sampling is treated. \clearpage
+the birth-death model. The conceptual difference between the coalescent
+and birth-death approaches lies in the direction of the flow of time. In
+the coalescent, time is modeled to move backwards, from the present to
+the past, while in the birth-death approach it is modeled to go
+forwards. Two other fundamental differences are the parameters that are
+inferred and the way sampling is treated. \clearpage
 
+\hypertarget{programs-used-in-this-exercise}{%
 \section{Programs used in this
-Exercise}\label{programs-used-in-this-exercise}
+Exercise}\label{programs-used-in-this-exercise}}
 
+\hypertarget{beast2---bayesian-evolutionary-analysis-sampling-trees-2}{%
 \subsubsection{BEAST2 - Bayesian Evolutionary Analysis Sampling Trees
-2}\label{beast2---bayesian-evolutionary-analysis-sampling-trees-2}
+2}\label{beast2---bayesian-evolutionary-analysis-sampling-trees-2}}
 
 BEAST2 (\url{http://www.beast2.org}) is a free software package for
 Bayesian evolutionary analysis of molecular sequences using MCMC and
 strictly oriented toward inference using rooted, time-measured
-phylogenetic trees. This tutorial is written for BEAST v2.5.x \citep{Bouckaert2014, Bouckaert2019}.
+phylogenetic trees. This tutorial is written for BEAST v2.7.x \citep{Bouckaert2014, Bouckaert2019}.
 
+\hypertarget{beauti---bayesian-evolutionary-analysis-utility}{%
 \subsubsection{BEAUti - Bayesian Evolutionary Analysis
-Utility}\label{beauti---bayesian-evolutionary-analysis-utility}
+Utility}\label{beauti---bayesian-evolutionary-analysis-utility}}
 
 BEAUti2 is a graphical user interface tool for generating BEAST2 XML
 configuration files.
@@ -87,7 +91,8 @@ will have the same layout and functionality on both Windows and Linux.
 BEAUti2 is provided as a part of the BEAST2 package so you do not need
 to install it separately.
 
-\subsubsection{Tracer}\label{tracer}
+\hypertarget{tracer}{%
+\subsubsection{Tracer}\label{tracer}}
 
 Tracer (\url{http://beast.community/tracer}) is used to summarise the
 posterior estimates of the various parameters sampled by the Markov
@@ -98,7 +103,8 @@ effective sample sizes (ESS) of parameters. It can also be used to
 investigate potential parameter correlations. We will be using Tracer
 v1.7.x.
 
-\subsubsection{R / RStudio}\label{r-rstudio}
+\hypertarget{r-rstudio}{%
+\subsubsection{R / RStudio}\label{r-rstudio}}
 
 We will be using \href{/href\%7Bhttps://www.r-project.org}{R} to analyze
 the output of the Birth-Death Skyline plot.
@@ -107,8 +113,9 @@ graphical user interface to R that makes it easier to edit and run
 scripts. (It is not necessary to use RStudio for this tutorial).
 \clearpage
 
+\hypertarget{practical-bayesian-and-birth-death-skyline-plots}{%
 \section{Practical: Bayesian and Birth-Death Skyline
-Plots}\label{practical-bayesian-and-birth-death-skyline-plots}
+Plots}\label{practical-bayesian-and-birth-death-skyline-plots}}
 
 In this tutorial we will estimate the dynamics of the Egyptian Hepatitis
 C epidemic from genetic sequence data collected in 1993.
@@ -126,22 +133,23 @@ The aim of this tutorial is to:
   Bayesian Skyline Plot and the Birth-Death Skyline.
 \end{itemize}
 
-\subsection{The Data}\label{the-data}
+\hypertarget{the-data}{%
+\subsection{The Data}\label{the-data}}
 
 The dataset consists of an alignment of 63 Hepatitis C sequences sampled
 in 1993 in Egypt \citep{Ray2000}. This dataset has been used previously
-to test the performance of skyline methods \citep{Drummond2005}
-\citep{Stadler2013}.
+to test the performance of skyline methods
+\citep{Drummond2005, Stadler2013}.
 
 With an estimated 15-25\%, Egypt has the highest Hepatits C prevalence
-in the world. In the mid 20$^{th}$ century, the prevalence of Hepatitis
-C increased drastically (see Figure \ref{fig:prevalence} for estimates).
+in the world. In the mid 20th century, the prevalence of Hepatitis C
+increased drastically (see Figure \ref{fig:prevalence} for estimates).
 We will try to infer this increase from sequence data.
 
 The alignment file can be downloaded from the Taming the BEAST website
 at \url{https://taming-the-beast.org/tutorials/Skyline-plots/} by
-downloading the file \lstinline!hcv.nexus! from the left-hand panel,
-under the heading \textbf{Date}.
+downloading the file \passthrough{\lstinline!hcv.nexus!} from the
+left-hand panel, under the heading \textbf{Data}.
 
 \begin{figure}
     \centering
@@ -150,13 +158,16 @@ under the heading \textbf{Date}.
     \label{fig:prevalence}
 \end{figure}
 
+\hypertarget{creating-the-analysis-files-with-beauti}{%
 \subsection{Creating the Analysis Files with
-BEAUti}\label{creating-the-analysis-files-with-beauti}
+BEAUti}\label{creating-the-analysis-files-with-beauti}}
 
 We will use BEAUti to generate the configuration file for BEAST2 from
 the sequence alignment.
 
-\subsubsection{Install BEAST 2 packages}\label{install-beast-2-packages}
+\hypertarget{install-beast-2-packages}{%
+\subsubsection{Install BEAST 2
+packages}\label{install-beast-2-packages}}
 
 While the coalescent-based Bayesian Skyline Plot is integrated in the
 BEAST2 core, we need to install the BDSKY package, which contains the
@@ -188,30 +199,31 @@ BEAUti to fully load the \textbf{BDSKY} package.
     \label{fig:install}
 \end{figure}
 
- \clearpage
+\clearpage
 
+\hypertarget{setting-up-the-coalescent-bayesian-skyline-analysis}{%
 \subsubsection{Setting up the Coalescent Bayesian Skyline
-analysis}\label{setting-up-the-coalescent-bayesian-skyline-analysis}
+analysis}\label{setting-up-the-coalescent-bayesian-skyline-analysis}}
 
 To start we have to import the alignment into BEAUti.
 
 \begin{framed}
 In the \textbf{Partitions} panel, import the nexus file with the
 alignment by navigating to \textbf{File \textgreater{} Import Alignment}
-in the menu and then finding the \lstinline!hcv.nexus! file on your
-computer \textbf{or} simply drag and drop the file into the
+in the menu and then finding the \passthrough{\lstinline!hcv.nexus!}
+file on your computer \textbf{or} simply drag and drop the file into the
 \textbf{BEAUti} window.
 \end{framed}
 
-BEAUti will recognize the sequences from the \lstinline!*.nexus! file as
-nucleotide data. It will do so for sequence files with the character set
-of \textbf{A \textbar{} C \textbar{} G \textbar{} T \textbar{} N}, where
+BEAUti will recognize the sequences from the
+\passthrough{\lstinline!*.nexus!} file as nucleotide data. It will do so
+for sequence files with the character set of \textbf{A C G T N}, where
 \textbf{N} indicates an unknown nucleotide. As soon as other non-gap
 characters are included (e.g.~using \textbf{R} or \textbf{Y} to indicate
 purines and pyramidines) BEAUti will not recognize the data as
 nucleotides anymore (unless the type of data is specified in the
-\lstinline!*.nexus! file) and open a dialogue box to confirm the data
-type.
+\passthrough{\lstinline!*.nexus!} file) and open a dialogue box to
+confirm the data type.
 
 The sequences were all sampled in 1993 so we are dealing with a
 homochronous alignment and do not need to specify tip dates.
@@ -225,7 +237,7 @@ The next step is to specify the model of nucleotide evolution (the site
 model). We will be using the GTR model, which is the most general
 reversible model and estimates transition probabilities between
 individual nucleotides separately. That means that the transition
-probabilities between e.g. \textbf{A} and \textbf{T} will be inferred
+probabilities between e.g.~\textbf{A} and \textbf{T} will be inferred
 separately to the ones between \textbf{A} and \textbf{C}, however
 transition probabilities from \textbf{A} to \textbf{C} will be the same
 as \textbf{C} to \textbf{A} etc. Additionally, we allow for rate
@@ -296,20 +308,20 @@ Bayesian Skyline} as the tree prior (Figure \ref{fig:coalescent}).
 
 The Coalescent Bayesian Skyline divides the time between the present and
 the root of the tree (the tMRCA) into segments, and estimates a
-different effective population size ($ N_e $) for each
-segment. The endpoints of segments are tied to the branching times (also
-called coalescent events) in the tree (Figure \ref{fig:coal_events}),
-and the size of segments is measured in the number of coalescent events
-included in each segment. The Coalescent Bayesian Skyline groups
-coalescent events into segments and jointly estimates the
-$ N_e $ (\textbf{bPopSizes} parameter in BEAST) and the size
-(\textbf{bGroupSizes} parameter) of each segment. To set the number of
-segments we have to change the dimension of \textbf{bPopSizes} and
-\textbf{bGroupSizes} (note that the dimension of both parameters has to
-be the same). Note that the length of a segment is not fixed, but
-dependent on the timing of coalescent events in the tree (Figure
-\ref{fig:coal_events}), as well as the number of events contained within
-a segment (\textbf{bGroupSizes}).
+different effective population size (\passthrough{$ N\_e $})
+for each segment. The endpoints of segments are tied to the branching
+times (also called coalescent events) in the tree (Figure
+\ref{fig:coal_events}), and the size of segments is measured in the
+number of coalescent events included in each segment. The Coalescent
+Bayesian Skyline groups coalescent events into segments and jointly
+estimates the \passthrough{$ N\_e $} (\textbf{bPopSizes}
+parameter in BEAST) and the size of each segment (\textbf{bGroupSizes}
+parameter). To set the number of segments we have to change the
+dimension of \textbf{bPopSizes} and \textbf{bGroupSizes} (note that the
+dimension of both parameters always has to be the same). Note that the
+length of a segment is not fixed, but dependent on the timing of
+coalescent events in the tree (Figure \ref{fig:coal_events}), as well as
+the number of events contained within a segment (\textbf{bGroupSizes}).
 
 \begin{figure}
     \centering
@@ -325,7 +337,8 @@ Navigate to \textbf{View \textgreater{} Show Initialization Panel} to
 make it visible and navigate to it (Figure \ref{fig:init}).
 
 Set the dimension of \textbf{bPopSizes} and \textbf{bGroupSizes} to 4
-(the default value is 5) (Figure \ref{fig:dimensions}).
+(the default value is 5) after expanding the boxes for the two
+parameters (Figure \ref{fig:dimensions}).
 \end{framed}
 
 \begin{figure}
@@ -343,10 +356,11 @@ Set the dimension of \textbf{bPopSizes} and \textbf{bGroupSizes} to 4
 \end{figure}
 
 This sets the number of segments equal to 4 (the parameter dimension),
-which means $ N_e $ will be allowed to change 3 times
-between the tMRCA and the present (if we have $ d $
-segments, $ N_e $ is allowed to change $ d-1 $
-times).
+which means \passthrough{$ N\_e $} will be allowed to change
+3 times between the tMRCA and the present (if we have
+\passthrough{$ d $} segments,
+\passthrough{$ N\_e $} is allowed to change
+\passthrough{$ d-1 $} times).
 
 We can leave the rest of the priors as they are and save the XML file.
 We want to shorten the chain length and decrease the sampling frequency
@@ -360,29 +374,34 @@ Navigate to the \textbf{MCMC} panel.
 Change the \textbf{Chain Length} from 10'000'000 to 3'000'000.
 
 Click on the arrow next to the \textbf{tracelog} and change the
-\textbf{File Name} to \lstinline!$(filebase).log! and set the
-\textbf{Log Every} to 3'000.
+\textbf{File Name} to \passthrough{\lstinline!\$(filebase).log!} and set
+the \textbf{Log Every} to 3'000.
 
 Click on the arrow next to the \textbf{treelog} and change the
-\textbf{File Name} to \lstinline!$(filebase).$(tree).log! and set the
-\textbf{Log Every} to 3'000.
+\textbf{File Name} to \passthrough{\lstinline!\$(filebase)-$(tree).log!}
+and set the \textbf{Log Every} to 3'000.
 
 Leave all other settings at their default values and save the file as
-\lstinline!hcv_coal.xml!.
+\passthrough{\lstinline!hcv\_coal.xml!}.
+
+(Note that since BEAST 2.7 the filenames used here are the default
+filenames and should not need to be changed!)
 \end{framed}
 
-When we run the analysis \lstinline!$(filebase)! in the name of the
-\lstinline!*.log! and \lstinline!*.trees! files will be replaced by the
-name of the XML file. This is a good idea, since it makes it easy to
-keep track of which XML files produced which output files.
+When we run the analysis \passthrough{\lstinline!\$(filebase)!} in the
+name of the \passthrough{\lstinline!*.log!} and
+\passthrough{\lstinline!*.trees!} files will be replaced by the name of
+the XML file. This is a good idea, since it makes it easy to keep track
+of which XML files produced which output files.
 
 Now we are ready to run the analysis.
 
 \begin{framed}
-Start \textbf{BEAST2} and choose the file \lstinline!hcv_coal.xml!.
+Start \textbf{BEAST2} and choose the file
+\passthrough{\lstinline!hcv\_coal.xml!}.
 
 If you have \textbf{BEAGLE} installed tick the box to \textbf{Use BEAGLE
-library if available}, which will make the run faster.
+library if available}, which will make the analysis run faster.
 
 Hit \textbf{Run} to start the analysis.
 \end{framed}
@@ -392,8 +411,9 @@ next section while waiting for your results or start preparing the XML
 file for the \protect\hyperlink{sec:bdsky}{birth-death skyline}
 analysis.
 
+\hypertarget{the-coalescent-bayesian-skyline-parameterization}{%
 \subsubsection{The Coalescent Bayesian Skyline
-parameterization}\label{the-coalescent-bayesian-skyline-parameterization}
+parameterization}\label{the-coalescent-bayesian-skyline-parameterization}}
 
 The coalescent model that the Coalescent Bayesian Skyline is based on
 assumes that the sequences represent a small sample from a haploid
@@ -410,55 +430,60 @@ coalesce (have a common ancestor) in a given time.
     \label{fig:wrightfisher}
 \end{figure}
 
-The effective population size ($ N_e $) is the inverse of
-the rate of coalescence $ \lambda $. The larger
-$ N_e $ is the less likely lineages are to coalesce. Thus,
-intervals in a sampled tree with many branching events often coincide
-with periods when the population size was small. Similarly, few
-branching events occur during periods of large population size. (Note
-that these results are conditioned on sampling only a small fraction of
-the population).
+The effective population size (\passthrough{$ N\_e $}) is
+the inverse of the rate of coalescence
+\passthrough{$ \lambda $}. The larger
+\passthrough{$ N\_e $} is the less likely lineages are to
+coalesce. Thus, intervals in a sampled tree with many branching events
+often coincide with periods when the population size was small.
+Similarly, few branching events occur during periods of large population
+size. (Note that these results are conditioned on sampling only a small
+fraction of the population).
 
 \begin{equation}
     \lambda = \frac{1}{N_e}
 \end{equation}
 
 For an SIR model (\textbf{S}usceptible, \textbf{I}nfected and
-\textbf{R}ecovered), $ N_e $ is proportional to the overall
-population size $ N $ and the number of infected
-$ I $ and inversely proportional to the transmission rate
-$ \theta $.
+\textbf{R}ecovered), \passthrough{$ N\_e $} is proportional
+to the overall population size \passthrough{$ N $} and the
+number of infected \passthrough{$ I $} and inversely
+proportional to the transmission rate
+\passthrough{$ \theta $}.
 
 \begin{equation}
     N_e = \frac{I}{\theta} \frac{N}{S}
 \end{equation}
 
-Estimates of $ N_e $ therefore do not directly tell us
-something about the number of infected, nor the transmission rate.
-However, changes in $ N_e $ can be informative about changes
-in the transmission rate or the number of infected (if they do not
-cancel out).
+Estimates of \passthrough{$ N\_e $} therefore do not
+directly tell us something about the number of infected, nor the
+transmission rate. However, changes in
+\passthrough{$ N\_e $} can be informative about changes in
+the transmission rate or the number of infected (if they do not cancel
+out).
 
-The Coalescent Bayesian Skyline model allows $ N_e $ to
-change over time in a nonparametric fashion (i.e.~we do not have to
-specify an equation governing changes in $ N_e $ over time).
+The Coalescent Bayesian Skyline model allows
+\passthrough{$ N\_e $} to change over time in a
+nonparametric fashion (i.e.~we do not have to specify an equation
+governing changes in \passthrough{$ N\_e $} over time).
 Another way to think about the model is as maximally-parameterized,
-since it infers $ d $ change-point times (segment
-boundaries) and a value for $ N_e $ in each segment. This
-makes the Bayesian Skyline flexible enough to model very complicated
-$ N_e $ dynamics, provided that enough segments are
-specified. It may be tempting to specify the maximum dimension for the
-model (each group contains only one coalescent event, thus
-$ N_e $ changes at each branching time in the tree), making
-it as flexible as possible. This is the parameterization used by the
-Classic Skyline plot \citep{Pybus2000}, which is the direct ancestor of
-the Coalescent Bayesian Skyline plot. However, the only informative
-events used by the Coalescent Bayesian Skyline plot are the coalescent
-events. Thus, using a maximally-flexible parameterization with only one
-informative event per segment often leads to erratic and noisy estimates
-of $ N_e $ over time (especially if segments are very short,
-see Figure \ref{fig:coal_events}). Grouping segments together leads to
-smoother and more robust estimates.
+since it infers \passthrough{$ d $} change-point times
+(segment boundaries) and a value for \passthrough{$ N\_e $}
+in each segment. This makes the Bayesian Skyline flexible enough to
+model very complicated \passthrough{$ N\_e $} dynamics,
+provided that enough segments are specified. It may be tempting to
+specify the maximum dimension for the model (each group contains only
+one coalescent event, thus \passthrough{$ N\_e $} changes at
+each branching time in the tree), making it as flexible as possible.
+This is the parameterization used by the Classic Skyline plot
+\citep{Pybus2000}, which is the direct ancestor of the Coalescent
+Bayesian Skyline plot. However, the only informative events used by the
+Coalescent Bayesian Skyline plot are the coalescent events. Thus, using
+a maximally-flexible parameterization with only one informative event
+per segment often leads to erratic and noisy estimates of
+\passthrough{$ N\_e $} over time (especially if segments are
+very short, see Figure \ref{fig:coal_events}). Grouping segments
+together leads to smoother and more robust estimates.
 
 Choosing the dimension for the Bayesian Skyline can be rather arbitrary.
 If the dimension is chosen too low, not all population size changes are
@@ -466,25 +491,28 @@ captured, but if it is chosen too large, there may be too little
 information in a segment to support a robust estimate. When trying to
 decide if the dimension is appropriate it may be useful to consider the
 average number of informative (coalescent) events per segment. (A tree
-of $ n $ taxa has $ n-1 $ coalescences, thus
-$ N_e $ in each segment is estimated from on average
-$ \frac{n-1}{d} $ informative data points). Would this
-number of random samples drawn from a hypothetical distribution allow
-you to accurately estimate the distribution? If not, consider decreasing
-the dimension. There are descendants of the coalescent skyline in BEAST
-that either estimate the number of segments (Extended Bayesian Skyline
-\citep{Heled2008}) or do not require the number of segments to be
-specified (Skyride \citep{Minin2008}), but instead makes very strong
-prior assumptions about changes in $ N_e $.
+of \passthrough{$ n $} taxa has
+\passthrough{$ n-1 $} coalescences, thus
+\passthrough{$ N\_e $} in each segment is estimated from on
+average \passthrough{$ \frac\{n-1\}\{d\} $} informative
+data points). Would this number of random samples drawn from a
+hypothetical distribution allow you to accurately estimate the
+distribution? If not, consider decreasing the dimension. There are
+descendants of the coalescent skyline in BEAST that either estimate the
+number of segments (Extended Bayesian Skyline \citep{Heled2008}) or do
+not require the number of segments to be specified (Skyride
+\citep{Minin2008}), but instead makes very strong prior assumptions
+about changes in \passthrough{$ N\_e $}.
 
+\hypertarget{exploring-the-results-of-the-coalescent-bayesian-skyline-analysis}{%
 \subsubsection{Exploring the results of the Coalescent Bayesian Skyline
-analysis}\label{exploring-the-results-of-the-coalescent-bayesian-skyline-analysis}
+analysis}\label{exploring-the-results-of-the-coalescent-bayesian-skyline-analysis}}
 
 For the reconstruction of the population dynamics, we need two files,
-the \lstinline!*.log! file and the \lstinline!*.trees! file. The log
-file contains the information about the group sizes and population sizes
-of each segment, while the trees file is needed for the times of the
-coalescent events.
+the \passthrough{\lstinline!*.log!} file and the
+\passthrough{\lstinline!*.trees!} file. The log file contains the
+information about the group sizes and population sizes of each segment,
+while the trees file is needed for the times of the coalescent events.
 
 \begin{framed}
 Load the logfile into \textbf{Tracer} to check mixing and parameter
@@ -501,16 +529,16 @@ estimates (Figure \ref{fig:tracer_bsp}).
 Because we shortened the chain most parameters have very low ESS values.
 If you like, you can compare your results with the example results we
 obtained with identical settings and a chain of 30,000,000
-(\lstinline!hcv_coal_30M.log!).
+(\passthrough{\lstinline!hcv\_coal\_30M.log!}).
 
 \begin{framed}
 Navigate to \textbf{Analysis \textgreater{} Bayesian Skyline
-Reconstruction}. From there open the \lstinline!*.trees! file. To get
-the correct dates in the analysis we should specify the \textbf{Age of
-the youngest tip}. In our case it is 1993, the year where all the
-samples were taken. If the sequences were sampled at different times
-(heterochronous data), the age of the youngest tip is the time when the
-most recent sample was collected.
+Reconstruction}. From there open the \passthrough{\lstinline!*.trees!}
+file. To get the correct dates in the analysis we should specify the
+\textbf{Age of the youngest tip}. In our case it is 1993, the year where
+all the samples were taken. If the sequences were sampled at different
+times (heterochronous data), the age of the youngest tip is the time
+when the most recent sample was collected.
 
 Press \textbf{OK} to reconstruct the past population dynamics (Figure
 \ref{fig:trees}).
@@ -526,12 +554,13 @@ Press \textbf{OK} to reconstruct the past population dynamics (Figure
 The output will have the years on the x-axis and the effective
 population size on the y-axis. By default, the y-axis is on a log-scale.
 If everything worked as it is supposed to work you will see a sharp
-increase in the effective population size in the mid 20$^{th}$ century,
+increase in the effective population size in the mid 20th century,
 similar to what is seen on Figure \ref{fig:skyline}.
 
-(Note that the reconstruction will only work if the \lstinline!*.log!
-and \lstinline!*.trees! files contain the same number of states and both
-files were logged at the same frequency).
+(Note that the reconstruction will only work if the
+\passthrough{\lstinline!*.log!} and \passthrough{\lstinline!*.trees!}
+files contain the exact same number of states and both files were logged
+at the same frequency).
 
 \begin{figure}
     \centering
@@ -541,19 +570,22 @@ files were logged at the same frequency).
 \end{figure}
 
 There are two ways to save the analysis, it can either be saved as a
-\lstinline!*.pdf! for display purposes or as a tab delimited file.
+\passthrough{\lstinline!*.pdf!} for display purposes or as a tab
+delimited file.
 
 \begin{framed}
 Navigate to \textbf{File \textgreater{} Export Data Table}.
 
-Enter the filename as \lstinline!hcv_coal.tsv! and save the file.
+Enter the filename as \passthrough{\lstinline!hcv\_coal.tsv!} and save
+the file.
 \end{framed}
 
 The exported file will have five rows, the time, the mean, median, lower
 and upper boundary of the 95\% HPD interval of the estimates, which you
 can use to plot the data with other software (R, Matlab, etc).
 
-\subsubsection{Choosing the Dimension}\label{choosing-the-dimension}
+\hypertarget{choosing-the-dimension}{%
+\subsubsection{Choosing the Dimension}\label{choosing-the-dimension}}
 
 If we compare the estimates of the population dynamics using different
 dimensions, we see that most of the dynamics are already captured with
@@ -575,7 +607,7 @@ in the effective population size before the subsequent increase.
 The choice of the number of dimensions can also have a direct effect on
 how fast the MCMC converges (Figure \ref{fig:ess}). The slower
 convergence with increasing dimension can be caused by e.g.~less
-information in intervals. To some extent it is simply caused by the need
+information per interval. To some extent it is simply caused by the need
 to estimate more parameters though.
 
 \begin{figure}
@@ -585,10 +617,11 @@ to estimate more parameters though.
     \label{fig:ess}
 \end{figure}
 
- \clearpage
+\clearpage
 
+\hypertarget{setting-up-the-birth-death-skyline-analysis}{%
 \subsubsection{Setting up the Birth-Death Skyline
-analysis}\label{setting-up-the-birth-death-skyline-analysis}
+analysis}\label{setting-up-the-birth-death-skyline-analysis}}
 
 In the first analysis, we used the coalescent approach to estimate
 population dynamics. We now want to repeat the analysis using the
@@ -596,9 +629,9 @@ Birth-Death Skyline model. We will use the same model setup as in the
 previous analysis and only change the tree prior.
 
 \begin{framed}
-Restart \textbf{BEAUti}, load \lstinline!hcv.nexus! as before and set up
-the same site and clock model as in the Coalescent Bayesian Skyline
-analysis.
+Restart \textbf{BEAUti}, load \passthrough{\lstinline!hcv.nexus!} as
+before and set up the same site and clock model as in the Coalescent
+Bayesian Skyline analysis.
 \end{framed}
 
 We will need to set the prior to \textbf{Birth Death Skyline
@@ -606,14 +639,16 @@ Contemporary}, since the sequences were all sampled at the same point in
 time. For heterochronous data (sequences sampled at different times), we
 would use \textbf{Birth Death Skyline Serial}. As with the Coalescent
 Bayesian Skyline, we need to set the number of dimensions. Here we set
-the dimension for $ R_e $, the effective reproduction
-number, which denotes the average number of secondary infections caused
-by an infected person at a given time during the epidemic, i.e.~an
-$ R_e $ of 2 would mean that every infected person causes
-two new infections on average. In other words, an $ R_e $
-above 1 means that the number of cases are increasing, therefore the
-disease will cause an exponentially growing epidemic, and an
-$ R_e $ below 1 means that the epidemic will die out.
+the dimension for $ R_e $, the effective
+reproduction number, which denotes the average number of secondary
+infections caused by an infected person at a given time during the
+epidemic, i.e.~an $ R_e $ of 2 would mean
+that every infected person causes two new infections on average. In
+other words, an $ R_e $ above 1 means that
+the number of cases are increasing, therefore the disease will cause an
+exponentially growing epidemic, and an
+$ R_e $ below 1 means that the epidemic will
+die out.
 
 \begin{framed}
 Navigate to the \textbf{Priors} panel and select \textbf{Birth Death
@@ -642,46 +677,51 @@ Press \textbf{OK} to close the pop-up window.
     \label{fig:dimensions_bdsky}
 \end{figure}
 
-This means that $ R_e $ will be allowed to change at 9 times
-equally spaced between the origin of the epidemic and the present time.
-Choosing this dimension can again be arbitrary and may require the
-testing of a few different values. Too few intervals and not all rate
-shifts are captured. Too many intervals and the intervals may not
-contain enough information to infer parameters. (As with setting the
+This means that $ R_e $ will be allowed to
+change at 9 equally spaced times between the origin of the epidemic and
+the present time. Choosing this dimension can again be arbitrary and may
+require the testing of a few different values. Too few intervals and not
+all rate shifts are captured. Too many intervals and the intervals may
+not contain enough information to infer parameters. (As with setting the
 dimension of the Coalescent Bayesian Skyline the dimension of
-$ R_e $ can also be set in the initialization panel).
+$ R_e $ can also be set in the initialization
+panel).
 
-Besides $ R_e $ (\textbf{reproductiveNumber}), the
-\textbf{Birth Death Skyline Contemporary} model has 3 more parameters,
+Besides $ R_e $
+(\textbf{reproductiveNumber}), the \textbf{Birth Death Skyline
+Contemporary} model has 3 more parameters,
 \textbf{becomeUninfectiousRate} (the rate at which infected patients
-become uninfectious, $ \delta $, through recovery, death or
-isolation), \textbf{rho} (the proportion of lineages sampled in the
-present, $ \rho $) and the \textbf{origin} (the time at
-which the index case became infected, which is always earlier than the
-tMRCA of the tree). We may know some of these parameters from literature
-or be able to estimate them from external sources. For example, the
-average time that patients are able to transmit a disease is informative
-about the \textbf{becomeUninfectiousRate}. This prior knowledge we can
-incorporate in our analysis by setting appropriate priors for these
-parameters.
+become uninfectious, \passthrough{$ \delta $}, through
+recovery, death or isolation), \textbf{rho} (the proportion of lineages
+sampled in the present, \passthrough{$ \rho $}) and the
+\textbf{origin} (the time at which the index case became infected, which
+is always earlier than the tMRCA of the tree). We may know some of these
+parameters from literature or be able to estimate them from external
+sources. For example, the average time that patients are able to
+transmit a disease is informative about the
+\textbf{becomeUninfectiousRate}. This prior knowledge we can incorporate
+in our analysis by setting appropriate priors for these parameters.
 
-We will use a lognormal prior for $ R_e $. This is a good
-prior distribution to use for rates since it is always positive (a rate
-cannot be negative) and has a long tail defined over all positive
-numbers. The long tail allows arbitrarily high estimates of
-$ R_e $, but does not place much weight on very high rates.
-This agrees with our prior knowledge about $ R_e $ (most
-diseases have an $ R_e $ between 1.2 and 5. Measles is one
-of the most infectious diseases we know about and has
-$ R_e \approx 18 $). If an epidemic is neither growing or
-declining, it has an $ R_e $ of 1, which we will use as a
-null hypothesis, by setting a prior on $ R_e $ centered
-around 1 (we assume that if there isn't a strong signal in an interval
-for an epidemic to grow or decline that $ R_e = 1 $,
-i.e.~the epidemic size stays constant). Note that this prior is used for
-each of the $ R_e $ intervals (the Birth-Death Skyline
-assumes that $ R_e $ is independent in each of the
-intervals).
+We will use a lognormal prior for $ R_e $.
+This is a good prior distribution to use for rates since it is always
+positive (a rate cannot be negative) and has a long tail defined over
+all positive numbers. The long tail allows arbitrarily high estimates of
+$ R_e $, but does not place much weight on
+very high rates. This agrees with our prior knowledge about
+$ R_e $ (most diseases have an
+$ R_e $ between 1.2 and 5. Measles is one of
+the most infectious diseases we know about and has
+$ R_e \approx 18 $). If an epidemic is
+neither growing or declining, it has an
+$ R_e $ of 1, which we will use as a null
+hypothesis, by setting a prior on $ R_e $
+centered around 1 (we assume that if there isn't a strong signal in an
+interval for an epidemic to grow or decline that
+$ R_e = 1 $, i.e.~the epidemic size stays
+constant). Note that this prior is used for each of the
+$ R_e $ intervals (the Birth-Death Skyline
+assumes that $ R_e $ is independent in each
+of the intervals).
 
 \begin{framed}
 Select a \textbf{Log Normal} distribution for the
@@ -706,10 +746,11 @@ For the becoming uninfectious rate we will again use a log normal prior.
 The inverse of the becoming uninfectious rate is the average infectious
 period. In some patients an HCV infection only lasts a few weeks, while
 in others it is a chronic infection lasting for many years. Setting
-$ M=0 $ and $ S=1.25 $ results in the same prior
-we used for the $ R_e $. In terms of the becoming
+\passthrough{$ M=0 $} and
+\passthrough{$ S=1.25 $} results in the same prior we used
+for the $ R_e $. In terms of the becoming
 uninfectious rate, this translates to the 95\% quantiles for the
-infectious period falling between 0.128 years (46.67 days) and 11.59
+infectious period falling between 0.0862 years (31.5 days) and 11.59
 years, with a median of 1 year. We will see later that there is a strong
 signal in the data for a longer becoming uninfectious period.
 
@@ -726,15 +767,16 @@ Set the same prior for \textbf{becomeUninfectiousRate} as for
     \label{fig:bURprior}
 \end{figure}
 
-The sampling proportion, $ \rho $, represents the proportion
-of HCV cases in Egypt in 1993 that are included in the analysis. In 1993
-Egypt had a population of roughly 60 million people, and with a
-prevalence of at least 15\% this translates into millions of cases,
-while we only have 63 sequences.
+The sampling proportion, \passthrough{$ \rho $}, represents
+the proportion of HCV cases in Egypt in 1993 that are included in the
+analysis. In 1993 Egypt had a population of roughly 60 million people,
+and with a prevalence of at least 15\% this translates into millions of
+cases, while we only have 63 sequences.
 
-We will use a beta distribution for the prior on $ \rho $.
-Beta distributions are a very flexible class of distributions that are
-only defined between 0 and 1, making them ideal to use for proportions.
+We will use a beta distribution for the prior on
+\passthrough{$ \rho $}. Beta distributions are a very
+flexible class of distributions that are only defined between 0 and 1,
+making them ideal to use for proportions.
 
 \begin{framed}
 Select a \textbf{Beta} distribution for the \textbf{rho} prior.
@@ -782,24 +824,28 @@ Navigate to the \textbf{MCMC} panel.
 Change the \textbf{Chain Length} from 10'000'000 to 3'000'000.
 
 Click on the arrow next to the \textbf{tracelog} and change the
-\textbf{File Name} to \lstinline!$(filebase).log! and set the
-\textbf{Log Every} to 3'000.
+\textbf{File Name} to \passthrough{\lstinline!\$(filebase).log!} and set
+the \textbf{Log Every} to 3'000.
 
 Click on the arrow next to the \textbf{treelog} and change the
-\textbf{File Name} to \lstinline!$(filebase).$(tree).log! and set the
-\textbf{Log Every} to 3'000.
+\textbf{File Name} to \passthrough{\lstinline!\$(filebase)-$(tree).log!}
+and set the \textbf{Log Every} to 3'000.
 
 Leave all other settings at their default values and save the file as
-\lstinline!hcv_bdsky.xml!.
+\passthrough{\lstinline!hcv\_bdsky.xml!}.
+
+(Note that since BEAST 2.7 the filenames used here are the default
+filenames and should not need to be changed!)
 \end{framed}
 
 Now we are ready to run the analysis.
 
 \begin{framed}
-Start \textbf{BEAST2} and choose the file \lstinline!hcv_bdsky.xml!.
+Start \textbf{BEAST2} and choose the file
+\passthrough{\lstinline!hcv\_bdsky.xml!}.
 
 If you have \textbf{BEAGLE} installed tick the box to \textbf{Use BEAGLE
-library if available}, which will make the run faster.
+library if available}, which will make the analysis run faster.
 
 Hit \textbf{Run} to start the analysis.
 \end{framed}
@@ -813,10 +859,11 @@ section while waiting for the analysis to finish.
 \begin{itemize}
 
 \item
-  We set a prior on $ R_e $ in the Birth-Death Skyline
-  analysis, but did not set any prior for $ N_e $ in the
-  Coalescent Bayesian Skyline analysis. Is there a prior on
-  $ N_e $? If so, what is it?
+  We set a prior on $ R_e $ in the
+  Birth-Death Skyline analysis, but did not set any prior for
+  \passthrough{$ N\_e $} in the Coalescent Bayesian Skyline
+  analysis. Is there a prior on \passthrough{$ N\_e $}? If
+  so, what is it?
 \item
   We fixed the clock rate to an independent estimate and set a strict
   clock. If we had strong prior knowledge that there is substitution
@@ -825,86 +872,97 @@ section while waiting for the analysis to finish.
 \end{itemize}
 \end{framed}
 
+\hypertarget{the-birth-death-skyline-parameterization}{%
 \subsubsection{The Birth-Death Skyline
-parameterization}\label{the-birth-death-skyline-parameterization}
+parameterization}\label{the-birth-death-skyline-parameterization}}
 
 The birth-death model is parameterized very differently from the
 coalescent model, using per lineage rates and an explicit sampling model
 (whereas the coalescent model conditions on the samples). This makes the
 birth-death model more powerful, but also much more complex. A basic
-birth-death model has a birth rate ($ \lambda $), the rate
-at which lineages are added to the tree, and a death rate
-($ \delta $), the rate at which lineages are removed from
-the tree (Figure \ref{fig:bd_model}). In an infectious disease epidemic
-$ \lambda $ can be thought of as the transmission rate, the
-rate at which rate infected individuals infect susceptibles, while
-$ \delta $ can be thought of as the becoming uninfectious
-rate, the rate at which infected individuals recover, die or are
-isolated. In species tree inferences these rates can be thought of in
-terms of speciation and extinction.
+birth-death model has a birth rate
+(\passthrough{$ \lambda $}), the rate at which lineages are
+added to the tree, and a death rate
+(\passthrough{$ \delta $}), the rate at which lineages are
+removed from the tree (Figure \ref{fig:bd_model}). In an infectious
+disease epidemic \passthrough{$ \lambda $} can be thought
+of as the transmission rate, the rate at which infected individuals
+infect susceptibles, while \passthrough{$ \delta $} can be
+thought of as the becoming uninfectious rate, the rate at which infected
+individuals recover, die or are isolated. In species tree inferences
+these rates can be thought of in terms of speciation and extinction.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.250000\textwidth]{figures/bd_model.png}
-    \caption{A schematic of the BDSKY model.}
+    \caption{A schematic of the birth-death model.}
     \label{fig:bd_model}
 \end{figure}
 
 The \textbf{Birth Death Skyline Contemporary} model we used was
 parameterized in terms of $ R_e $ and
-$ \delta $. Recall that $ R_e > 1 $ means that
-an epidemic will keep growing. We can see this from the definitioin of
-$ R_e $ as the ratio of the birth and death rates.
+\passthrough{$ \delta $}. Recall that
+\passthrough{$ R_e > 1 $} means that an epidemic will keep
+growing. We can see this from the definition of
+$ R_e $ as the ratio of the birth and death
+rates.
 
 \begin{equation}
     R_{e} = \frac{\lambda}{\delta}
 \end{equation}
 
-\begin{longtable}[]{@{}rl@{}}
+if \passthrough{$ \lambda > \delta $} then
+\passthrough{$ R_e > 1 $}
 
-if $ \lambda > \delta $ then $ R_e > 1 $ &
-epidemic grows\tabularnewline
-if $ \lambda = \delta $ then $ R_e = 1 $ &
-epidemic stays constant\tabularnewline
-if $ \lambda < \delta $ then $ R_e < 1 $ &
-epidemic declines\tabularnewline
+epidemic grows
 
-\end{longtable}
+if \passthrough{$ \lambda = \delta $} then
+\passthrough{$ R_e = 1 $}
+
+epidemic stays constant
+
+if \passthrough{$ \lambda < \delta $} then
+\passthrough{$ R_e < 1 $}
+
+epidemic declines
 
 We used this paramerization simply because it is often easier to specify
-priors for $ R_e $ than the transmission rate, and because
-$ R_e $ is often more informative for prevention efforts. In
-addition, the model also has a sampling probability
-($ \rho $) parameter, which in our analysis describes how
-likely it is that a person infected with HCV in Egypt in 1993 was
-sampled in our dataset. The final parameter is the origin. Whereas
-coalescent models work backward-in-time from the sampled sequences,
-birth-death models work forward-in-time from the origin. Hence, the
-model needs an origin time, which can also be jointly estimated along
-with the other parameters. The origin will always be bigger than the
-tMRCA of the sampled tree, since the sampled tree is by definition
-smaller than the complete tree.
+priors for $ R_e $ than the transmission
+rate, and because $ R_e $ is often more
+informative for prevention efforts. In addition, the model also has a
+sampling probability (\passthrough{$ \rho $}) parameter,
+which in our analysis describes how likely it is that a person infected
+with HCV in Egypt in 1993 was sampled in our dataset. The final
+parameter is the origin. Whereas coalescent models work backward-in-time
+from the sampled sequences, birth-death models work forward-in-time from
+the origin. Hence, the model needs an origin time, which can also be
+jointly estimated along with the other parameters. The origin will
+always be at least as big, and usually bigger, than the tMRCA of the
+sampled tree, since the sampled tree is by definition smaller than the
+complete tree.
 
 You may have noticed that there are many Birth-Death Skyline models
 available in BEAUti. For example, the \textbf{Birth Death Skyline
 Contemporary BDSParam} model is parameterized in terms of
-$ \lambda, \delta $ and $ \rho $ and is usually
-more appropriate for macro-evolutionary studies. The \textbf{Birth Death
-Skyline Serial} model assumes that the data are heterochronous (sampled
-at different times). It assumes that:
+\passthrough{$ \lambda, \delta $} and
+\passthrough{$ \rho $} and is usually more appropriate for
+macroevolutionary studies. The \textbf{Birth Death Skyline Serial} model
+assumes that the data are heterochronous (sampled at different times).
+It assumes that:
 
 \begin{equation}
     \delta = \psi + \mu
 \end{equation}
 
-where $ \psi $ is the rate at which lineages are sampled
-through time and $ \mu $ is the rate at which lineages are
-removed from the tree for any other reason (death, recovery, extinction
-etc.). (In this case the $ \rho $ parameter is no-longer
-available, because samples are collected through time, and not just at
-one timepoint). By default, the model is parameterized in terms of
-$ R_e , \delta $ and $ p $, the sampling
-proportion:
+where \passthrough{$ \psi $} is the rate at which lineages
+are sampled through time and \passthrough{$ \mu $} is the
+rate at which lineages are removed from the tree for any other reason
+(death, recovery, extinction etc.). (In this case the
+\passthrough{$ \rho $} parameter is no-longer available by
+default, because samples are collected through time, and not just at one
+timepoint). By default, the model is parameterized in terms of
+\passthrough{$ R_e , \delta $} and
+\passthrough{$ p $}, the sampling proportion:
 
 \begin{equation}
     p = \frac{\psi}{\psi + \mu}
@@ -916,8 +974,9 @@ population size. This model is useful for studying infectious disease
 dynamics, because samples are often collected over the course of an
 epidemic. It can also be used for macro-evolutionary studies, when
 fossil data (morphological traits or ancient DNA) are incorporated. In
-that case a parameterization in terms of $ \lambda, \mu $
-and $ \psi $ is preferable.
+that case a parameterization in terms of
+\passthrough{$ \lambda, \mu $} and
+\passthrough{$ \psi $} is preferable.
 
 You can also see that the model \textbf{Birth Death Skyline Serial}
 assumes that upon sampling a lineage is removed from the tree (e.g.~in a
@@ -929,16 +988,17 @@ assumption can be relaxed, but we will not do so during this tutorial.
 The Birth-Death Skyline model is very flexible and allows any or all of
 these rates to change independently over time. This is done by dividing
 the time from the origin to the most recent sample into dimension
-$ d $ equally spaced intervals (see Figure
+\passthrough{$ d $} equally spaced intervals (see Figure
 \ref{fig:bdsky_principle}). The rates are then allowed to change between
-intervals. Since some rates (e.g. $ \lambda $ and
-$ \delta $) are highly correlated, it is not always a good
-idea to let all rates change over time because it can lead to poor
-mixing or biased estimates (often we assume that the becoming
-uninfectious rate is constant while allowing $ R_e $ to
-change over time, as we did here). It is also possible to specify the
-change-point times more flexibly, or even estimate them, however for now
-this requires editing the XML file. Some examples are available
+intervals. Since some rates (e.g.~\passthrough{$ \lambda $}
+and \passthrough{$ \delta $}) are highly correlated, it is
+not always a good idea to let all rates change over time because it can
+lead to poor mixing or biased estimates (often we assume that the
+becoming uninfectious rate is constant while allowing
+$ R_e $ to change over time, as we did here).
+It is also possible to specify the change-point times more flexibly, or
+even estimate them, however for now this requires editing the XML file.
+Some examples are available
 \href{https://github.com/laduplessis/skylinetools/wiki/TreeSlicer}{here}.
 
 \begin{figure}
@@ -948,25 +1008,28 @@ this requires editing the XML file. Some examples are available
     \label{fig:bdsky_principle}
 \end{figure}
 
+\hypertarget{visualizing-the-birth-death-skyline-output}{%
 \subsubsection{Visualizing the Birth-Death Skyline
-Output}\label{visualizing-the-birth-death-skyline-output}
+Output}\label{visualizing-the-birth-death-skyline-output}}
 
-There is no equivalent visualization of the skyline plot of a
+There is no equivalent built-in visualization of the skyline plot of a
 Birth-Death Skyline (BDSKY) analysis in Tracer as there is for the
 Coalescent Bayesian Skyline. But because BDSKY separates the full tree
 into equally spaced intervals, we can already get an idea of the
-inference just by looking at the inferred $ R_e $ values
-(see Figure \ref{fig:bdsky_dynamics}). This gives us a good idea of the
-trend, but it is not completely accurate. Since we are also estimating
-the origin parameter, the interval times are slightly different in each
-posterior sample and overlap slightly. The advantage of this is that we
-get a smooth estimate through time. The disadvantage is that we need to
-do some extra post-processing to plot the smooth skyline.
+inference just by looking at the inferred
+$ R_e $ values (see Figure
+\ref{fig:bdsky_dynamics}). This gives us a good idea of the trend, but
+it is not completely accurate. Since we are also estimating the origin
+parameter, the interval times are slightly different in each posterior
+sample and overlap slightly. The advantage of this is that we get a
+smooth estimate through time. The disadvantage is that we need to do
+some extra post-processing to plot the smooth skyline.
 
 As with the Coalescent Bayesian Skyline, because we shortened the chain,
 most parameters have very low ESS values. If you like, you can compare
 your results with the example results we obtained with identical
-settings and a chain of 30,000,000 (\lstinline!hcv_bdsky_30M.log!).
+settings and a chain of 30,000,000
+(\passthrough{\lstinline!hcv\_bdsky\_30M.log!}).
 
 \begin{figure}
     \centering
@@ -975,94 +1038,113 @@ settings and a chain of 30,000,000 (\lstinline!hcv_bdsky_30M.log!).
     \label{fig:bdsky_dynamics}
 \end{figure}
 
-We will use the R-package \lstinline!bdskytools! to plot the output of
-the BDSKY analysis. The package is still in development and not
-available over CRAN. Thus, we have to install the package directly over
-GitHub (note that you only have to install the package once):
+We will use R to post-process and plot the Birth-Death Skyline. The
+below steps are also in an RMarkDown notebook on the left-hand panel,
+under the heading \textbf{Scripts}.
+
+First, install the necessary packages. Once installed, we don't need to
+install the packages again. Because two of the packages we need are not
+available on CRAN we install them from GitHub.
 
 \begin{lstlisting}
 install.packages("devtools")
-library(devtools)
-
+install.packages("coda")
 devtools::install_github("laduplessis/bdskytools")
+devtools::install_github("laduplessis/beastio")
 \end{lstlisting}
 
-Once the package is installed we have to load it into our R workspace
-before we can use the functions in the package. To plot the results, we
-need to first tell R where to find the \lstinline!*.log! file of our run
-and then load it into R (discarding 10\% of samples as burn-in). If you
-are using RStudio, you can change the working directory to the directory
-where you stored your log files, which makes it easier to load the files
-in R.
+Once the packages are installed we have to load them into our R
+workspace before we can use their functions.
+
+To plot the results, we need to first tell R where to find the
+\passthrough{\lstinline!*.log!} file of our run and then load it into R
+(discarding 10\% of samples as burn-in). If you are using RStudio, you
+can change the working directory to the directory where you stored your
+log files, which makes it easier to load the files in R. In the
+RMarkDown notebook the logfile location is stored in the
+\passthrough{\lstinline!params$logfile!} parameter.
 
 \begin{lstlisting}
+library(coda)
 library(bdskytools)
+library(beastio)
 
-# Navigate to Session > Set Working Directory > Choose Directory (on RStudio)
-# or change fname to the full path to the log file
-fname <- "hcv_bdsky.log"   
-lf    <- readLogfile(fname, burnin=0.1)
+bdsky_trace   <- beastio::readLog(params$logfile, burnin=0.1)
 \end{lstlisting}
 
-Next, we can extract the HPDs of $ R_e $ and the becoming
-uninfectious rate:
+With the trace loaded as an \passthrough{\lstinline!mcmc!} object from
+the coda package we can use coda functions to investigate the trace and
+check convergence. For details on how to use coda see the package on
+\href{https://cran.r-project.org/web/packages/coda/index.html}{CRAN}.
+
+Next, we can extract the HPDs of $ R_e $ and
+the becoming uninfectious rate:
 
 \begin{lstlisting}
-Re_sky    <- getSkylineSubset(lf, "reproductiveNumber")
-Re_hpd    <- getMatrixHPD(Re_sky)
-delta_hpd <- getHPD(lf$becomeUninfectiousRate)
+Re_sky    <- beastio::getLogFileSubset(bdsky_trace, "reproductiveNumber_BDSKY_Contemp")
+Re_hpd    <- t(beastio::getHPDMedian(Re_sky))
+delta_hpd <- beastio::getHPDMedian(bdsky_trace[, "becomeUninfectiousRate_BDSKY_Contemp"])
 \end{lstlisting}
 
-Next we plot the raw HPD intervals of $ R_e $. This is
-equivalent to the output in Tracer.
+Next we plot the raw HPD intervals of
+$ R_e $. This is equivalent to the output in
+Tracer.
 
 \begin{lstlisting}
-plotSkyline(1:10, Re_hpd, type='step', ylab="R")
+bdskytools::plotSkyline(1:10, Re_hpd, type='step', ylab="R")
 \end{lstlisting}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.800000\textwidth]{figures/bdsky_hpds.png}
+    \includegraphics[width=0.800000\textwidth]{scripts/figs/plot-Re-ungridded-1.png}
     \caption{The HPDs of `$ R_e $` (equivalent to the previous figure from Tracer).}
     \label{fig:bdsky_hpds}
 \end{figure}
 
 In order to plot the smooth skyline we have to marginalise our
-$ R_e $ estimates on a regular timegrid and calculate the
-HPD at each gridpoint. It is usually a good idea to use a grid with more
-cells than the dimension of $ R_e $. To do this we first
-calculate the marginal posterior at every time of interest using the
-function \lstinline!gridSkyline! and then calculate the HPD for each of
-the finer time intervals. The times to grid the skyline on
-(\lstinline!timegrid!), refers to years in the past.
+\passthrough{$ R_e $} estimates on a regular timegrid and
+calculate the HPD at each gridpoint. It is usually a good idea to use a
+grid with more cells than the dimension of
+\passthrough{$ R_e $} (but using too many can result in
+noisy estimates). To do this we first calculate the marginal posterior
+at every time of interest using the function
+\passthrough{\lstinline!bdskytools::gridSkyline!} and then calculate the
+HPD for each of the finer time intervals. Here we choose to look at
+\passthrough{\lstinline!params$gridsize!} equidistantly spaced points
+between the median tMRCA and the most recent sequence. The times to grid
+the skyline on (\passthrough{\lstinline!timegrid!}), refers to years in
+the past.
 
 \begin{lstlisting}[language=R]
-timegrid       <- seq(0,400,length.out=101)
-Re_gridded     <- gridSkyline(Re_sky,    lf$origin, timegrid)
-Re_gridded_hpd <- getMatrixHPD(Re_gridded)
+tmrca_med  <- median(bdsky_trace[, "Tree.height"])
+gridTimes  <- seq(0, median(tmrca_med), length.out=params$gridsize)  
+    
+Re_gridded <- mcmc(bdskytools::gridSkyline(Re_sky, bdsky_trace[, "origin_BDSKY_Contemp"], gridTimes))
+Re_gridded_hpd <- t(getHPDMedian(Re_gridded))
 \end{lstlisting}
 
 Now we are ready to plot the smooth skyline (remember that the sequences
 were sampled in 1993):
 
 \begin{lstlisting}[language=R]
-times     <- 1993-timegrid
-plotSkyline(times, Re_gridded_hpd, type='smooth', xlab="Time", ylab="R")
+times <- 1993 - gridTimes
+plotSkyline(times, Re_gridded_hpd, xlab="Date", ylab="Re", type="smooth") 
 \end{lstlisting}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.800000\textwidth]{figures/bdsky_smooth.png}
+    \includegraphics[width=0.800000\textwidth]{scripts/figs/plot-Re-1.png}
     \caption{The smooth `$ R_e $` skyline.}
     \label{fig:bdsky_smooth}
 \end{figure}
 
-We can plot the gridded $ R_e $ skyline (not its HPDs) for a
-few of the MCMC samples to see what it really looks like as the Markov
-chain samples parameters. Note that the intervals overlap between
-different posterior samples. This is because the origin is different in
-each of the plotted samples. As we add more samples to the plot we start
-to see the smooth skyline appear.
+We can plot the gridded \passthrough{$ R_e $} skyline (not
+its HPDs) for a few of the states in our MCMC chain to see what it
+really looks like as the Markov chain samples parameters. Note that the
+intervals overlap between different posterior samples. This is because
+the origin estimate is a different sample from the origin's posterior
+density in each of the plotted samples. As we add more samples to the
+plot we start to see the smooth skyline appear.
 
 \begin{lstlisting}[language=R]
 plotSkyline(times, Re_gridded, type='steplines', traces=1, col=pal.dark(cblue,1),ylims=c(0,5), 
@@ -1077,17 +1159,17 @@ plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.800000\textwidth]{figures/bdsky_traces.png}
+    \includegraphics[width=0.800000\textwidth]{scripts/figs/plot-Re-traces-1.png}
     \caption{Increasing the number of traces plotted from 1 to 10, to 100, to 1000.}
     \label{fig:bdsky_traces}
 \end{figure}
 
-Finally, we can plot both the $ R_e $ and
-$ \delta $ (the becoming uninfectious rate) on a single set
-of axes. Since we left the dimension of the becoming uninfectious rate
-at 1, it is constant through time. (Normally we would not plot constant
-parameters over a time period)! The output should be similar to Figure
-\ref{fig:bdsky_out}.
+Finally, we can plot both the \passthrough{$ R_e $} and
+\passthrough{$ \delta $} (the becoming uninfectious rate)
+on a single set of axes. Since we left the dimension of the becoming
+uninfectious rate at 1, it is constant through time. (Normally we would
+not plot constant parameters over a time period)! The output should be
+similar to Figure \ref{fig:bdsky_out}.
 
 \begin{lstlisting}[language=R]
 par(mar=c(5,4,4,4)+0.1)
@@ -1109,22 +1191,18 @@ plotSkylinePretty(times, Re_gridded_hpd, type='smooth', axispadding=0.0,
     \label{fig:bdsky_out}
 \end{figure}
 
-An R-script with the above commands (and a few extras) is in the
-\lstinline!scripts/! directory (\lstinline!Skyline_Example.R!). If the
-bdskytools package cannot be installed from GitHub the relevant scripts
-are also provided in the \lstinline!scripts/! directory.
-
 \begin{framed}
-\textbf{Topic for discussion:} Do the Birth-Death Skyline results agree
-with the Coalescent Bayesian Skyline results? How would your conclusions
-from the two analyses differ? (Hint: Use R to plot the results from both
-analyses).
+\textbf{Topic for discussion:} Do the Birth-Death Skyline resgit bults
+agree with the Coalescent Bayesian Skyline results? How would your
+conclusions from the two analyses differ? (Hint: Use R to plot the
+results from both analyses).
 
 \clearpage
 \end{framed}
 
+\hypertarget{some-considerations-for-using-skyline-plots}{%
 \subsection{Some considerations for using skyline
-plots}\label{some-considerations-for-using-skyline-plots}
+plots}\label{some-considerations-for-using-skyline-plots}}
 
 Both the coalescent and the birth-death skylines assume that the
 population is well-mixed. That is, they assume that there is no
@@ -1132,12 +1210,13 @@ significant population structure and that the sequences are a random
 sample from the population. However, if there is population structure,
 for instance sequences were sampled from two different villages and
 there is much more contact within than between villages, then the
-results will be biased \citep{Heller2013}. Instead a structured model
+results will be biased \citep{Heller2013}. Instead, a structured model
 should then be used to account for these biases.
 
 \clearpage
 
-\section{Useful Links}\label{useful-links}
+\hypertarget{useful-links}{%
+\section{Useful Links}\label{useful-links}}
 
 \begin{itemize}
 
@@ -1160,7 +1239,8 @@ should then be used to account for these biases.
   complex change-point times using BDSKY \clearpage
 \end{itemize}
 
-
+\hypertarget{relevant-references}{%
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % Tutorial disclaimer %
@@ -1168,7 +1248,9 @@ should then be used to account for these biases.
 % Please do not change the license
 % Add the author names and relevant links
 % Add any other aknowledgments here
-\href{http://creativecommons.org/licenses/by/4.0/}{\includegraphics[scale=0.8]{figures/ccby.pdf}} This tutorial was written by Nicola F. Müller and Louis du Plessis for \href{https://taming-the-beast.github.io}{Taming the BEAST} and is licensed under a \href{http://creativecommons.org/licenses/by/4.0/}{Creative Commons Attribution 4.0 International License}. 
+\href{http://creativecommons.org/licenses/by/4.0/}{\includegraphics[scale=0.8]{figures/ccby.pdf}} This tutorial was written by Nicola
+F. Müller and Louis du
+Plessis for \href{https://taming-the-beast.github.io}{Taming the BEAST} and is licensed under a \href{http://creativecommons.org/licenses/by/4.0/}{Creative Commons Attribution 4.0 International License}. 
 
 
 %%%%%%%%%%%%%%%%%%%%

@@ -8,6 +8,8 @@ tracerversion: 1.7.x
 ---
 
 
+
+
 # Background
 
 Population dynamics influence the shape of the tree and consequently, the shape of the tree contains some information about past population dynamics. The so-called Skyline methods allow to extract this information from phylogenetic trees in a non-parametric manner. It is non-parametric since there is no underlying system of differential equations governing the inference of these dynamics. In this tutorial we will look at two different methods to infer these dynamics from sequence data. The first one is the Coalescent Bayesian Skyline plot {% cite Drummond2005 --file Skyline-plots/master-refs %}, which is based on the coalescent model, and the second one is the Birth-Death Skyline plot {% cite Stadler2013 --file Skyline-plots/master-refs %} based on the birth-death model. The conceptual difference between the coalescent and birth-death approaches lies in the direction of the flow of time. In the coalescent, time is modeled to move backwards, from the present to the past, while in the birth-death approach it is modeled to go forwards. Two other fundamental differences are the parameters that are inferred and the way sampling is treated. 
@@ -535,72 +537,80 @@ As with the Coalescent Bayesian Skyline, because we shortened the chain, most pa
 <br>
 
 
-We will use the R-package `bdskytools` to plot the output of the BDSKY analysis. The package is still in development and not available over CRAN. Thus, we have to install the package directly over GitHub (note that you only have to install the package once): 
+We will use R to post-process and plot the Birth-Death Skyline. The below steps are also in an RMarkDown notebook on the left-hand panel, under the heading **Scripts**. 
+
+First, install the necessary packages. Once installed, we don't need to install the packages again. Because two of the packages we need are not available on CRAN we install them from GitHub.
+
 
 ```{R}
 install.packages("devtools")
-library(devtools)
-
+install.packages("coda")
 devtools::install_github("laduplessis/bdskytools")
+devtools::install_github("laduplessis/beastio")
 ```
 
-Once the package is installed we have to load it into our R workspace before we can use the functions in the package.
-To plot the results, we need to first tell R where to find the `*.log` file of our run and then load it into R (discarding 10% of samples as burn-in). If you are using RStudio, you can change the working directory to the directory where you stored your log files, which makes it easier to load the files in R.
+Once the packages are installed we have to load them into our R workspace before we can use their functions.
+
+To plot the results, we need to first tell R where to find the `*.log` file of our run and then load it into R (discarding 10% of samples as burn-in). If you are using RStudio, you can change the working directory to the directory where you stored your log files, which makes it easier to load the files in R. In the RMarkDown notebook the logfile location is stored in the `params$logfile` parameter.
 
 ```{R}
+library(coda)
 library(bdskytools)
+library(beastio)
 
-# Navigate to Session > Set Working Directory > Choose Directory (on RStudio)
-# or change fname to the full path to the log file
-fname <- "hcv_bdsky.log"   
-lf    <- readLogfile(fname, burnin=0.1)
+bdsky_trace   <- beastio::readLog(params$logfile, burnin=0.1)
 ```
+
+With the trace loaded as an `mcmc` object from the coda package we can use coda functions to investigate the trace and check convergence. For details on how to use coda see the package on [CRAN](https://cran.r-project.org/web/packages/coda/index.html).
 
 Next, we can extract the HPDs of {% eqinline R_e %} and the becoming uninfectious rate: 
 
 ```{R}
-Re_sky    <- getSkylineSubset(lf, "reproductiveNumber")
-Re_hpd    <- getMatrixHPD(Re_sky)
-delta_hpd <- getHPD(lf$becomeUninfectiousRate)
-```
+Re_sky    <- beastio::getLogFileSubset(bdsky_trace, "reproductiveNumber_BDSKY_Contemp")
+Re_hpd    <- t(beastio::getHPDMedian(Re_sky))
+delta_hpd <- beastio::getHPDMedian(bdsky_trace[, "becomeUninfectiousRate_BDSKY_Contemp"])
 
+```
 
 Next we plot the raw HPD intervals of {% eqinline R_e %}. This is equivalent to the output in Tracer. 
 
 ```{R}
-plotSkyline(1:10, Re_hpd, type='step', ylab="R")
+bdskytools::plotSkyline(1:10, Re_hpd, type='step', ylab="R")
 ```
 
 <figure>
 	<a id="fig:bdsky_hpds"></a>
-	<img style="width:80%;" src="figures/bdsky_hpds.png" alt="">
+	<img style="width:80%;" src="scripts/figs/plot-Re-ungridded-1.png" alt="">
 	<figcaption>Figure 24: The HPDs of {% eqinline R_e %} (equivalent to the previous figure from Tracer).</figcaption>
 </figure>
 <br>
 
-In order to plot the smooth skyline we have to marginalise our {% eqinline R_e %} estimates on a regular timegrid and calculate the HPD at each gridpoint. It is usually a good idea to use a grid with more cells than the dimension of {% eqinline R_e %}. To do this we first calculate the marginal posterior at every time of interest using the function `gridSkyline` and then calculate the HPD for each of the finer time intervals. The times to grid the skyline on (`timegrid`), refers to years in the past. 
+In order to plot the smooth skyline we have to marginalise our {% eqinline R_e %} estimates on a regular timegrid and calculate the HPD at each gridpoint. It is usually a good idea to use a grid with more cells than the dimension of {% eqinline R_e %} (but using too many can result in noisy estimates). To do this we first calculate the marginal posterior at every time of interest using the function `bdskytools::gridSkyline` and then calculate the HPD for each of the finer time intervals. Here we choose to look at `params$gridsize` equidistantly spaced points between the median tMRCA and the most recent sequence. The times to grid the skyline on (`timegrid`), refers to years in the past. 
 
 ```R
-timegrid       <- seq(0,400,length.out=101)
-Re_gridded     <- gridSkyline(Re_sky,    lf$origin, timegrid)
-Re_gridded_hpd <- getMatrixHPD(Re_gridded)
+tmrca_med  <- median(bdsky_trace[, "Tree.height"])
+gridTimes  <- seq(0, median(tmrca_med), length.out=params$gridsize)  
+    
+Re_gridded <- mcmc(bdskytools::gridSkyline(Re_sky, bdsky_trace[, "origin_BDSKY_Contemp"], gridTimes))
+Re_gridded_hpd <- t(getHPDMedian(Re_gridded))
 ```
 
 Now we are ready to plot the smooth skyline (remember that the sequences were sampled in 1993):
 
 ```R
-times     <- 1993-timegrid
-plotSkyline(times, Re_gridded_hpd, type='smooth', xlab="Time", ylab="R")
+times <- 1993 - gridTimes
+plotSkyline(times, Re_gridded_hpd, xlab="Date", ylab="Re", type="smooth") 
 ```
 
 <figure>
 	<a id="fig:bdsky_smooth"></a>
-	<img style="width:80%;" src="figures/bdsky_smooth.png" alt="">
+	<img style="width:80%;" src="scripts/figs/plot-Re-1.png" alt="">
 	<figcaption>Figure 25: The smooth {% eqinline R_e %} skyline.</figcaption>
 </figure>
 <br>
 
-We can plot the gridded {% eqinline R_e %} skyline (not its HPDs) for a few of the MCMC samples to see what it really looks like as the Markov chain samples parameters. Note that the intervals overlap between different posterior samples. This is because the origin is different in each of the plotted samples. As we add more samples to the plot we start to see the smooth skyline appear. 
+We can plot the gridded {% eqinline R_e %} skyline (not its HPDs) for a few of the states in our MCMC chain to see what it really looks like as the Markov chain samples parameters. Note that the intervals overlap between different posterior samples. This is because the origin estimate is a different sample from the origin's 
+posterior density in each of the plotted samples. As we add more samples to the plot we start to see the smooth skyline appear. 
 
 ```R
 plotSkyline(times, Re_gridded, type='steplines', traces=1, col=pal.dark(cblue,1),ylims=c(0,5), 
@@ -615,7 +625,7 @@ plotSkyline(times, Re_gridded, type='steplines', traces=1000, col=pal.dark(cblue
 
 <figure>
 	<a id="fig:bdsky_traces"></a>
-	<img style="width:80%;" src="figures/bdsky_traces.png" alt="">
+	<img style="width:80%;" src="scripts/figs/plot-Re-traces-1.png" alt="">
 	<figcaption>Figure 26: Increasing the number of traces plotted from 1 to 10, to 100, to 1000.</figcaption>
 </figure>
 <br>
@@ -641,9 +651,6 @@ plotSkylinePretty(times, Re_gridded_hpd, type='smooth', axispadding=0.0,
 	<figcaption>Figure 27: Estimates of the inferred {% eqinline R_e %} (orange) over time and the estimate of the becoming uninfectious rate (blue), for which we only used one value.</figcaption>
 </figure>
 <br>
-
-An R-script with the above commands (and a few extras) is in the `scripts/` directory (`Skyline_Example.R`). 
-If the bdskytools package cannot be installed from GitHub the relevant scripts are also provided in the `scripts/` directory.
 
 > **Topic for discussion:** Do the Birth-Death Skyline resgit bults agree with the Coalescent Bayesian Skyline results? How would your conclusions from the two analyses differ? (Hint: Use R to plot the results from both analyses). 
 >

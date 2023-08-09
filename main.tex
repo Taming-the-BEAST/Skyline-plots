@@ -74,7 +74,8 @@ Exercise}\label{programs-used-in-this-exercise}}
 BEAST2 (\url{http://www.beast2.org}) is a free software package for
 Bayesian evolutionary analysis of molecular sequences using MCMC and
 strictly oriented toward inference using rooted, time-measured
-phylogenetic trees. This tutorial is written for BEAST v2.7.x \citep{Bouckaert2014, Bouckaert2019}.
+phylogenetic trees. This tutorial is written for BEAST v\{\{
+page.beastversion \}\} \citep{Bouckaert2014 Bouckaert2019}.
 
 \hypertarget{beauti---bayesian-evolutionary-analysis-utility}{%
 \subsubsection{BEAUti - Bayesian Evolutionary Analysis
@@ -101,7 +102,7 @@ convergence. It helps to quickly view median estimates and 95\% highest
 posterior density intervals of the parameters, and calculates the
 effective sample sizes (ESS) of parameters. It can also be used to
 investigate potential parameter correlations. We will be using Tracer
-v1.7.x.
+v\{\{ page.tracerversion \}\}.
 
 \hypertarget{r-rstudio}{%
 \subsubsection{R / RStudio}\label{r-rstudio}}
@@ -139,7 +140,7 @@ The aim of this tutorial is to:
 The dataset consists of an alignment of 63 Hepatitis C sequences sampled
 in 1993 in Egypt \citep{Ray2000}. This dataset has been used previously
 to test the performance of skyline methods
-\citep{Drummond2005, Stadler2013}.
+\citep{Drummond2005 Stadler2013}.
 
 With an estimated 15-25\%, Egypt has the highest Hepatits C prevalence
 in the world. In the mid 20th century, the prevalence of Hepatitis C
@@ -240,7 +241,12 @@ individual nucleotides separately. That means that the transition
 probabilities between e.g.~\textbf{A} and \textbf{T} will be inferred
 separately to the ones between \textbf{A} and \textbf{C}, however
 transition probabilities from \textbf{A} to \textbf{C} will be the same
-as \textbf{C} to \textbf{A} etc. Additionally, we allow for rate
+as \textbf{C} to \textbf{A} etc. (Note that the transition probabilities
+here refer to the transition between \emph{any} two states in the
+continuous time Markov-chain stochastic process that is used for the
+substitution model, and not specifically to \emph{transitions} in the
+context of genetics, i.e.~mutations from purines to purines or
+pyramidines to pyramidines). Additionally, we allow for rate
 heterogeneity among sites. We do this by changing the Gamma Category
 Count to 4 (normally between 4 and 6).
 
@@ -308,13 +314,13 @@ Bayesian Skyline} as the tree prior (Figure \ref{fig:coalescent}).
 
 The Coalescent Bayesian Skyline divides the time between the present and
 the root of the tree (the tMRCA) into segments, and estimates a
-different effective population size (\passthrough{$ N\_e $})
+different effective population size (\passthrough{$ N_e $})
 for each segment. The endpoints of segments are tied to the branching
 times (also called coalescent events) in the tree (Figure
 \ref{fig:coal_events}), and the size of segments is measured in the
 number of coalescent events included in each segment. The Coalescent
 Bayesian Skyline groups coalescent events into segments and jointly
-estimates the \passthrough{$ N\_e $} (\textbf{bPopSizes}
+estimates the \passthrough{$ N_e $} (\textbf{bPopSizes}
 parameter in BEAST) and the size of each segment (\textbf{bGroupSizes}
 parameter). To set the number of segments we have to change the
 dimension of \textbf{bPopSizes} and \textbf{bGroupSizes} (note that the
@@ -356,10 +362,10 @@ parameters (Figure \ref{fig:dimensions}).
 \end{figure}
 
 This sets the number of segments equal to 4 (the parameter dimension),
-which means \passthrough{$ N\_e $} will be allowed to change
+which means \passthrough{$ N_e $} will be allowed to change
 3 times between the tMRCA and the present (if we have
 \passthrough{$ d $} segments,
-\passthrough{$ N\_e $} is allowed to change
+\passthrough{$ N_e $} is allowed to change
 \passthrough{$ d-1 $} times).
 
 We can leave the rest of the priors as they are and save the XML file.
@@ -378,17 +384,17 @@ Click on the arrow next to the \textbf{tracelog} and change the
 the \textbf{Log Every} to 3'000.
 
 Click on the arrow next to the \textbf{treelog} and change the
-\textbf{File Name} to \passthrough{\lstinline!\$(filebase)-$(tree).log!}
+\textbf{File Name} to \passthrough{\lstinline!\$(filebase)-\$(tree).log!}
 and set the \textbf{Log Every} to 3'000.
 
 Leave all other settings at their default values and save the file as
-\passthrough{\lstinline!hcv\_coal.xml!}.
+\passthrough{\lstinline!hcv_coal.xml!}.
 
 (Note that since BEAST 2.7 the filenames used here are the default
 filenames and should not need to be changed!)
 \end{framed}
 
-When we run the analysis \passthrough{\lstinline!\$(filebase)!} in the
+When we run the analysis \passthrough{lstinline!\$(filebase)!} in the
 name of the \passthrough{\lstinline!*.log!} and
 \passthrough{\lstinline!*.trees!} files will be replaced by the name of
 the XML file. This is a good idea, since it makes it easy to keep track
@@ -398,7 +404,7 @@ Now we are ready to run the analysis.
 
 \begin{framed}
 Start \textbf{BEAST2} and choose the file
-\passthrough{\lstinline!hcv\_coal.xml!}.
+\passthrough{\lstinline!hcv_coal.xml!}.
 
 If you have \textbf{BEAGLE} installed tick the box to \textbf{Use BEAGLE
 library if available}, which will make the analysis run faster.
@@ -415,13 +421,13 @@ analysis.
 \subsubsection{The Coalescent Bayesian Skyline
 parameterization}\label{the-coalescent-bayesian-skyline-parameterization}}
 
-The coalescent model that the Coalescent Bayesian Skyline is based on
-assumes that the sequences represent a small sample from a haploid
-population evolving under Wright-Fisher dynamics (Figure
+The Coalescent Bayesian Skyline model uses the Kingman coalescent for
+each segment, which assumes that the sequences are a small sample drawn
+from a haploid population evolving under Wright-Fisher dynamics (Figure
 \ref{fig:wrightfisher}). The model works by calculating the probability
-of the tree under this assumption. This essentially boils down to
-repeatedly asking the question of how likely it is for two lineages to
-coalesce (have a common ancestor) in a given time.
+of observing the tree under this assumption. This essentially boils down
+to repeatedly asking the question of how likely it is for two lineages
+to coalesce (have a common ancestor) in a given time.
 
 \begin{figure}
     \centering
@@ -430,10 +436,10 @@ coalesce (have a common ancestor) in a given time.
     \label{fig:wrightfisher}
 \end{figure}
 
-The effective population size (\passthrough{$ N\_e $}) is
+The effective population size (\passthrough{$ N_e $}) is
 the inverse of the rate of coalescence
 \passthrough{$ \lambda $}. The larger
-\passthrough{$ N\_e $} is the less likely lineages are to
+\passthrough{$ N_e $} is the less likely lineages are to
 coalesce. Thus, intervals in a sampled tree with many branching events
 often coincide with periods when the population size was small.
 Similarly, few branching events occur during periods of large population
@@ -445,7 +451,7 @@ fraction of the population).
 \end{equation}
 
 For an SIR model (\textbf{S}usceptible, \textbf{I}nfected and
-\textbf{R}ecovered), \passthrough{$ N\_e $} is proportional
+\textbf{R}ecovered), \passthrough{$ N_e $} is proportional
 to the overall population size \passthrough{$ N $} and the
 number of infected \passthrough{$ I $} and inversely
 proportional to the transmission rate
@@ -455,25 +461,25 @@ proportional to the transmission rate
     N_e = \frac{I}{\theta} \frac{N}{S}
 \end{equation}
 
-Estimates of \passthrough{$ N\_e $} therefore do not
+Estimates of \passthrough{$ N_e $} therefore do not
 directly tell us something about the number of infected, nor the
 transmission rate. However, changes in
-\passthrough{$ N\_e $} can be informative about changes in
+\passthrough{$ N_e $} can be informative about changes in
 the transmission rate or the number of infected (if they do not cancel
 out).
 
 The Coalescent Bayesian Skyline model allows
-\passthrough{$ N\_e $} to change over time in a
+\passthrough{$ N_e $} to change over time in a
 nonparametric fashion (i.e.~we do not have to specify an equation
-governing changes in \passthrough{$ N\_e $} over time).
+governing changes in \passthrough{$ N_e $} over time).
 Another way to think about the model is as maximally-parameterized,
 since it infers \passthrough{$ d $} change-point times
-(segment boundaries) and a value for \passthrough{$ N\_e $}
+(segment boundaries) and a value for \passthrough{$ N_e $}
 in each segment. This makes the Bayesian Skyline flexible enough to
-model very complicated \passthrough{$ N\_e $} dynamics,
+model very complicated \passthrough{$ N_e $} dynamics,
 provided that enough segments are specified. It may be tempting to
 specify the maximum dimension for the model (each group contains only
-one coalescent event, thus \passthrough{$ N\_e $} changes at
+one coalescent event, thus \passthrough{$ N_e $} changes at
 each branching time in the tree), making it as flexible as possible.
 This is the parameterization used by the Classic Skyline plot
 \citep{Pybus2000}, which is the direct ancestor of the Coalescent
@@ -481,7 +487,7 @@ Bayesian Skyline plot. However, the only informative events used by the
 Coalescent Bayesian Skyline plot are the coalescent events. Thus, using
 a maximally-flexible parameterization with only one informative event
 per segment often leads to erratic and noisy estimates of
-\passthrough{$ N\_e $} over time (especially if segments are
+\passthrough{$ N_e $} over time (especially if segments are
 very short, see Figure \ref{fig:coal_events}). Grouping segments
 together leads to smoother and more robust estimates.
 
@@ -493,7 +499,7 @@ decide if the dimension is appropriate it may be useful to consider the
 average number of informative (coalescent) events per segment. (A tree
 of \passthrough{$ n $} taxa has
 \passthrough{$ n-1 $} coalescences, thus
-\passthrough{$ N\_e $} in each segment is estimated from on
+\passthrough{$ N_e $} in each segment is estimated from on
 average \passthrough{$ \frac\{n-1\}\{d\} $} informative
 data points). Would this number of random samples drawn from a
 hypothetical distribution allow you to accurately estimate the
@@ -502,7 +508,7 @@ descendants of the coalescent skyline in BEAST that either estimate the
 number of segments (Extended Bayesian Skyline \citep{Heled2008}) or do
 not require the number of segments to be specified (Skyride
 \citep{Minin2008}), but instead makes very strong prior assumptions
-about changes in \passthrough{$ N\_e $}.
+about changes in \passthrough{$ N_e $}.
 
 \hypertarget{exploring-the-results-of-the-coalescent-bayesian-skyline-analysis}{%
 \subsubsection{Exploring the results of the Coalescent Bayesian Skyline
@@ -529,7 +535,7 @@ estimates (Figure \ref{fig:tracer_bsp}).
 Because we shortened the chain most parameters have very low ESS values.
 If you like, you can compare your results with the example results we
 obtained with identical settings and a chain of 30,000,000
-(\passthrough{\lstinline!hcv\_coal\_30M.log!}).
+(\passthrough{\lstinline!hcv_coal_30M.log!}).
 
 \begin{framed}
 Navigate to \textbf{Analysis \textgreater{} Bayesian Skyline
@@ -576,7 +582,7 @@ delimited file.
 \begin{framed}
 Navigate to \textbf{File \textgreater{} Export Data Table}.
 
-Enter the filename as \passthrough{\lstinline!hcv\_coal.tsv!} and save
+Enter the filename as \passthrough{\lstinline!hcv_coal.tsv!} and save
 the file.
 \end{framed}
 
@@ -639,15 +645,15 @@ Contemporary}, since the sequences were all sampled at the same point in
 time. For heterochronous data (sequences sampled at different times), we
 would use \textbf{Birth Death Skyline Serial}. As with the Coalescent
 Bayesian Skyline, we need to set the number of dimensions. Here we set
-the dimension for $ R_e $, the effective
+the dimension for \passthrough{$ R_e $}, the effective
 reproduction number, which denotes the average number of secondary
 infections caused by an infected person at a given time during the
-epidemic, i.e.~an $ R_e $ of 2 would mean
+epidemic, i.e.~an \passthrough{$ R_e $} of 2 would mean
 that every infected person causes two new infections on average. In
-other words, an $ R_e $ above 1 means that
+other words, an \passthrough{$ R_e $} above 1 means that
 the number of cases are increasing, therefore the disease will cause an
 exponentially growing epidemic, and an
-$ R_e $ below 1 means that the epidemic will
+\passthrough{$ R_e $} below 1 means that the epidemic will
 die out.
 
 \begin{framed}
@@ -677,17 +683,17 @@ Press \textbf{OK} to close the pop-up window.
     \label{fig:dimensions_bdsky}
 \end{figure}
 
-This means that $ R_e $ will be allowed to
+This means that \passthrough{$ R_e $} will be allowed to
 change at 9 equally spaced times between the origin of the epidemic and
 the present time. Choosing this dimension can again be arbitrary and may
 require the testing of a few different values. Too few intervals and not
 all rate shifts are captured. Too many intervals and the intervals may
 not contain enough information to infer parameters. (As with setting the
 dimension of the Coalescent Bayesian Skyline the dimension of
-$ R_e $ can also be set in the initialization
+\passthrough{$ R_e $} can also be set in the initialization
 panel).
 
-Besides $ R_e $
+Besides \passthrough{$ R_e $}
 (\textbf{reproductiveNumber}), the \textbf{Birth Death Skyline
 Contemporary} model has 3 more parameters,
 \textbf{becomeUninfectiousRate} (the rate at which infected patients
@@ -702,25 +708,25 @@ transmit a disease is informative about the
 \textbf{becomeUninfectiousRate}. This prior knowledge we can incorporate
 in our analysis by setting appropriate priors for these parameters.
 
-We will use a lognormal prior for $ R_e $.
+We will use a lognormal prior for \passthrough{$ R_e $}.
 This is a good prior distribution to use for rates since it is always
 positive (a rate cannot be negative) and has a long tail defined over
 all positive numbers. The long tail allows arbitrarily high estimates of
-$ R_e $, but does not place much weight on
+\passthrough{$ R_e $}, but does not place much weight on
 very high rates. This agrees with our prior knowledge about
-$ R_e $ (most diseases have an
-$ R_e $ between 1.2 and 5. Measles is one of
+\passthrough{$ R_e $} (most diseases have an
+\passthrough{$ R_e $} between 1.2 and 5. Measles is one of
 the most infectious diseases we know about and has
-$ R_e \approx 18 $). If an epidemic is
+\passthrough{$ R_e \approx 18 $}). If an epidemic is
 neither growing or declining, it has an
-$ R_e $ of 1, which we will use as a null
-hypothesis, by setting a prior on $ R_e $
+\passthrough{$ R_e $} of 1, which we will use as a null
+hypothesis, by setting a prior on \passthrough{$ R_e $}
 centered around 1 (we assume that if there isn't a strong signal in an
 interval for an epidemic to grow or decline that
-$ R_e = 1 $, i.e.~the epidemic size stays
+\passthrough{$ R_e = 1 $}, i.e.~the epidemic size stays
 constant). Note that this prior is used for each of the
-$ R_e $ intervals (the Birth-Death Skyline
-assumes that $ R_e $ is independent in each
+\passthrough{$ R_e $} intervals (the Birth-Death Skyline
+assumes that \passthrough{$ R_e $} is independent in each
 of the intervals).
 
 \begin{framed}
@@ -728,9 +734,9 @@ Select a \textbf{Log Normal} distribution for the
 \textbf{reproductiveNumber} prior.
 
 Click on the arrow to the left of \textbf{reproductiveNumber} to open
-all the options for $ R_e $ settings
+all the options for \passthrough{$ R_e $} settings
 
-Set \textbf{M} to 0, which results in a median of 1. We set the variance
+Set \textbf{M} to 0, which results in a median of 1. We set \textbf{S}
 to 1.25, which places most weight below 7.82 (95\% quantile). (Figure
 \ref{fig:r0prior}).
 \end{framed}
@@ -748,7 +754,7 @@ period. In some patients an HCV infection only lasts a few weeks, while
 in others it is a chronic infection lasting for many years. Setting
 \passthrough{$ M=0 $} and
 \passthrough{$ S=1.25 $} results in the same prior we used
-for the $ R_e $. In terms of the becoming
+for the \passthrough{$ R_e $}. In terms of the becoming
 uninfectious rate, this translates to the 95\% quantiles for the
 infectious period falling between 0.0862 years (31.5 days) and 11.59
 years, with a median of 1 year. We will see later that there is a strong
@@ -824,15 +830,15 @@ Navigate to the \textbf{MCMC} panel.
 Change the \textbf{Chain Length} from 10'000'000 to 3'000'000.
 
 Click on the arrow next to the \textbf{tracelog} and change the
-\textbf{File Name} to \passthrough{\lstinline!\$(filebase).log!} and set
+\textbf{File Name} to \passthrough{lstinline!\$(filebase).log!} and set
 the \textbf{Log Every} to 3'000.
 
 Click on the arrow next to the \textbf{treelog} and change the
-\textbf{File Name} to \passthrough{\lstinline!\$(filebase)-$(tree).log!}
+\textbf{File Name} to \passthrough{lstinline!\$(filebase)-\$(tree).log!}
 and set the \textbf{Log Every} to 3'000.
 
 Leave all other settings at their default values and save the file as
-\passthrough{\lstinline!hcv\_bdsky.xml!}.
+\passthrough{\lstinline!hcv_bdsky.xml!}.
 
 (Note that since BEAST 2.7 the filenames used here are the default
 filenames and should not need to be changed!)
@@ -842,7 +848,7 @@ Now we are ready to run the analysis.
 
 \begin{framed}
 Start \textbf{BEAST2} and choose the file
-\passthrough{\lstinline!hcv\_bdsky.xml!}.
+\passthrough{\lstinline!hcv_bdsky.xml!}.
 
 If you have \textbf{BEAGLE} installed tick the box to \textbf{Use BEAGLE
 library if available}, which will make the analysis run faster.
@@ -859,10 +865,10 @@ section while waiting for the analysis to finish.
 \begin{itemize}
 
 \item
-  We set a prior on $ R_e $ in the
+  We set a prior on \passthrough{$ R_e $} in the
   Birth-Death Skyline analysis, but did not set any prior for
-  \passthrough{$ N\_e $} in the Coalescent Bayesian Skyline
-  analysis. Is there a prior on \passthrough{$ N\_e $}? If
+  \passthrough{$ N_e $} in the Coalescent Bayesian Skyline
+  analysis. Is there a prior on \passthrough{$ N_e $}? If
   so, what is it?
 \item
   We fixed the clock rate to an independent estimate and set a strict
@@ -900,11 +906,11 @@ these rates can be thought of in terms of speciation and extinction.
 \end{figure}
 
 The \textbf{Birth Death Skyline Contemporary} model we used was
-parameterized in terms of $ R_e $ and
+parameterized in terms of \passthrough{$ R_e $} and
 \passthrough{$ \delta $}. Recall that
 \passthrough{$ R_e > 1 $} means that an epidemic will keep
 growing. We can see this from the definition of
-$ R_e $ as the ratio of the birth and death
+\passthrough{$ R_e $} as the ratio of the birth and death
 rates.
 
 \begin{equation}
@@ -927,8 +933,8 @@ if \passthrough{$ \lambda < \delta $} then
 epidemic declines
 
 We used this paramerization simply because it is often easier to specify
-priors for $ R_e $ than the transmission
-rate, and because $ R_e $ is often more
+priors for \passthrough{$ R_e $} than the transmission
+rate, and because \passthrough{$ R_e $} is often more
 informative for prevention efforts. In addition, the model also has a
 sampling probability (\passthrough{$ \rho $}) parameter,
 which in our analysis describes how likely it is that a person infected
@@ -995,7 +1001,7 @@ and \passthrough{$ \delta $}) are highly correlated, it is
 not always a good idea to let all rates change over time because it can
 lead to poor mixing or biased estimates (often we assume that the
 becoming uninfectious rate is constant while allowing
-$ R_e $ to change over time, as we did here).
+\passthrough{$ R_e $} to change over time, as we did here).
 It is also possible to specify the change-point times more flexibly, or
 even estimate them, however for now this requires editing the XML file.
 Some examples are available
@@ -1017,7 +1023,7 @@ Birth-Death Skyline (BDSKY) analysis in Tracer as there is for the
 Coalescent Bayesian Skyline. But because BDSKY separates the full tree
 into equally spaced intervals, we can already get an idea of the
 inference just by looking at the inferred
-$ R_e $ values (see Figure
+\passthrough{$ R_e $} values (see Figure
 \ref{fig:bdsky_dynamics}). This gives us a good idea of the trend, but
 it is not completely accurate. Since we are also estimating the origin
 parameter, the interval times are slightly different in each posterior
@@ -1029,7 +1035,7 @@ As with the Coalescent Bayesian Skyline, because we shortened the chain,
 most parameters have very low ESS values. If you like, you can compare
 your results with the example results we obtained with identical
 settings and a chain of 30,000,000
-(\passthrough{\lstinline!hcv\_bdsky\_30M.log!}).
+(\passthrough{\lstinline!hcv_bdsky_30M.log!}).
 
 \begin{figure}
     \centering
@@ -1077,7 +1083,7 @@ the coda package we can use coda functions to investigate the trace and
 check convergence. For details on how to use coda see the package on
 \href{https://cran.r-project.org/web/packages/coda/index.html}{CRAN}.
 
-Next, we can extract the HPDs of $ R_e $ and
+Next, we can extract the HPDs of \passthrough{$ R_e $} and
 the becoming uninfectious rate:
 
 \begin{lstlisting}
@@ -1087,7 +1093,7 @@ delta_hpd <- beastio::getHPDMedian(bdsky_trace[, "becomeUninfectiousRate_BDSKY_C
 \end{lstlisting}
 
 Next we plot the raw HPD intervals of
-$ R_e $. This is equivalent to the output in
+\passthrough{$ R_e $}. This is equivalent to the output in
 Tracer.
 
 \begin{lstlisting}
@@ -1102,10 +1108,10 @@ bdskytools::plotSkyline(1:10, Re_hpd, type='step', ylab="R")
 \end{figure}
 
 In order to plot the smooth skyline we have to marginalise our
-\passthrough{$ R_e $} estimates on a regular timegrid and
+$R_e $ estimates on a regular timegrid and
 calculate the HPD at each gridpoint. It is usually a good idea to use a
 grid with more cells than the dimension of
-\passthrough{$ R_e $} (but using too many can result in
+$R_e$ (but using too many can result in
 noisy estimates). To do this we first calculate the marginal posterior
 at every time of interest using the function
 \passthrough{\lstinline!bdskytools::gridSkyline!} and then calculate the
@@ -1138,7 +1144,7 @@ plotSkyline(times, Re_gridded_hpd, xlab="Date", ylab="Re", type="smooth")
     \label{fig:bdsky_smooth}
 \end{figure}
 
-We can plot the gridded \passthrough{$ R_e $} skyline (not
+We can plot the gridded $R_e$ skyline (not
 its HPDs) for a few of the states in our MCMC chain to see what it
 really looks like as the Markov chain samples parameters. Note that the
 intervals overlap between different posterior samples. This is because
@@ -1192,10 +1198,10 @@ plotSkylinePretty(times, Re_gridded_hpd, type='smooth', axispadding=0.0,
 \end{figure}
 
 \begin{framed}
-\textbf{Topic for discussion:} Do the Birth-Death Skyline resgit bults
-agree with the Coalescent Bayesian Skyline results? How would your
-conclusions from the two analyses differ? (Hint: Use R to plot the
-results from both analyses).
+\textbf{Topic for discussion:} Do the Birth-Death Skyline results agree
+with the Coalescent Bayesian Skyline results? How would your conclusions
+from the two analyses differ? (Hint: Use R to plot the results from both
+analyses).
 
 \clearpage
 \end{framed}

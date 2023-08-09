@@ -10,6 +10,7 @@ tracerversion: 1.7.x
 
 
 
+
 # Background
 
 Population dynamics influence the shape of the tree and consequently, the shape of the tree contains some information about past population dynamics. The so-called Skyline methods allow to extract this information from phylogenetic trees in a non-parametric manner. It is non-parametric since there is no underlying system of differential equations governing the inference of these dynamics. In this tutorial we will look at two different methods to infer these dynamics from sequence data. The first one is the Coalescent Bayesian Skyline plot {% cite Drummond2005 --file Skyline-plots/master-refs %}, which is based on the coalescent model, and the second one is the Birth-Death Skyline plot {% cite Stadler2013 --file Skyline-plots/master-refs %} based on the birth-death model. The conceptual difference between the coalescent and birth-death approaches lies in the direction of the flow of time. In the coalescent, time is modeled to move backwards, from the present to the past, while in the birth-death approach it is modeled to go forwards. Two other fundamental differences are the parameters that are inferred and the way sampling is treated. 
@@ -112,7 +113,8 @@ The sequences were all sampled in 1993 so we are dealing with a homochronous ali
 > Skip the **Tip Dates** panel and navigate to the **Site Model** panel.
 >
 
-The next step is to specify the model of nucleotide evolution (the site model). We will be using the GTR model, which is the most general reversible model and estimates transition probabilities between individual nucleotides separately. That means that the transition probabilities between e.g. **A** and **T** will be inferred separately to the ones between **A** and **C**, however transition probabilities from **A** to **C** will be the same as **C** to **A** etc. Additionally, we allow for rate heterogeneity among sites. We do this by changing the Gamma Category Count to 4 (normally between 4 and 6).
+The next step is to specify the model of nucleotide evolution (the site model). We will be using the GTR model, which is the most general reversible model and estimates transition probabilities between individual nucleotides separately. That means that the transition probabilities between e.g. **A** and **T** will be inferred separately to the ones between **A** and **C**, however transition probabilities from **A** to **C** will be the same as **C** to **A** etc. (Note that the transition probabilities here refer to the transition between _any_ two states in the continuous time Markov-chain stochastic process that is used for the substitution model, and not specifically to _transitions_ in the context of genetics, i.e. mutations from purines to purines or pyramidines to pyramidines). 
+Additionally, we allow for rate heterogeneity among sites. We do this by changing the Gamma Category Count to 4 (normally between 4 and 6).
 
 > Change the **Gamma Category Count** to 4, make sure that the estimate box next to the **Shape** parameter of the Gamma distribution is ticked and set **Subst Model** to **GTR**. Make sure that the estimate box is ticked for all but one of the 6 rates (there should be 5 ticked boxes) and that **Frequencies** are estimated ([Figure 3](#fig:model)).
 >
@@ -220,7 +222,7 @@ The analysis will take about 10 minutes to complete. Read through the next secti
 
 ### The Coalescent Bayesian Skyline parameterization
 
-The coalescent model that the Coalescent Bayesian Skyline is based on assumes that the sequences represent a small sample from a haploid population evolving under Wright-Fisher dynamics ([Figure 9](#fig:wrightfisher)). The model works by calculating the probability of the tree under this assumption. This essentially boils down to repeatedly asking the question of how likely it is for two lineages to coalesce (have a common ancestor) in a given time. 
+The Coalescent Bayesian Skyline model uses the Kingman coalescent for each segment, which assumes that the sequences are a small sample drawn from a haploid population evolving under Wright-Fisher dynamics ([Figure 9](#fig:wrightfisher)). The model works by calculating the probability of observing the tree under this assumption. This essentially boils down to repeatedly asking the question of how likely it is for two lineages to coalesce (have a common ancestor) in a given time. 
 
 <figure>
 	<a id="fig:wrightfisher"></a>
@@ -373,7 +375,7 @@ We will use a lognormal prior for {% eqinline R_e %}. This is a good prior distr
 >
 > Click on the arrow to the left of **reproductiveNumber** to open all the options for {% eqinline R_e %} settings 
 >
-> Set **M** to 0, which results in a median of 1. We set the variance to 1.25, which places most weight below 7.82 (95% quantile). ([Figure 17](#fig:r0prior)).
+> Set **M** to 0, which results in a median of 1. We set **S** to 1.25, which places most weight below 7.82 (95% quantile). ([Figure 17](#fig:r0prior)).
 >
 
 <figure>
@@ -652,7 +654,7 @@ plotSkylinePretty(times, Re_gridded_hpd, type='smooth', axispadding=0.0,
 </figure>
 <br>
 
-> **Topic for discussion:** Do the Birth-Death Skyline resgit bults agree with the Coalescent Bayesian Skyline results? How would your conclusions from the two analyses differ? (Hint: Use R to plot the results from both analyses). 
+> **Topic for discussion:** Do the Birth-Death Skyline results agree with the Coalescent Bayesian Skyline results? How would your conclusions from the two analyses differ? (Hint: Use R to plot the results from both analyses). 
 >
 
 ----

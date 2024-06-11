@@ -194,15 +194,13 @@ We can leave the rest of the priors as they are and save the XML file. We want t
 >
 > Change the **Chain Length** from 10'000'000 to 3'000'000.
 > 
-> Click on the arrow next to the **tracelog** and change the **File Name** to `$(filebase).log` and set the 
+> Click on the arrow next to the **tracelog** and ensure the **File Name** is set to `$(filebase).log` and set the 
 > **Log Every** to 3'000.
 > 
-> Click on the arrow next to the **treelog** and change the **File Name** to `$(filebase)-$(tree).log` and set the 
+> Click on the arrow next to the **treelog** and ensure the **File Name** to `$(filebase)-$(tree).trees` and set the 
 > **Log Every** to 3'000.
 > 
 > Leave all other settings at their default values and save the file as `hcv_coal.xml`.
->
-> (Note that since BEAST 2.7 the filenames used here are the default filenames and should not need to be changed!)
 
 When we run the analysis `$(filebase)` in the name of the `*.log` and `*.trees` files will be replaced by the name of the XML file. This is a good idea, since it makes it easy to keep track of which XML files produced which output files.
 

@@ -197,7 +197,7 @@ We can leave the rest of the priors as they are and save the XML file. We want t
 > Click on the arrow next to the **tracelog** and ensure the **File Name** is set to `$(filebase).log` and set the 
 > **Log Every** to 3'000.
 > 
-> Click on the arrow next to the **treelog** and ensure the **File Name** to `$(filebase)-$(tree).trees` and set the 
+> Click on the arrow next to the **treelog** and ensure the **File Name** is set to `$(filebase)-$(tree).trees` and set the 
 > **Log Every** to 3'000.
 > 
 > Leave all other settings at their default values and save the file as `hcv_coal.xml`.

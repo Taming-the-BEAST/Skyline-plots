@@ -1,10 +1,21 @@
 ---
 author: Nicola F. Müller,Louis du Plessis
-level: Beginner
 title: Skyline plots
 subtitle: Inference of past population dynamics using Bayesian Coalescent Skyline and Birth-Death Skyline plots.
-beastversion: 2.7.x
 tracerversion: 1.7.x
+beastversion_tutorial: 2.7.x
+workflow: Basic workflow
+status: current
+keywords:
+- skyline
+- coalescent
+- birth-death
+- population dynamics
+packages:
+- BDSKY
+domains:
+- epidemiology
+beastversion_package: '2.7'
 ---
 
 
